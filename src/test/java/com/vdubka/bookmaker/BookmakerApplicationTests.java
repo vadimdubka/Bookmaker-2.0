@@ -1,4 +1,4 @@
-package com.dubatovka.bookmaker;
+package com.vdubka.bookmaker;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
