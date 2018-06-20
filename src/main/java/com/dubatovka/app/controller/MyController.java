@@ -1,7 +1,7 @@
-package com.vdubka.bookmaker.controller;
+package com.dubatovka.app.controller;
 
-import com.vdubka.bookmaker.bean.City;
-import com.vdubka.bookmaker.service.ICityService;
+import com.dubatovka.app.bean.City;
+import com.dubatovka.app.service.ICityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

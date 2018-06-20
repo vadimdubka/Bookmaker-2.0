@@ -1,6 +1,6 @@
-package com.vdubka.bookmaker.service;
+package com.dubatovka.app.service;
 
-import com.vdubka.bookmaker.bean.City;
+import com.dubatovka.app.bean.City;
 
 import java.util.List;
 

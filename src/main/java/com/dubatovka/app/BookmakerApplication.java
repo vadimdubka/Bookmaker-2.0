@@ -1,4 +1,4 @@
-package com.vdubka.bookmaker;
+package com.dubatovka.app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

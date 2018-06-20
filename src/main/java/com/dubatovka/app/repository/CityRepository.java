@@ -1,6 +1,6 @@
-package com.vdubka.bookmaker.repository;
+package com.dubatovka.app.repository;
 
-import com.vdubka.bookmaker.bean.City;
+import com.dubatovka.app.bean.City;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

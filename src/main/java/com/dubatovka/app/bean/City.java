@@ -1,4 +1,4 @@
-package com.vdubka.bookmaker.bean;
+package com.dubatovka.app.bean;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
