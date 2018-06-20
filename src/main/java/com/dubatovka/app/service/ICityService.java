@@ -1,6 +1,6 @@
 package com.dubatovka.app.service;
 
-import com.dubatovka.app.bean.City;
+import com.dubatovka.app.entity.City;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.dubatovka.app.controller;
 
-import com.dubatovka.app.bean.City;
+import com.dubatovka.app.entity.City;
 import com.dubatovka.app.service.ICityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

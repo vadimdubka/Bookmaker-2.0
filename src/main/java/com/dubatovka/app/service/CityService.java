@@ -1,6 +1,6 @@
 package com.dubatovka.app.service;
 
-import com.dubatovka.app.bean.City;
+import com.dubatovka.app.entity.City;
 import com.dubatovka.app.repository.CityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

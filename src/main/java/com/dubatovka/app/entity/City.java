@@ -1,4 +1,4 @@
-package com.dubatovka.app.bean;
+package com.dubatovka.app.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
