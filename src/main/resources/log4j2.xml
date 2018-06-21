@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+    <properties>
+        <property name="name">bookmaker</property>
+        <property name="pattern_to_file">%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %-55logger{36} line:%-4L : %msg%n
+        </property>
+        <property name="pattern_to_console">%d{mm:ss} |%12t | %-5level %-20logger{2} line:%-3L : %msg%n</property>
+    </properties>
+
+    <appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${pattern_to_console}"/>
+        </Console>
+
+        <RollingFile name="RollingFile" fileName="logs/${name}.log"
+                     filePattern="logs/$${date:yyyy-MM}/${name}-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="${pattern_to_file}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="100 KB"/>
+            </Policies>
+        </RollingFile>
+    </appenders>
+
+    <loggers>
+        <root level="info">
+            <appender-ref ref="Console"/>
+            <appender-ref ref="RollingFile"/>
+        </root>
+    </loggers>
+</configuration>

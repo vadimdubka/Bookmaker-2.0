@@ -1,0 +1,33 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<section class="section-events col-s-12 col-6 col-float-right">
+    <div class="section-header"><h2><fmt:message key="header.events.actual"/></h2></div>
+    <div class="section-content table-overflow">
+        <table class="events">
+            <tr>
+                <th>№</th>
+                <th><fmt:message key="event.date"/></th>
+                <th><fmt:message key="event"/></th>
+                <th>${requestScope.type_1_map.name}</th>
+                <th>${requestScope.type_x_map.name}</th>
+                <th>${requestScope.type_2_map.name}</th>
+            </tr>
+            <c:forEach var="event" items="${requestScope.event_set}">
+                <c:set var="event_id">${event.id}</c:set>
+                <tr>
+                    <td>${event.id}</td>
+                    <td>${j:formatDateTime(event.date, "dd.MM.yyyy HH:mm")}</td>
+                    <td>${event.participant1} - ${event.participant2}</td>
+                    <td>
+                        <a href="${pageContext.request.contextPath}/controller?command_type=goto_make_bet&event_id=${event.id}&outcome_type=${requestScope.type_1_map.name}">${requestScope.type_1_map[pageScope.event_id]}</a>
+                    </td>
+                    <td>
+                        <a href="${pageContext.request.contextPath}/controller?command_type=goto_make_bet&event_id=${event.id}&outcome_type=${requestScope.type_x_map.name}">${requestScope.type_x_map[pageScope.event_id]}</a>
+                    </td>
+                    <td>
+                        <a href="${pageContext.request.contextPath}/controller?command_type=goto_make_bet&event_id=${event.id}&outcome_type=${requestScope.type_2_map.name}">${requestScope.type_2_map[pageScope.event_id]}</a>
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
+    </div>
+</section>

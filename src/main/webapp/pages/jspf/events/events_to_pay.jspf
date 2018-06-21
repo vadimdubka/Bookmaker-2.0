@@ -1,0 +1,34 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<section class="section-events col-s-12 col-6 col-float-right">
+    <div class="section-header"><h2><fmt:message key="header.events.to.pay"/></h2></div>
+    <div class="section-content table-overflow">
+        <table class="events">
+            <tr>
+                <th>№</th>
+                <th><fmt:message key="event.date"/></th>
+                <th><fmt:message key="event"/></th>
+                <th><fmt:message key="event.result"/></th>
+                <th><fmt:message key="bets.winning"/></th>
+                <th><fmt:message key="action"/></th>
+            </tr>
+            <c:forEach var="event" items="${requestScope.event_set}">
+                <c:set var="event_id">${event.id}</c:set>
+                <tr>
+                    <td>${event.id}</td>
+                    <td>${j:formatDateTime(event.date, "dd.MM.yyyy HH:mm")}</td>
+                    <td>${event.participant1} - ${event.participant2}</td>
+                    <td>${event.result1} - ${event.result2}</td>
+                    <td>Количество: ${requestScope.win_bet_count[pageScope.event_id]}
+                        Сумма: ${requestScope.win_bet_sum[pageScope.event_id]}</td>
+                    <td>
+                        <form class="edit-event-form" action="controller" method="post" id="form-edit">
+                            <input type="hidden" name="command_type" value="pay_win_bet"/>
+                            <input type="hidden" name="event_id" value="${event.id}"/>
+                            <input type="submit" value="<fmt:message key="button.pay"/>">
+                        </form>
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
+    </div>
+</section>

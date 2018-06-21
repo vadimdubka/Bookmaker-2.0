@@ -1,0 +1,646 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/*Стандартные элементы*/
+html {
+    font-size: 14px;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1em;
+    color: white;
+    background: #14181B;
+}
+
+h1, h2, h3 {
+    font-weight: bold;
+    text-align: center;
+}
+
+a {
+    text-decoration: none;
+    color: red;
+}
+
+a:hover {
+    color: #1ecc4a;
+}
+
+img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
+}
+
+textarea {
+    resize: none;
+}
+
+input,
+button {
+    outline: none;
+    border: none;
+
+}
+
+button {
+    font-size: 0.85em;
+    border-radius: .5em;
+    background-color: #FDC001;
+    color: black;
+    cursor: pointer;
+    margin: .2em;
+    padding: .2em;
+    font-weight: bold;
+}
+
+div.bold{
+    font-weight: bold;
+}
+
+/*****************/
+
+/*Header*/
+header {
+    padding: .5em;
+}
+
+header h1 a {
+    color: #FDC001;
+    font-size: 1.25em;
+}
+
+header h1 a:hover {
+    color: red;
+}
+
+/*Navigator*/
+nav ul.nav-horizontal {
+    margin: 0;
+    padding: 15px;
+    list-style-type: none;
+    text-align: center;
+}
+
+nav ul.nav-horizontal li {
+    border: 1px solid #14181B;
+    background-color: #FDC001;
+    padding: 5px;
+    font-size: 1.5em;
+}
+
+nav ul.nav-horizontal li a {
+    color: #14181B;
+}
+
+nav ul.nav-horizontal li a:hover {
+    text-decoration: underline;
+}
+
+nav.employee-nav {
+    background: white;
+}
+
+/*Sections*/
+.section-header {
+    background-color: #FDC001;
+    padding: 5px;
+    color: black;
+}
+
+.section-content {
+    background-color: white;
+    padding: 5px;
+    color: black;
+}
+
+/*Section Sport Category*/
+.section-sport-category .section-content ul {
+    text-align: center;
+}
+
+.section-sport-category .section-content li ul {
+    display: none;
+}
+
+.section-sport-category .section-content > ul > li {
+    border-bottom: 1px solid #14181B;
+}
+
+.section-sport-category .section-content > ul > li:hover {
+    background-color: lightgrey;
+}
+
+.section-sport-category .section-content li:hover ul {
+    display: block;
+}
+
+.section-sport-category .sport-name {
+    font-size: 1.5em;
+}
+
+.section-sport-category .category-name {
+    font-size: 1.25em;
+}
+
+.section-sport-category .category-name a {
+    color: #2A2A2A;
+    /*font-style: italic;*/
+}
+
+.section-sport-category .category-name a:hover {
+    color: #0c4dcc;
+    /*font-style: italic;*/
+}
+
+.section-sport-category .category-count {
+    /*font-size: 1em;*/
+    font-style: italic;
+    font-weight: bold;
+    color: #0c4dcc;
+}
+
+/*Form */
+input {
+    padding: .5em;
+    background-color: #ccc;
+}
+
+input[required] {
+    background-color: #c4dcde;
+}
+
+input:hover,
+input:focus {
+    background-color: #deffbc;
+}
+
+input[type="submit"] {
+    font-size: .85em;
+    font-weight: bold;
+    padding: .3em;
+    border-radius: .5em;
+    cursor: pointer;
+    background-color: #FDC001;
+}
+
+/*Login-form */
+.login-form {
+    padding: 0 1em;
+}
+
+.login-form input {
+    width: 100%;
+    margin: 1em 0 0;
+}
+
+.login-form input[name="email"] {
+    margin: 0;
+}
+
+.login-form input[name="email"] {
+    margin: 0;
+}
+
+/*Registration-form*/
+.register-form {
+    padding: 0 1em;
+}
+
+.input-block {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: stretch;
+    justify-content: flex-start;
+    margin: 0 0 0;
+    text-align: center;
+}
+
+.input-block-inner {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: stretch;
+    justify-content: flex-start;
+    margin: 0 0 0;
+    text-align: center;
+}
+
+.register-form label,
+.register-form input {
+    display: block;
+    width: 100%;
+}
+
+.register-form label {
+    color: #5a6868;
+}
+
+.register-form label.required::after {
+    content: "*";
+    color: #ccc;
+    display: inline;
+}
+
+.register-form input[type="submit"] {
+    font-size: 1em;
+    margin: 0.5em auto auto;
+    width: 50%;
+}
+
+/*Make bet form*/
+form.make-bet-form {
+    padding: 0.5em 1em;
+}
+
+form.make-bet-form input {
+    margin: 0.33em;
+}
+
+/*Edit event form*/
+form.edit-event-form input {
+    padding-right: 0;
+}
+
+/*error pages*/
+ul.error-paragraph {
+    margin: 0 auto;
+    max-width: 80%;
+    color: #fff;
+}
+
+ul.error-paragraph li {
+    word-wrap: break-word;
+}
+
+/*Сообщения об ошибке*/
+.err-msg {
+    color: #b11826;
+}
+
+.error-message {
+    width: 80%;
+    margin: 0 auto;
+    color: #fff;
+}
+
+/*Language block*/
+.lang-block {
+    float: right;
+}
+
+/*Custom buttons и Links*/
+.custom-link {
+    text-align: center;
+}
+
+.custom-link a {
+    font-size: 0.85em;
+}
+
+.custom-button {
+    margin: .5em 20%;
+    text-align: center;
+}
+
+.custom-button a {
+    font-size: 0.85em;
+    font-weight: bold;
+    color: black;
+    padding: .3em;
+    background-color: #FDC001;
+    border-radius: .5em;
+    text-align: center;
+    cursor: pointer;
+    /*margin: 0em 20% 0;*/
+}
+
+/*Button for editing events*/
+.button-edit {
+    margin: 0px 0px 10px 0px;
+    font-size: 0.8em;
+}
+
+.button-edit a {
+    text-align: center;
+    margin: 0px 0px 0px 0px;
+}
+
+.button-edit-last {
+    margin: 0px 0px 0px 0px;
+}
+
+/*Table*/
+table {
+    border-collapse: collapse;
+    border: 1px solid dimgrey;
+    width: 100%;
+}
+
+div.table-overflow {
+    width: 100%;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/*Table events*/
+table.events td, table.bets td {
+    border: 1px solid dimgrey;
+    padding: 5px;
+    text-align: center;
+    color: black;
+}
+
+table.events tr:nth-child(2n) {
+    background-color: white;
+}
+
+table.events tr:nth-child(2n+1) {
+    background-color: #eeeeee;
+}
+
+table.events th, table.bets th {
+    padding: 5px;
+    border: 1px solid dimgrey;
+    background-color: lightgray;
+    color: black;
+}
+
+table.events button.delete {
+    background-color: red;
+    color: white;
+}
+
+/*Table user-state*/
+table.user-state {
+    font-size: 12px;
+}
+
+table.user-state td.bet-status{
+    font-weight: bold;
+    background-color: #B8E5FF;
+}
+
+table.user-state td.bet-status-win{
+    background-color: #8dee0f;
+}
+
+table.user-state td.bet-status-paid{
+    background-color: #1ecc4a;
+}
+
+table.user-state td.bet-status-losing{
+    background-color: #c05d4a;
+}
+
+/*Table user-menu*/
+table.user-menu {
+    border: none;
+}
+
+table.user-menu td.name {
+    padding-right: 5px;
+}
+
+table.user-menu td.info {
+    font-weight: bold;
+}
+
+/*Table events*/
+table.events {
+    font-size: 11px;
+}
+
+table.events .row-new-event input {
+    background: #caff28;
+}
+
+table.events input.bet {
+    width: 60px;
+}
+
+table.events input.result {
+    width: 60px;
+}
+
+table.events input.participant {
+    width: 140px;
+}
+
+table.events input[type=datetime-local] {
+    width: auto;
+}
+
+/*Footer*/
+footer {
+    padding: 0.5em;
+    text-align: center;
+    color: white;
+    background: #2A2A2A;
+}
+
+footer img {
+    display: inline;
+    width: 30px;
+    transition: width 1s;
+}
+
+footer img:hover {
+    width: 50px;
+}
+
+/*********************/
+
+/*Отрисовка сетки с целью тесрирования*/
+.border-test {
+    /*border: 1px dashed yellow;*/
+}
+
+/*Для центрирования содержимого блока*/
+.div-align-center {
+    text-align: center;
+}
+
+/*Распорка, чтобы последующие блоки учитывали верхние плавающие блоки*/
+.clearfix:after,
+.row:after,
+.layout-positioner:after {
+    content: '';
+    clear: both;
+    display: table;
+}
+
+.container, .wrapper {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.row {
+    /*border: 1px dashed red;*/
+}
+
+[class*="col-"] {
+    float: left;
+    padding: 5px;
+    width: 100%;
+    /*border: 1px dashed green;*/
+}
+
+/*tablets and big landscape mobiles*/
+@media only screen and (min-width: 600px) {
+    .col-s-1 {
+        width: 8.33%;
+    }
+
+    .col-s-2 {
+        width: 16.66%;
+    }
+
+    .col-s-3 {
+        width: 25%;
+    }
+
+    .col-s-4 {
+        width: 33.33%;
+    }
+
+    .col-s-5 {
+        width: 41.66%;
+    }
+
+    .col-s-6 {
+        width: 50%;
+    }
+
+    .col-s-7 {
+        width: 58.33%;
+    }
+
+    .col-s-8 {
+        width: 66.66%;
+    }
+
+    .col-s-9 {
+        width: 75%;
+    }
+
+    .col-s-10 {
+        width: 83.33%;
+    }
+
+    .col-s-11 {
+        width: 91.66%;
+    }
+
+    .col-s-12 {
+        width: 100%;
+    }
+
+    .col-float-right {
+        float: right;
+    }
+}
+
+/*laptops and big landscape tablets*/
+@media only screen and (min-width: 769px) {
+    .col-1 {
+        width: 8.33%;
+    }
+
+    .col-2 {
+        width: 16.66%;
+    }
+
+    .col-3 {
+        width: 25%;
+    }
+
+    .col-4 {
+        width: 33.33%;
+    }
+
+    .col-5 {
+        width: 41.66%;
+    }
+
+    .col-6 {
+        width: 50%;
+    }
+
+    .col-7 {
+        width: 58.33%;
+    }
+
+    .col-8 {
+        width: 66.66%;
+    }
+
+    .col-9 {
+        width: 75%;
+    }
+
+    .col-10 {
+        width: 83.33%;
+    }
+
+    .col-11 {
+        width: 91.66%;
+    }
+
+    .col-12 {
+        width: 100%;
+    }
+
+    .col-float-right {
+        float: right;
+    }
+
+    /*Navigation*/
+    nav {
+        background: #FDC001;
+        min-height: 50px;
+        margin-bottom: 5px;
+    }
+
+    nav ul.nav-horizontal li {
+        margin-right: 5px;
+        display: inline; /*Отображать как строчный элемент*/
+        background-color: #14181B;
+        border: 1px solid #05080c;
+    }
+
+    nav ul.nav-horizontal li a {
+        color: #FDC001;
+    }
+}
+
+.section-center {
+    float: none;
+    margin: 0 auto;
+}
+
+/*big screens*/
+@media only screen and (min-width: 1960px) {
+    .container {
+        width: 70%;
+    }
+}
+
+@font-face {
+    font-family: RobotoCondensed; /* имя шрифта для CSS правил */
+    src: url(../fonts/RobotoCondensed.ttf);
+}
+
+/*.colors {
+    color: #34495e;-мокрый асфальт
+    color: #c0392b; -красный
+    color: #3498DB; -синий
+    color: #569ECC;
+    color: #B8E5FF;
+    color: #509999; - зеленый
+    color: #FFD685; -золотой
+}*/

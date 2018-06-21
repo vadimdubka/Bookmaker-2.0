@@ -1,0 +1,62 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<section class="section-events col-s-12 col-6 col-float-right">
+    <div class="section-header"><h2><fmt:message key="header.events.correct"/></h2></div>
+    <div class="section-content table-overflow">
+        <table class="events">
+            <tr>
+                <th>№</th>
+                <th><fmt:message key="event.date"/></th>
+                <th><fmt:message key="event.participant1"/></th>
+                <th><fmt:message key="event.participant2"/></th>
+                <th><fmt:message key="action"/></th>
+            </tr>
+            <tr class="row-new-event">
+                <td>new</td>
+                <form class="edit-event-form" action="controller" method="post">
+                    <input type="hidden" name="command_type" value="event_create"/>
+                    <input type="hidden" name="category_id" value="${requestScope.category_id}"/>
+                    <td>
+                        <input type="datetime-local" name="date" value="2018-01-01T00:00" min="2018-01-02T00:00" max="2028-01-01T00:00" required/>
+                    </td>
+                    <td>
+                        <input class="participant" type="text" name="participant_1" value="---" pattern="^([a-zA-Z_0-9а-яА-Я]+).{0,100}" required/>
+                    </td>
+                    <td>
+                        <input class="participant" type="text" name="participant_2" value="---" pattern="^([a-zA-Z_0-9а-яА-Я]+).{0,100}" required/>
+                    </td>
+                    <td><input type="submit" value="<fmt:message key="button.create"/>"/></td>
+                </form>
+            </tr>
+            <c:forEach var="event" items="${requestScope.event_set}">
+                <tr>
+                    <td>${event.id}</td>
+                    <form class="edit-event-form" action="controller" method="post" id="form-edit${event.id}">
+                        <input type="hidden" name="command_type" value="event_info_update"/>
+                        <input type="hidden" name="event_id" value="${event.id}"/>
+                        <td>
+                            <input type="datetime-local" name="date" value="${event.date}" min="2018-01-01" required/>
+                        </td>
+                        <td>
+                            <input class="participant" type="text" name="participant_1" value="${event.participant1}" pattern="^([a-zA-Z_0-9а-яА-Я]+).{0,100}" required/>
+                        </td>
+                        <td>
+                            <input class="participant" type="text" name="participant_2" value="${event.participant2}" pattern="^([a-zA-Z_0-9а-яА-Я]+).{0,100}" required/>
+                        </td>
+                    </form>
+                    <form class="edit-event-form" action="controller" method="post" id="form-delete${event.id}">
+                        <input type="hidden" name="command_type" value="event_delete"/>
+                        <input type="hidden" name="event_id" value="${event.id}"/>
+                        <input type="hidden" name="category_id" value="${requestScope.category_id}"/>
+                    </form>
+                    <td>
+                        <button type="submit" form="form-edit${event.id}">
+                            <fmt:message key="button.save"/></button>
+                        <br/>
+                        <button type="submit" form="form-delete${event.id}" class="delete button-edit-last">
+                            <fmt:message key="button.delete"/></button>
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
+    </div>
+</section>

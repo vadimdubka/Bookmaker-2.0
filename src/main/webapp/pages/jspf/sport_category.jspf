@@ -1,0 +1,24 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<section class="section-sport-category col-s-7 col-3">
+    <div class="section-header"><h2><fmt:message key="header.section.sport.category"/></h2></div>
+    <div class="section-content">
+        <ul>
+            <c:forEach var="sport" items="${requestScope.sport_set}">
+                <li>
+                    <div class="sport-name">${sport.name}</div>
+                    <ul>
+                        <c:forEach var="category" items="${sport.childCategorySet}">
+                            <li>
+                                <div class="category-name">
+                                    <a href="${pageContext.request.contextPath}/controller?command_type=goto_main&category_id=${category.id}">${category.name}
+                                    </a>
+                                    <span class="category-count">${requestScope.event_count_map[category.id]}</span>
+                                </div>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                </li>
+            </c:forEach>
+        </ul>
+    </div>
+</section>

@@ -1,0 +1,39 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<section class="section-events col-s-12 col-6 col-float-right">
+    <div class="section-header"><h2><fmt:message key="header.events.manage.coefficient"/></h2></div>
+    <div class="section-content table-overflow">
+        <table class="events">
+            <tr>
+                <th>№</th>
+                <th><fmt:message key="event.date"/></th>
+                <th><fmt:message key="event"/></th>
+                <th>${requestScope.type_1_map.name}</th>
+                <th>${requestScope.type_x_map.name}</th>
+                <th>${requestScope.type_2_map.name}</th>
+                <th><fmt:message key="action"/></th>
+            </tr>
+            <c:forEach var="event" items="${requestScope.event_set}">
+                <c:set var="event_id">${event.id}</c:set>
+                <tr>
+                    <td>${event.id}</td>
+                    <td>${j:formatDateTime(event.date, "dd.MM.yyyy HH:mm")}</td>
+                    <td>${event.participant1} - ${event.participant2}</td>
+                    <form class="edit-event-form" action="controller" method="post">
+                        <input type="hidden" name="command_type" value="outcome_create"/>
+                        <input type="hidden" name="event_id" value="${pageScope.event_id}"/>
+                        <td>
+                            <input type="number" class="bet" name="outcome_1" value="${requestScope.type_1_map[pageScope.event_id]}" title="<fmt:message key="input.title.set.coeff"/>" min="1.01" max="99.99" step="0.01" required/>
+                        </td>
+                        <td>
+                            <input type="number" class="bet" name="outcome_X" value="${requestScope.type_x_map[pageScope.event_id]}" title="<fmt:message key="input.title.set.coeff"/>" min="1.01" max="99.99" step="0.01" required/>
+                        </td>
+                        <td>
+                            <input type="number" class="bet" name="outcome_2" value="${requestScope.type_2_map[pageScope.event_id]}" title="<fmt:message key="input.title.set.coeff"/>" min="1.01" max="99.99" step="0.01" required/>
+                        </td>
+                        <td><input type="submit" value="<fmt:message key="button.save"/>"/></td>
+                    </form>
+                </tr>
+            </c:forEach>
+        </table>
+    </div>
+</section>
