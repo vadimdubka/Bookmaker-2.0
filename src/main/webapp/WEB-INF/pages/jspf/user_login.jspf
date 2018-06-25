@@ -24,7 +24,7 @@
             <noscript><p class="error-message">${requestScope.errorMessage}</p></noscript>
             <input class="button-login" type="submit" value="<fmt:message key="login.submit"/>"/>
             <div class="custom-button register">
-                <a href="/controller?command_type=goto_register">
+                <a href="<s:url value="/controller?command_type=goto_register"/>">
                     <fmt:message key="login.register"/></a>
             </div>
         </form>

@@ -85,9 +85,12 @@
                     <c:forEach var="i" begin="1" end="${requestScope.pagination.amountOfPages}">
                         <c:choose>
                             <c:when test="${i!=requestScope.pagination.currentPage}">
-                                <a href="controller?command_type=goto_player_state&page_number=<c:out value="${i}"/>">
+                                <a href="<s:url value="/controller?command_type=goto_player_state&page_number=${i}"/>">
                                     <c:out value="${i}"/>
                                 </a>
+                                <%--<a href="/controller?command_type=goto_player_state&page_number=<c:out value="${i}"/>">
+                                    <c:out value="${i}"/>
+                                </a>--%>
                             </c:when>
                             <c:otherwise>
                                 <c:out value="${i}"/>

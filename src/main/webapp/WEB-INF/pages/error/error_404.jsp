@@ -18,7 +18,7 @@
             <li>Error message: <c:out value="${errorMessage}" default="Requested resource doesn't exist"/></li>
         </ul>
         <div class="custom-button">
-            <a href="/controller?command=back_from_error">Back</a>
+            <a href="<s:url value="/controller?command=back_from_error"/>">Back</a>
         </div>
     </section>
 </main>

@@ -5,30 +5,30 @@
 <tiles-definitions>
 
     <!--Define a base tile-->
-    <definition name="base" template="/layout/page.jsp">
-        <put-attribute name="header" value="/layout/header.jsp"/>
+    <definition name="base" template="/WEB-INF/layout/page.jsp">
+        <put-attribute name="header" value="/WEB-INF/layout/header.jsp"/>
         <put-attribute name="body" value=""/>
-        <put-attribute name="footer" value="/layout/footer.jsp"/>
+        <put-attribute name="footer" value="/WEB-INF/layout/footer.jsp"/>
     </definition>
 
     <definition name="main" extends="base">
-        <put-attribute name="body" value="/pages/main.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/main.jsp"/>
     </definition>
 
     <definition name="make_bet" extends="base">
-        <put-attribute name="body" value="/pages/make_bet.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/make_bet.jsp"/>
     </definition>
 
     <definition name="manage_players" extends="base">
-        <put-attribute name="body" value="/pages/manage_players.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/manage_players.jsp"/>
     </definition>
 
     <definition name="player_state" extends="base">
-        <put-attribute name="body" value="/pages/player_state.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/player_state.jsp"/>
     </definition>
 
     <definition name="register" extends="base">
-        <put-attribute name="body" value="/pages/register.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/register.jsp"/>
     </definition>
 
 </tiles-definitions>

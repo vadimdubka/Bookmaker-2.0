@@ -67,7 +67,7 @@
                 </div>
             </form>
             <div class="custom-link">
-                <a href="/controller?command_type=goto_index">
+                <a href="<s:url value="/controller?command_type=goto_index"/>">
                     <fmt:message key="register.back"/>
                 </a>
             </div>

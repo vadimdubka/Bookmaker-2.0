@@ -17,7 +17,7 @@
                         <c:forEach var="category" items="${sport.childCategorySet}">
                             <li>
                                 <div class="category-name">
-                                    <a href="/controller?command_type=goto_main&category_id=${category.id}">${category.name}
+                                    <a href="<s:url value="/controller?command_type=goto_main&category_id=${category.id}"/>">${category.name}
                                     </a>
                                     <span class="category-count">${requestScope.event_count_map[category.id]}</span>
                                 </div>

@@ -25,13 +25,13 @@
                     <td>${j:formatDateTime(event.date, "dd.MM.yyyy HH:mm")}</td>
                     <td>${event.participant1} - ${event.participant2}</td>
                     <td>
-                        <a href="/controller?command_type=goto_make_bet&event_id=${event.id}&outcome_type=${requestScope.type_1_map.name}">${requestScope.type_1_map[pageScope.event_id]}</a>
+                        <a href="<s:url value="/controller?command_type=goto_make_bet&event_id=${event.id}&outcome_type=${requestScope.type_1_map.name}"/>">${requestScope.type_1_map[pageScope.event_id]}</a>
                     </td>
                     <td>
-                        <a href="/controller?command_type=goto_make_bet&event_id=${event.id}&outcome_type=${requestScope.type_x_map.name}">${requestScope.type_x_map[pageScope.event_id]}</a>
+                        <a href="<s:url value="/controller?command_type=goto_make_bet&event_id=${event.id}&outcome_type=${requestScope.type_x_map.name}"/>">${requestScope.type_x_map[pageScope.event_id]}</a>
                     </td>
                     <td>
-                        <a href="/controller?command_type=goto_make_bet&event_id=${event.id}&outcome_type=${requestScope.type_2_map.name}">${requestScope.type_2_map[pageScope.event_id]}</a>
+                        <a href="<s:url value="/controller?command_type=goto_make_bet&event_id=${event.id}&outcome_type=${requestScope.type_2_map.name}"/>">${requestScope.type_2_map[pageScope.event_id]}</a>
                     </td>
                 </tr>
             </c:forEach>

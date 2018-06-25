@@ -23,33 +23,31 @@
 
         <header>
         <h1>
-        <a href="/controller?command_type=goto_index"><fmt:message
+        <a href="<s:url value="/controller?command_type=goto_index"/>" ><fmt:message
             key="header.sitename"/></a>
         </h1>
         </header>
 
         <div class="lang-block border-test">
-        <a class="rus" href="/controller?command_type=change_locale&locale=ru_RU"
-        title="RU">rus</a>
-        <a class="eng" href="/controller?command_type=change_locale&locale=en_US"
-        title="EN">eng</a>
+        <a class="rus" href="<c:url value="/change_locale?locale=ru_RU"/>" title="RU">rus</a>
+        <a class="eng" href="<c:url value="/change_locale?locale=en_US"/>" title="EN">eng</a>
         </div>
 
         <nav>
         <ul class="nav-horizontal">
-        <li><a href="/controller?command_type=goto_event_show_actual">
+        <li><a href="<c:url value="/controller?command_type=goto_event_show_actual"/>" >
         <fmt:message key="header.topmenu.main"/></a></li>
-        <li><a href="/controller?command_type=goto_event_show_result">
+        <li><a href="<c:url value="/controller?command_type=goto_event_show_result"/>" >
         <fmt:message key="header.topmenu.results"/></a></li>
-        <li><a href="/controller?command_type=goto_rules">
+        <li><a href="<c:url value="/controller?command_type=goto_rules"/>" >
         <fmt:message key="header.topmenu.rules"/></a></li>
-        <li><a href="/controller?command_type=goto_support">
+        <li><a href="<c:url value="/controller?command_type=goto_support"/>" >
         <fmt:message key="header.topmenu.support"/></a></li>
-        <li><a href="/controller?command_type=goto_actions">
+        <li><a href="<c:url value="/controller?command_type=goto_actions"/>" >
         <fmt:message key="header.topmenu.actions"/></a></li>
-        <li><a href="/controller?command_type=goto_news">
+        <li><a href="<c:url value="/controller?command_type=goto_news"/>" >
         <fmt:message key="header.topmenu.news"/></a></li>
-        <li><a href="/controller?command_type=goto_aboutus">
+        <li><a href="<c:url value="/controller?command_type=goto_aboutus"/>" >
         <fmt:message key="header.topmenu.aboutus"/></a></li>
         </ul>
         </nav>
