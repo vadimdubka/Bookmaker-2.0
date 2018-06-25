@@ -25,7 +25,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public InternalResourceViewResolver internalResourceViewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setViewClass(JstlView.class);
-        viewResolver.setPrefix("/pages/");
+        viewResolver.setPrefix("/WEB-INF/pages/");
         viewResolver.setSuffix(".jsp");
         // this will ensure that JSTL’s formatting and message tags will get the Locale and message sources configured in Spring
         viewResolver.setExposeContextBeansAsAttributes(true); // added by myself
@@ -50,7 +50,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Bean
     public TilesConfigurer tilesConfigurer() {
         TilesConfigurer tiles = new TilesConfigurer();
-        tiles.setDefinitions("/layout/tiles.xml");
+        tiles.setDefinitions("/WEB-INF/layout/tiles.xml");
         tiles.setCheckRefresh(true);
         return tiles;
     }
