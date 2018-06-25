@@ -1,4 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="j" uri="http://bookmaker.com/functions" %>
+<fmt:setLocale value="${sessionScope.locale != null ? sessionScope.locale : 'default'}"/>
+<fmt:setBundle basename="textcontent.pagecontent"/>
 <%@ page isErrorPage="true" %>
 
 <main class="container">
@@ -12,7 +18,7 @@
             <li>Error message: <c:out value="${errorMessage}" default="Invalid request"/></li>
         </ul>
         <div class="custom-button">
-            <a href="${pageContext.request.contextPath}/controller?command=back_from_error">Back</a>
+            <a href="/controller?command=back_from_error">Back</a>
         </div>
     </section>
 </main>
