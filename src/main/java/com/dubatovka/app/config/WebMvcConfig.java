@@ -3,13 +3,50 @@ package com.dubatovka.app.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+    /* ********* Configure View Resolver***********
+     * The ViewResolver maps view names to actual views.
+     * Equivalents of View resolver:
+     * InternalResourceViewResolver - for JSP
+     * TilesViewResolver - Apache Tile
+     * FreeMarkerViewResolver - views as FreeMarker templates
+     * VelocityViewResolver - views as Velocity templates */
     
-    /* ********* Defining a layout with Apache Tiles views ********* */
+    /* ********* Configuring a JSP view resolver **********/
+    @Bean
+    public InternalResourceViewResolver internalResourceViewResolver() {
+        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        viewResolver.setViewClass(JstlView.class);
+        viewResolver.setPrefix("/pages/");
+        viewResolver.setSuffix(".jsp");
+        // this will ensure that JSTL’s formatting and message tags will get the Locale and message sources configured in Spring
+        viewResolver.setExposeContextBeansAsAttributes(true); // added by myself
+        return viewResolver;
+    }
+    
+    /* ********* Configuring a Thymeleaf view resolver **********/
+    @Bean
+    public ThymeleafViewResolver thymeleafViewResolver(SpringTemplateEngine templateEngine) {
+        ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
+        viewResolver.setTemplateEngine(templateEngine);
+        viewResolver.setOrder(1);
+        
+        /*Thymeleaf throws an error when trying to find pages outside of their view resolver instead of passing it onto the next view resolver. By setting the excludeViewNames, skips trying to resolve the view name within Thymeleaf.*/
+        String[] excludedViews = new String[]{"index", "main", "xxx",};
+        viewResolver.setExcludedViewNames(excludedViews);
+        
+        return viewResolver;
+    }
+    
+    /* ********* Configuring a layout with Apache Tiles views ********* */
     @Bean
     public TilesConfigurer tilesConfigurer() {
         TilesConfigurer tiles = new TilesConfigurer();
@@ -26,7 +63,4 @@ public class WebMvcConfig implements WebMvcConfigurer {
         tilesViewResolver.setOrder(0);
         return tilesViewResolver;
     }
-    /* **************************/
-    
-    
 }
