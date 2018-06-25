@@ -1,5 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="j" uri="http://bookmaker.com/functions" %>
+<fmt:setLocale value="${sessionScope.locale != null ? sessionScope.locale : 'default'}"/>
+<fmt:setBundle basename="textcontent.pagecontent"/>
+
 <main class="row container">
     <section class="section-center col-s-10">
         <div class="section-header"><h2><fmt:message key="header.manage.players"/></h2></div>

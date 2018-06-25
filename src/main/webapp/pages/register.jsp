@@ -1,4 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="j" uri="http://bookmaker.com/functions" %>
+<fmt:setLocale value="${sessionScope.locale != null ? sessionScope.locale : 'default'}"/>
+<fmt:setBundle basename="textcontent.pagecontent"/>
+
 <main class="row container">
     <section class="section-center col-s-10 col-6">
         <div class="section-header"><h2><fmt:message key="register.header"/></h2></div>
@@ -60,13 +67,13 @@
                 </div>
             </form>
             <div class="custom-link">
-                <a href="${pageContext.request.contextPath}/controller?command_type=goto_index">
+                <a href="/controller?command_type=goto_index">
                     <fmt:message key="register.back"/>
                 </a>
             </div>
         </div>
     </section>
 </main>
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/validate-form.js"></script>
+<script type="text/javascript" src="/resources/js/validate-form.js"></script>
 
 

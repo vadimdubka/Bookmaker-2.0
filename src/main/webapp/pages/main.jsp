@@ -1,4 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="j" uri="http://bookmaker.com/functions" %>
+<fmt:setLocale value="${sessionScope.locale != null ? sessionScope.locale : 'default'}"/>
+<fmt:setBundle basename="textcontent.pagecontent"/>
+
 <main class="row container">
 
     <c:choose>
@@ -46,7 +53,7 @@
             <section class="section-promo col-s-12 col-6 col-float-right">
                 <div class="section-header"><h2><fmt:message key="header.section.promo"/></h2></div>
                 <img class="img-choose-sport"
-                     src="${pageContext.request.contextPath}/resources/img/choose-sport.jpg"
+                     src="<s:url value="/img/choose-sport.jpg"/>"
                      alt="Choose-sport-logo"
                      title="Choose your sport">
             </section>
