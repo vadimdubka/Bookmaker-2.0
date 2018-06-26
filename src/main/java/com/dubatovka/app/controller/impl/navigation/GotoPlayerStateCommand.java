@@ -16,6 +16,9 @@ import com.dubatovka.app.service.PlayerService;
 import com.dubatovka.app.service.QueryService;
 import com.dubatovka.app.service.ValidationService;
 import com.dubatovka.app.service.impl.ServiceFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +42,32 @@ import static com.dubatovka.app.config.ConfigConstant.PLAYER;
  *
  * @author Dubatovka Vadim
  */
+@Controller
 public class GotoPlayerStateCommand implements Command {
+    @GetMapping("/player_state")
+    public String showPlayerStatePage(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        MessageService messageService = ServiceFactory.getMessageService(session);
+        
+        Player player = (Player) session.getAttribute(PLAYER);
+        String pageNumberStr = request.getParameter(PARAM_PAGE_NUMBER);
+        
+        validateCommand(player, messageService);
+        String navigator = "main";//TODO сделать на FORWARD_PREV_QUERY
+//        PageNavigator navigator = PageNavigator.FORWARD_PREV_QUERY;
+        if (messageService.isErrMessEmpty()) {
+            PaginationService paginationService = getPaginationService(request, player,
+                                                                       pageNumberStr);
+            setBetInfo(request, player, paginationService);
+            setPlayerInfo(session, player);
+            navigator = "player_state";
+        }
+        QueryService.saveQueryToSession(request);
+        setMessagesToRequest(messageService, request);
+        
+        return navigator;
+    }
+    
     /**
      * Limit of bets on page
      */
@@ -56,11 +84,12 @@ public class GotoPlayerStateCommand implements Command {
      * @return {@link PageNavigator}
      */
     @Override
+    @Deprecated
     public PageNavigator execute(HttpServletRequest request) {
-        HttpSession    session        = request.getSession();
+        HttpSession session = request.getSession();
         MessageService messageService = ServiceFactory.getMessageService(session);
         
-        Player player        = (Player) session.getAttribute(PLAYER);
+        Player player = (Player) session.getAttribute(PLAYER);
         String pageNumberStr = request.getParameter(PARAM_PAGE_NUMBER);
         
         validateCommand(player, messageService);
@@ -90,15 +119,15 @@ public class GotoPlayerStateCommand implements Command {
         try (BetService betService = ServiceFactory.getBetService();
              CategoryService categoryService = ServiceFactory.getCategoryService();
              EventService eventService = ServiceFactory.getEventService()) {
-            int                limit       = paginationService.getLimitOnPage();
-            int                offset      = paginationService.getOffset();
-            List<Bet>          betList     = betService.getBetListForPlayer(player.getId(), limit, offset);
-            Map<Bet, Event>    eventMap    = new HashMap<>(betList.size());
+            int limit = paginationService.getLimitOnPage();
+            int offset = paginationService.getOffset();
+            List<Bet> betList = betService.getBetListForPlayer(player.getId(), limit, offset);
+            Map<Bet, Event> eventMap = new HashMap<>(betList.size());
             Map<Bet, Category> categoryMap = new HashMap<>(betList.size());
-            Map<Bet, Category> sportMap    = new HashMap<>(betList.size());
+            Map<Bet, Category> sportMap = new HashMap<>(betList.size());
             betList.forEach(bet -> {
-                Event    event          = eventService.getEvent(bet.getEventId());
-                Category category       = categoryService.getCategoryById(event.getCategoryId());
+                Event event = eventService.getEvent(bet.getEventId());
+                Category category = categoryService.getCategoryById(event.getCategoryId());
                 Category parentCategory = categoryService.getCategoryById(category.getParentId());
                 eventMap.put(bet, event);
                 categoryMap.put(bet, category);
@@ -123,7 +152,7 @@ public class GotoPlayerStateCommand implements Command {
                                                           User player, String pageNumberStr) {
         ValidationService validationService = ServiceFactory.getValidationService();
         int pageNumber = (validationService.isValidId(pageNumberStr)) ?
-                         Integer.parseInt(pageNumberStr) : 1;
+                             Integer.parseInt(pageNumberStr) : 1;
         int totalEntityAmount;
         try (BetService betService = ServiceFactory.getBetService()) {
             totalEntityAmount = betService.countBetsForPlayer(player.getId());

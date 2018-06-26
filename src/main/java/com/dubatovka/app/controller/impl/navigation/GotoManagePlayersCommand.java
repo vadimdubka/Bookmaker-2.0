@@ -6,6 +6,9 @@ import com.dubatovka.app.entity.Player;
 import com.dubatovka.app.service.PlayerService;
 import com.dubatovka.app.service.QueryService;
 import com.dubatovka.app.service.impl.ServiceFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -17,13 +20,26 @@ import static com.dubatovka.app.config.ConfigConstant.ATTR_PLAYERS;
  *
  * @author Dubatovka Vadim
  */
+@Controller
 public class GotoManagePlayersCommand implements Command {
+    @GetMapping("/manage_players")
+    public String showManagePlayerPage(Model model, HttpServletRequest request) {
+        List<Player> players;
+        try (PlayerService playerService = ServiceFactory.getPlayerService()) {
+            players = playerService.getAllPlayers();
+        }
+        request.setAttribute(ATTR_PLAYERS, players);
+        QueryService.saveQueryToSession(request);
+        return "manage_players";
+    }
+    
     /**
      * Method provides navigation process to page for players management.<p>
      *
      * @param request {@link HttpServletRequest} from client
      * @return {@link PageNavigator#FORWARD_PAGE_MANAGE_PLAYER}
      */
+    @Deprecated
     @Override
     public PageNavigator execute(HttpServletRequest request) {
         List<Player> players;

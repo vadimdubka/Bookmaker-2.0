@@ -9,6 +9,9 @@ import com.dubatovka.app.service.CategoryService;
 import com.dubatovka.app.service.MessageService;
 import com.dubatovka.app.service.QueryService;
 import com.dubatovka.app.service.impl.ServiceFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -25,7 +28,39 @@ import static com.dubatovka.app.config.ConfigConstant.PARAM_OUTCOME_TYPE;
  *
  * @author Dubatovka Vadim
  */
+@Controller
 public class GotoMakeBetCommand implements Command {
+    @GetMapping("/make_bet")
+    public String showMakeBetPage(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        MessageService messageService = ServiceFactory.getMessageService(session);
+        
+        String eventIdStr = request.getParameter(PARAM_EVENT_ID);
+        String outcomeType = request.getParameter(PARAM_OUTCOME_TYPE);
+        Event event = new Event();
+        
+        validateRequestParams(messageService, eventIdStr, outcomeType);
+        checkAndSetEventNotNull(eventIdStr, event, messageService);
+        String navigator = "main";
+//        PageNavigator navigator = PageNavigator.FORWARD_GOTO_MAIN;
+        if (messageService.isErrMessEmpty()) {
+            try (CategoryService categoryService = ServiceFactory.getCategoryService()) {
+                Outcome outcome = event.getOutcomeByType(outcomeType);
+                Category category = categoryService.getCategoryById(event.getCategoryId());
+                Category parentCategory = categoryService.getCategoryById(category.getParentId());
+                request.setAttribute(ATTR_CATEGORY, category);
+                request.setAttribute(ATTR_SPORT_CATEGORY, parentCategory);
+                request.setAttribute(ATTR_EVENT, event);
+                request.setAttribute(ATTR_OUTCOME, outcome);
+                navigator = "make_bet";
+            }
+        }
+        
+        QueryService.saveQueryToSession(request);
+        setMessagesToRequest(messageService, request);
+        return navigator;
+    }
+    
     /**
      * Method provides navigation process to page for making bet.<p>Takes input parameters and
      * attributes from {@link HttpServletRequest} and {@link HttpSession} and based on them adds
@@ -37,22 +72,23 @@ public class GotoMakeBetCommand implements Command {
      * @param request {@link HttpServletRequest} from client
      * @return {@link PageNavigator}
      */
+    @Deprecated
     @Override
     public PageNavigator execute(HttpServletRequest request) {
-        HttpSession    session        = request.getSession();
+        HttpSession session = request.getSession();
         MessageService messageService = ServiceFactory.getMessageService(session);
         
-        String eventIdStr  = request.getParameter(PARAM_EVENT_ID);
+        String eventIdStr = request.getParameter(PARAM_EVENT_ID);
         String outcomeType = request.getParameter(PARAM_OUTCOME_TYPE);
-        Event  event       = new Event();
+        Event event = new Event();
         
         validateRequestParams(messageService, eventIdStr, outcomeType);
         checkAndSetEventNotNull(eventIdStr, event, messageService);
         PageNavigator navigator = PageNavigator.FORWARD_GOTO_MAIN;
         if (messageService.isErrMessEmpty()) {
             try (CategoryService categoryService = ServiceFactory.getCategoryService()) {
-                Outcome  outcome        = event.getOutcomeByType(outcomeType);
-                Category category       = categoryService.getCategoryById(event.getCategoryId());
+                Outcome outcome = event.getOutcomeByType(outcomeType);
+                Category category = categoryService.getCategoryById(event.getCategoryId());
                 Category parentCategory = categoryService.getCategoryById(category.getParentId());
                 request.setAttribute(ATTR_CATEGORY, category);
                 request.setAttribute(ATTR_SPORT_CATEGORY, parentCategory);
