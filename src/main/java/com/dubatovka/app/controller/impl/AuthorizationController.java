@@ -1,25 +1,40 @@
-package com.dubatovka.app.controller.impl.authorization;
+package com.dubatovka.app.controller.impl;
 
 import com.dubatovka.app.controller.Command;
 import com.dubatovka.app.controller.PageNavigator;
+import com.dubatovka.app.entity.Admin;
+import com.dubatovka.app.entity.Analyst;
+import com.dubatovka.app.entity.Player;
+import com.dubatovka.app.entity.User;
 import com.dubatovka.app.service.MessageService;
 import com.dubatovka.app.service.PlayerService;
+import com.dubatovka.app.service.UserService;
 import com.dubatovka.app.service.ValidationService;
 import com.dubatovka.app.service.impl.ServiceFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import static com.dubatovka.app.config.ConfigConstant.ATTR_ADMIN;
+import static com.dubatovka.app.config.ConfigConstant.ATTR_ANALYST;
 import static com.dubatovka.app.config.ConfigConstant.ATTR_BIRTHDATE_INPUT;
 import static com.dubatovka.app.config.ConfigConstant.ATTR_EMAIL_INPUT;
 import static com.dubatovka.app.config.ConfigConstant.ATTR_FNAME_INPUT;
 import static com.dubatovka.app.config.ConfigConstant.ATTR_LNAME_INPUT;
 import static com.dubatovka.app.config.ConfigConstant.ATTR_MNAME_INPUT;
+import static com.dubatovka.app.config.ConfigConstant.ATTR_PLAYER;
+import static com.dubatovka.app.config.ConfigConstant.ATTR_ROLE;
+import static com.dubatovka.app.config.ConfigConstant.ATTR_USER;
 import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_INVALID_BIRTHDATE;
 import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_INVALID_EMAIL;
 import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_INVALID_NAME;
 import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_INVALID_PASSWORD;
+import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_LOGIN_MISMATCH;
 import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_PASSWORD_MISMATCH;
 import static com.dubatovka.app.config.ConfigConstant.PARAM_BIRTHDATE;
 import static com.dubatovka.app.config.ConfigConstant.PARAM_EMAIL;
@@ -29,29 +44,11 @@ import static com.dubatovka.app.config.ConfigConstant.PARAM_MNAME;
 import static com.dubatovka.app.config.ConfigConstant.PARAM_PASSWORD;
 import static com.dubatovka.app.config.ConfigConstant.PARAM_PASSWORD_AGAIN;
 
-/**
- * The class provides registration command implementation.
- *
- * @author Dubatovka Vadim
- */
-@Deprecated
-public class RegisterCommand implements Command {
-    
-    
-    /**
-     * Method provides registration process for users.<p>Takes input parameters from {@link
-     * HttpServletRequest#getParameter(String)} and validates them. If all the parameters are valid
-     * converts them to relevant data types and passes converted parameters further to the Logic
-     * layer. If process passed successfully navigates to {@link
-     * PageNavigator#REDIRECT_GOTO_INDEX}, else navigates to{@link
-     * PageNavigator#FORWARD_PAGE_REGISTER}</p>
-     *
-     * @param request {@link HttpServletRequest} from client
-     * @return {@link PageNavigator}
-     */
-    @Override
-    public PageNavigator execute(HttpServletRequest request) {
-        HttpSession    session        = request.getSession();
+@Controller
+public class AuthorizationController implements Command {
+    @GetMapping("/register")
+    public String register(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
         MessageService messageService = ServiceFactory.getMessageService(session);
         
         String email = request.getParameter(PARAM_EMAIL);
@@ -66,19 +63,51 @@ public class RegisterCommand implements Command {
                               fName, mName, lName, birthDate);
         validateCommand(email, password, passwordAgain,
                         fName, mName, lName, birthDate, messageService, request);
-        PageNavigator navigator = PageNavigator.FORWARD_PAGE_REGISTER;
+//        PageNavigator navigator = PageNavigator.FORWARD_PAGE_REGISTER;
+        String navigator = "register";
         if (messageService.isErrMessEmpty()) {
             try (PlayerService playerService = ServiceFactory.getPlayerService()) {
                 int regPlayerId = playerService.registerPlayer(email, password, fName,
                                                                mName, lName, birthDate);
                 if (regPlayerId > 0) {
-                    navigator = PageNavigator.REDIRECT_GOTO_INDEX;
+                    navigator = "redirect:/main";
                 }
             }
         }
         setMessagesToRequest(messageService, request);
         return navigator;
     }
+    
+    @PostMapping("/login")
+    public String login(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        MessageService messageService = ServiceFactory.getMessageService(session);
+        
+        String email = request.getParameter(PARAM_EMAIL);
+        String password = request.getParameter(PARAM_PASSWORD);
+        
+        validateRequestParams(messageService, email, password);
+        validateCommand(email, password, messageService);
+        if (messageService.isErrMessEmpty()) {
+            try (UserService userService = ServiceFactory.getUserService()) {
+                User user = userService.authorizeUser(email, password);
+                if (user != null) {
+                    setUserToSession(user, session);
+                } else {
+                    messageService.appendErrMessByKey(MESSAGE_ERR_LOGIN_MISMATCH);
+                }
+            }
+        }
+        setMessagesToRequest(messageService, request);
+        return "main";
+    }
+    
+    @GetMapping("/logout")
+    public String showXXXPage(Model model, HttpServletRequest request) {
+        request.getSession().invalidate();
+        return "redirect:/main";
+    }
+    
     
     /**
      * Method validates parameters using {@link ValidationService} to confirm that all necessary
@@ -127,5 +156,58 @@ public class RegisterCommand implements Command {
         } else {
             messageService.appendErrMessByKey(MESSAGE_ERR_INVALID_BIRTHDATE);
         }
+    }
+    
+    
+    /**
+     * Method validates parameters using {@link ValidationService} to confirm that all necessary
+     * parameters for command execution have proper state according to requirements for application.
+     *
+     * @param email          {@link String} parameter for validation
+     * @param password       {@link String} parameter for validation
+     * @param messageService {@link MessageService} to hold message about validation result
+     */
+    private static void validateCommand(String email, String password,
+                                        MessageService messageService) {
+        if (messageService.isErrMessEmpty()) {
+            ValidationService validationService = ServiceFactory.getValidationService();
+            if (!validationService.isValidEmail(email)) {
+                messageService.appendErrMessByKey(MESSAGE_ERR_INVALID_EMAIL);
+            }
+            if (!validationService.isValidPassword(password)) {
+                messageService.appendErrMessByKey(MESSAGE_ERR_INVALID_PASSWORD);
+            }
+        }
+    }
+    
+    /**
+     * Method sets {@link User} to session.
+     *
+     * @param user    {@link User}
+     * @param session {@link HttpSession}
+     */
+    private static void setUserToSession(User user, HttpSession session) {
+        session.setAttribute(ATTR_USER, user);
+        session.setAttribute(ATTR_ROLE, user.getRole());
+        Class userClass = user.getClass();
+        if (userClass == Player.class) {
+            Player player = (Player) user;
+            try (PlayerService playerService = ServiceFactory.getPlayerService()) {
+                playerService.updatePlayerInfo(player);
+            }
+            session.setAttribute(ATTR_PLAYER, player);
+        } else if (userClass == Admin.class) {
+            Admin admin = (Admin) user;
+            session.setAttribute(ATTR_ADMIN, admin);
+        } else {
+            Analyst analyst = (Analyst) user;
+            session.setAttribute(ATTR_ANALYST, analyst);
+        }
+    }
+    
+    @Override
+    //TODO delete method
+    public PageNavigator execute(HttpServletRequest request) {
+        return null;
     }
 }

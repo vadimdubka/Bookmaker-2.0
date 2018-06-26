@@ -10,7 +10,11 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author Dubatovka Vadim
  */
+@Deprecated
 public class LogoutCommand implements Command {
+    
+    
+    
     /**
      * Method provides logout process for users.
      *
@@ -18,6 +22,7 @@ public class LogoutCommand implements Command {
      * @return {@link PageNavigator#REDIRECT_GOTO_INDEX}
      */
     @Override
+    @Deprecated
     public PageNavigator execute(HttpServletRequest request) {
         request.getSession().invalidate();
         return PageNavigator.REDIRECT_GOTO_INDEX;

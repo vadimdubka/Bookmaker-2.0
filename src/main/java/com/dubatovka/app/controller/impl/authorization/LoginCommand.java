@@ -31,7 +31,9 @@ import static com.dubatovka.app.config.ConfigConstant.PARAM_PASSWORD;
  *
  * @author Dubatovka Vadim
  */
+@Deprecated
 public class LoginCommand implements Command {
+    
     /**
      * Method provides login process for users.<p>Takes input parameters from {@link
      * HttpServletRequest#getParameter(String)} and validates them. If all the parameters are valid
@@ -43,6 +45,7 @@ public class LoginCommand implements Command {
      * @return {@link PageNavigator#FORWARD_PAGE_INDEX}
      */
     @Override
+    @Deprecated
     public PageNavigator execute(HttpServletRequest request) {
         HttpSession    session        = request.getSession();
         MessageService messageService = ServiceFactory.getMessageService(session);
