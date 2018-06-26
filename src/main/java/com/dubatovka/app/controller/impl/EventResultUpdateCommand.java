@@ -23,7 +23,10 @@ import static com.dubatovka.app.config.ConfigConstant.PARAM_RESULT_2;
  *
  * @author Dubatovka Vadim
  */
+@Deprecated
 public class EventResultUpdateCommand implements Command {
+    
+    
     /**
      * Method provides process for event result update.<p>Takes input parameters and attributes
      * from {@link HttpServletRequest} and {@link HttpSession} and based on them update event
@@ -33,14 +36,15 @@ public class EventResultUpdateCommand implements Command {
      * @return {@link PageNavigator#FORWARD_PREV_QUERY}
      */
     @Override
+    @Deprecated
     public PageNavigator execute(HttpServletRequest request) {
-        HttpSession    session        = request.getSession();
+        HttpSession session = request.getSession();
         MessageService messageService = ServiceFactory.getMessageService(session);
         
         String eventIdStr = request.getParameter(PARAM_EVENT_ID);
         String result1Str = request.getParameter(PARAM_RESULT_1);
         String result2Str = request.getParameter(PARAM_RESULT_2);
-        Event  event      = new Event();
+        Event event = new Event();
         
         validateRequestParams(messageService, result1Str, result2Str);
         checkAndSetEventNotNull(eventIdStr, event, messageService);
@@ -74,7 +78,7 @@ public class EventResultUpdateCommand implements Command {
         if (messageService.isErrMessEmpty()) {
             ValidationService validationService = ServiceFactory.getValidationService();
             if (!validationService.isValidEventResult(result1Str) ||
-                        !validationService.isValidEventResult(result2Str)) {
+                    !validationService.isValidEventResult(result2Str)) {
                 messageService.appendErrMessByKey(MESSAGE_ERR_INVALID_EVENT_RESULT);
             }
         }

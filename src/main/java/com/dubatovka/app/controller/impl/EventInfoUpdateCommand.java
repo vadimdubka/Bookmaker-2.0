@@ -23,6 +23,7 @@ import static com.dubatovka.app.config.ConfigConstant.PARAM_PARTICIPANT_2;
  *
  * @author Dubatovka Vadim
  */
+@Deprecated
 public class EventInfoUpdateCommand implements Command {
     /**
      * Method provides process for event information update.<p>Takes input parameters and attributes
@@ -33,15 +34,16 @@ public class EventInfoUpdateCommand implements Command {
      * @return {@link PageNavigator#FORWARD_PREV_QUERY}
      */
     @Override
+    @Deprecated
     public PageNavigator execute(HttpServletRequest request) {
-        HttpSession    session        = request.getSession();
+        HttpSession session = request.getSession();
         MessageService messageService = ServiceFactory.getMessageService(session);
         
-        String eventIdStr   = request.getParameter(PARAM_EVENT_ID);
-        String dateTimeStr  = request.getParameter(PARAM_DATE);
+        String eventIdStr = request.getParameter(PARAM_EVENT_ID);
+        String dateTimeStr = request.getParameter(PARAM_DATE);
         String participant1 = request.getParameter(PARAM_PARTICIPANT_1);
         String participant2 = request.getParameter(PARAM_PARTICIPANT_2);
-        Event  event        = new Event();
+        Event event = new Event();
         
         validateRequestParams(messageService, eventIdStr, dateTimeStr, participant1, participant2);
         checkAndSetEventNotNull(eventIdStr, event, messageService);

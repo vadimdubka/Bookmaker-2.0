@@ -23,6 +23,7 @@ import static com.dubatovka.app.config.ConfigConstant.PARAM_PARTICIPANT_2;
  *
  * @author Dubatovka Vadim
  */
+@Deprecated
 public class EventCreateCommand implements Command {
     /**
      * Method provides process for event creation.<p>Takes input parameters and attributes from
@@ -32,6 +33,7 @@ public class EventCreateCommand implements Command {
      * @return {@link PageNavigator#FORWARD_PREV_QUERY}
      */
     @Override
+    @Deprecated
     public PageNavigator execute(HttpServletRequest request) {
         HttpSession    session        = request.getSession();
         MessageService messageService = ServiceFactory.getMessageService(session);

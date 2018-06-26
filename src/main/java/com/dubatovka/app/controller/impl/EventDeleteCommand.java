@@ -20,6 +20,7 @@ import static com.dubatovka.app.config.ConfigConstant.PARAM_EVENT_ID;
  *
  * @author Dubatovka Vadim
  */
+@Deprecated
 public class EventDeleteCommand implements Command {
     /**
      * Method provides process for event deletion.<p>Takes input parameters and attributes from
@@ -29,8 +30,9 @@ public class EventDeleteCommand implements Command {
      * @return {@link PageNavigator#FORWARD_PREV_QUERY}
      */
     @Override
+    @Deprecated
     public PageNavigator execute(HttpServletRequest request) {
-        HttpSession    session        = request.getSession();
+        HttpSession session = request.getSession();
         MessageService messageService = ServiceFactory.getMessageService(session);
         
         String eventIdStr = request.getParameter(PARAM_EVENT_ID);
