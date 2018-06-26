@@ -8,6 +8,9 @@ import com.dubatovka.app.service.MessageService;
 import com.dubatovka.app.service.OutcomeService;
 import com.dubatovka.app.service.ValidationService;
 import com.dubatovka.app.service.impl.ServiceFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -28,7 +31,47 @@ import static com.dubatovka.app.config.ConfigConstant.PARAM_OUTCOME_X;
  *
  * @author Dubatovka Vadim
  */
+@Controller
+//TODO переименовать команду в контроллер
 public class OutcomeCreateCommand implements Command {
+    
+    @GetMapping("/outcome_create")
+    public String outcomeCreate(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        MessageService messageService = ServiceFactory.getMessageService(session);
+        
+        String eventIdStr = request.getParameter(PARAM_EVENT_ID);
+        String outcome1Str = request.getParameter(PARAM_OUTCOME_1);
+        String outcomeXStr = request.getParameter(PARAM_OUTCOME_X);
+        String outcome2Str = request.getParameter(PARAM_OUTCOME_2);
+        Event event = new Event();
+        
+        validateRequestParams(messageService, outcome1Str, outcomeXStr, outcome2Str);
+        checkAndSetEventNotNull(eventIdStr, event, messageService);
+        validateCommand(messageService, outcome1Str, outcomeXStr, outcome2Str);
+        if (messageService.isErrMessEmpty()) {
+            int eventId = event.getId();
+            Outcome outcomeType1 = new Outcome(eventId, new BigDecimal(outcome1Str), Outcome.Type.TYPE_1);
+            Outcome outcomeTypeX = new Outcome(eventId, new BigDecimal(outcomeXStr), Outcome.Type.TYPE_X);
+            Outcome outcomeType2 = new Outcome(eventId, new BigDecimal(outcome2Str), Outcome.Type.TYPE_2);
+            Set<Outcome> outcomeSet = new HashSet<>(3);
+            outcomeSet.add(outcomeType1);
+            outcomeSet.add(outcomeTypeX);
+            outcomeSet.add(outcomeType2);
+            try (OutcomeService outcomeService = ServiceFactory.getOutcomeService()) {
+                outcomeService.insertOutcomeSet(outcomeSet, messageService);
+            }
+            if (messageService.isErrMessEmpty()) {
+                messageService.appendInfMessByKey(MESSAGE_INF_OUTCOME_UPDATE);
+            } else {
+                messageService.appendErrMessByKey(MESSAGE_ERR_OUTCOME_UPDATE);
+            }
+        }
+        
+        setMessagesToRequest(messageService, request);
+        return "main";
+    }
+    
     /**
      * Method provides process for outcome creation.<p>Takes input parameters and attributes from
      * {@link HttpServletRequest} and {@link HttpSession} and based on them create new outcomes.</p>
@@ -37,25 +80,26 @@ public class OutcomeCreateCommand implements Command {
      * @return {@link PageNavigator#FORWARD_PREV_QUERY}
      */
     @Override
+    @Deprecated
     public PageNavigator execute(HttpServletRequest request) {
-        HttpSession    session        = request.getSession();
+        HttpSession session = request.getSession();
         MessageService messageService = ServiceFactory.getMessageService(session);
         
-        String eventIdStr  = request.getParameter(PARAM_EVENT_ID);
+        String eventIdStr = request.getParameter(PARAM_EVENT_ID);
         String outcome1Str = request.getParameter(PARAM_OUTCOME_1);
         String outcomeXStr = request.getParameter(PARAM_OUTCOME_X);
         String outcome2Str = request.getParameter(PARAM_OUTCOME_2);
-        Event  event       = new Event();
+        Event event = new Event();
         
         validateRequestParams(messageService, outcome1Str, outcomeXStr, outcome2Str);
         checkAndSetEventNotNull(eventIdStr, event, messageService);
         validateCommand(messageService, outcome1Str, outcomeXStr, outcome2Str);
         if (messageService.isErrMessEmpty()) {
-            int          eventId      = event.getId();
-            Outcome      outcomeType1 = new Outcome(eventId, new BigDecimal(outcome1Str), Outcome.Type.TYPE_1);
-            Outcome      outcomeTypeX = new Outcome(eventId, new BigDecimal(outcomeXStr), Outcome.Type.TYPE_X);
-            Outcome      outcomeType2 = new Outcome(eventId, new BigDecimal(outcome2Str), Outcome.Type.TYPE_2);
-            Set<Outcome> outcomeSet   = new HashSet<>(3);
+            int eventId = event.getId();
+            Outcome outcomeType1 = new Outcome(eventId, new BigDecimal(outcome1Str), Outcome.Type.TYPE_1);
+            Outcome outcomeTypeX = new Outcome(eventId, new BigDecimal(outcomeXStr), Outcome.Type.TYPE_X);
+            Outcome outcomeType2 = new Outcome(eventId, new BigDecimal(outcome2Str), Outcome.Type.TYPE_2);
+            Set<Outcome> outcomeSet = new HashSet<>(3);
             outcomeSet.add(outcomeType1);
             outcomeSet.add(outcomeTypeX);
             outcomeSet.add(outcomeType2);
