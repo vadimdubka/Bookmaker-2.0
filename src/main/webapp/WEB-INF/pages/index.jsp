@@ -6,7 +6,6 @@
         <title>Index</title>
     </head>
     <body>
-        <%--<jsp:forward page="/controller?command_type=goto_main"/>--%>
         <%--TODO удалить index совсем--%>
         <jsp:forward page="/main_page"/>
     </body>
