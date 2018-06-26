@@ -17,8 +17,8 @@ import static com.dubatovka.app.config.ConfigConstant.EVENT_QUERY_TYPE_ACTUAL;
  *
  * @author Dubatovka Vadim
  */
+@Deprecated
 public class GotoEventCorrectOutcomeCommand implements Command {
-    
     /**
      * Method provide navigation process to page for outcome correction by adding {@link
      * ConfigConstant#ATTR_EVENT_QUERY_TYPE} and {@link ConfigConstant#ATTR_EVENT_GOTO_TYPE}
@@ -28,6 +28,7 @@ public class GotoEventCorrectOutcomeCommand implements Command {
      * @return {@link PageNavigator#FORWARD_GOTO_MAIN}.
      */
     @Override
+    @Deprecated
     public PageNavigator execute(HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.setAttribute(ATTR_EVENT_QUERY_TYPE, EVENT_QUERY_TYPE_ACTUAL);

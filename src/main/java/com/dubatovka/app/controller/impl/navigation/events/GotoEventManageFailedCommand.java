@@ -17,6 +17,7 @@ import static com.dubatovka.app.config.ConfigConstant.EVENT_QUERY_TYPE_FAILED;
  *
  * @author Dubatovka Vadim
  */
+@Deprecated
 public class GotoEventManageFailedCommand implements Command {
     /**
      * Method provide navigation process to page for managing failed events by adding {@link
@@ -27,6 +28,7 @@ public class GotoEventManageFailedCommand implements Command {
      * @return {@link PageNavigator#FORWARD_GOTO_MAIN}.
      */
     @Override
+    
     public PageNavigator execute(HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.setAttribute(ATTR_EVENT_QUERY_TYPE, EVENT_QUERY_TYPE_FAILED);

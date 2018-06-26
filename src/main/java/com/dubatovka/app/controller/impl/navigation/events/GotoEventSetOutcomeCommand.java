@@ -17,6 +17,7 @@ import static com.dubatovka.app.config.ConfigConstant.EVENT_QUERY_TYPE_NEW;
  *
  * @author Dubatovka Vadim
  */
+@Deprecated
 public class GotoEventSetOutcomeCommand implements Command {
     /**
      * Method provide navigation process to page for event outcomes assignment by adding {@link

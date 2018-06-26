@@ -17,6 +17,7 @@ import static com.dubatovka.app.config.ConfigConstant.EVENT_QUERY_TYPE_ACTUAL;
  *
  * @author Dubatovka Vadim
  */
+@Deprecated
 public class GotoEventShowActualCommand implements Command {
     /**
      * Method provide navigation process to page with actual events by adding {@link
