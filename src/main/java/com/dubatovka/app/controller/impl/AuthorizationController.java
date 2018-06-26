@@ -158,7 +158,6 @@ public class AuthorizationController implements Command {
         }
     }
     
-    
     /**
      * Method validates parameters using {@link ValidationService} to confirm that all necessary
      * parameters for command execution have proper state according to requirements for application.
