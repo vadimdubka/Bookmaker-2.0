@@ -31,9 +31,20 @@ import static com.dubatovka.app.config.ConfigConstant.ATTR_TYPE_2_MAP;
 import static com.dubatovka.app.config.ConfigConstant.ATTR_TYPE_X_MAP;
 import static com.dubatovka.app.config.ConfigConstant.ATTR_WIN_BET_COUNT;
 import static com.dubatovka.app.config.ConfigConstant.ATTR_WIN_BET_SUM;
+import static com.dubatovka.app.config.ConfigConstant.EVENT_GOTO_MANAGE_EVENT;
+import static com.dubatovka.app.config.ConfigConstant.EVENT_GOTO_MANAGE_FAILED;
+import static com.dubatovka.app.config.ConfigConstant.EVENT_GOTO_MANAGE_OUTCOME;
+import static com.dubatovka.app.config.ConfigConstant.EVENT_GOTO_MANAGE_RESULT;
 import static com.dubatovka.app.config.ConfigConstant.EVENT_GOTO_SHOW_ACTUAL;
+import static com.dubatovka.app.config.ConfigConstant.EVENT_GOTO_SHOW_RESULT;
 import static com.dubatovka.app.config.ConfigConstant.EVENT_GOTO_SHOW_TO_PAY;
 import static com.dubatovka.app.config.ConfigConstant.EVENT_QUERY_TYPE_ACTUAL;
+import static com.dubatovka.app.config.ConfigConstant.EVENT_QUERY_TYPE_CLOSED;
+import static com.dubatovka.app.config.ConfigConstant.EVENT_QUERY_TYPE_FAILED;
+import static com.dubatovka.app.config.ConfigConstant.EVENT_QUERY_TYPE_NEW;
+import static com.dubatovka.app.config.ConfigConstant.EVENT_QUERY_TYPE_NOT_STARTED;
+import static com.dubatovka.app.config.ConfigConstant.EVENT_QUERY_TYPE_STARTED;
+import static com.dubatovka.app.config.ConfigConstant.EVENT_QUERY_TYPE_TO_PAY;
 import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_INVALID_EVENT_ID;
 import static com.dubatovka.app.config.ConfigConstant.PARAM_CATEGORY_ID;
 import static com.dubatovka.app.config.ConfigConstant.WIN_BET_INFO_KEY_COUNT;
@@ -170,5 +181,77 @@ public class GotoMainCommand implements Command {
                 messageService.appendErrMessByKey(MESSAGE_ERR_INVALID_EVENT_ID);
             }
         }
+    }
+    
+    @GetMapping("/event_correct_outcome")
+    public String showMainPageWithEventCorrectOutcome(Model model, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        session.setAttribute(ATTR_EVENT_QUERY_TYPE, EVENT_QUERY_TYPE_ACTUAL);
+        session.setAttribute(ATTR_EVENT_GOTO_TYPE, EVENT_GOTO_MANAGE_OUTCOME);
+        return "main";
+    }
+    
+    @GetMapping("/event_correct_result")
+    public String showMainPageWithEventCorrectResult(Model model, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        session.setAttribute(ATTR_EVENT_QUERY_TYPE, EVENT_QUERY_TYPE_CLOSED);
+        session.setAttribute(ATTR_EVENT_GOTO_TYPE, EVENT_GOTO_MANAGE_RESULT);
+        return "main";
+    }
+    
+    @GetMapping("/event_manage")
+    public String showMainPageWithEventManage(Model model, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        session.setAttribute(ATTR_EVENT_QUERY_TYPE, EVENT_QUERY_TYPE_NOT_STARTED);
+        session.setAttribute(ATTR_EVENT_GOTO_TYPE, EVENT_GOTO_MANAGE_EVENT);
+        return "main";
+    }
+    
+    @GetMapping("/event_manage_failed")
+    public String showMainPageWithEventManageFailed(Model model, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        session.setAttribute(ATTR_EVENT_QUERY_TYPE, EVENT_QUERY_TYPE_FAILED);
+        session.setAttribute(ATTR_EVENT_GOTO_TYPE, EVENT_GOTO_MANAGE_FAILED);
+        return "main";
+    }
+    
+    @GetMapping("/event_set_outcome")
+    public String showMainPageWithEventSetOutcome(Model model, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        session.setAttribute(ATTR_EVENT_QUERY_TYPE, EVENT_QUERY_TYPE_NEW);
+        session.setAttribute(ATTR_EVENT_GOTO_TYPE, EVENT_GOTO_MANAGE_OUTCOME);
+        return "main";
+    }
+    
+    @GetMapping("/event_set_result")
+    public String showMainPageWithEventSetResult(Model model, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        session.setAttribute(ATTR_EVENT_QUERY_TYPE, EVENT_QUERY_TYPE_STARTED);
+        session.setAttribute(ATTR_EVENT_GOTO_TYPE, EVENT_GOTO_MANAGE_RESULT);
+        return "main";
+    }
+    
+    @GetMapping("/event_show_actual")
+    public String showMainPageWithEventShowActual(Model model, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        session.setAttribute(ATTR_EVENT_QUERY_TYPE, EVENT_QUERY_TYPE_ACTUAL);
+        session.setAttribute(ATTR_EVENT_GOTO_TYPE, EVENT_GOTO_SHOW_ACTUAL);
+        return "main";
+    }
+    
+    @GetMapping("/event_show_result")
+    public String showMainPageWithEventShowResult(Model model, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        session.setAttribute(ATTR_EVENT_QUERY_TYPE, EVENT_QUERY_TYPE_CLOSED);
+        session.setAttribute(ATTR_EVENT_GOTO_TYPE, EVENT_GOTO_SHOW_RESULT);
+        return "main";
+    }
+    
+    @GetMapping("/event_to_pay")
+    public String showMainPageWithEventToPay(Model model, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        session.setAttribute(ATTR_EVENT_QUERY_TYPE, EVENT_QUERY_TYPE_TO_PAY);
+        session.setAttribute(ATTR_EVENT_GOTO_TYPE, EVENT_GOTO_SHOW_TO_PAY);
+        return "main";
     }
 }
