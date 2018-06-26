@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Controller
 public class GotoRegisterCommand implements Command {
-    @GetMapping("/register")
+    @GetMapping("/register_page")
     public String showRegisterPage(Model model, HttpServletRequest request) {
         QueryService.saveQueryToSession(request);
         return "register";

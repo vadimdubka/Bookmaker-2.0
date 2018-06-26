@@ -66,7 +66,7 @@ import static com.dubatovka.app.config.ConfigConstant.WIN_BET_INFO_KEY_SUM;
         return "index";
     }
     
-    @GetMapping("/main")
+    @GetMapping("/main_page")
     public String showMainPage(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         MessageService messageService = ServiceFactory.getMessageService(session);

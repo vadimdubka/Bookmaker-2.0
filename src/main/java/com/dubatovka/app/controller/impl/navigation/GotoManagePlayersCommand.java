@@ -22,7 +22,7 @@ import static com.dubatovka.app.config.ConfigConstant.ATTR_PLAYERS;
  */
 @Controller
 public class GotoManagePlayersCommand implements Command {
-    @GetMapping("/manage_players")
+    @GetMapping("/manage_players_page")
     public String showManagePlayerPage(Model model, HttpServletRequest request) {
         List<Player> players;
         try (PlayerService playerService = ServiceFactory.getPlayerService()) {

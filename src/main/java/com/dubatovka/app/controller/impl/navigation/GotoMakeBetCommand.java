@@ -30,7 +30,7 @@ import static com.dubatovka.app.config.ConfigConstant.PARAM_OUTCOME_TYPE;
  */
 @Controller
 public class GotoMakeBetCommand implements Command {
-    @GetMapping("/make_bet")
+    @GetMapping("/make_bet_page")
     public String showMakeBetPage(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         MessageService messageService = ServiceFactory.getMessageService(session);

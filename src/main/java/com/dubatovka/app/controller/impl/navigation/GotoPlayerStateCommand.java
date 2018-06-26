@@ -44,7 +44,7 @@ import static com.dubatovka.app.config.ConfigConstant.PLAYER;
  */
 @Controller
 public class GotoPlayerStateCommand implements Command {
-    @GetMapping("/player_state")
+    @GetMapping("/player_state_page")
     public String showPlayerStatePage(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         MessageService messageService = ServiceFactory.getMessageService(session);

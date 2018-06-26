@@ -31,7 +31,7 @@ public class ChangeLocaleCommand implements Command {
             locale = LOCALE_DEFAULT;
         }
         session.setAttribute(ATTR_LOCALE, locale);
-        return "redirect:/main"; //TODO сделать так, чтобы форвардило на предыдущую запрошенную страницу, а не всегда на main
+        return "redirect:/main_page"; //TODO сделать так, чтобы форвардило на предыдущую запрошенную страницу, а не всегда на main
     }
     
     /**

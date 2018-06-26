@@ -70,7 +70,7 @@ public class AuthorizationController implements Command {
                 int regPlayerId = playerService.registerPlayer(email, password, fName,
                                                                mName, lName, birthDate);
                 if (regPlayerId > 0) {
-                    navigator = "redirect:/main";
+                    navigator = "redirect:/main_page";
                 }
             }
         }
@@ -105,7 +105,7 @@ public class AuthorizationController implements Command {
     @GetMapping("/logout")
     public String showXXXPage(Model model, HttpServletRequest request) {
         request.getSession().invalidate();
-        return "redirect:/main";
+        return "redirect:/main_page";
     }
     
     
