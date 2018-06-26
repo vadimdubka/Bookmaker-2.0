@@ -20,7 +20,11 @@ import static com.dubatovka.app.config.ConfigConstant.PARAM_EVENT_ID;
  *
  * @author Dubatovka Vadim
  */
+@Deprecated
 public class PayWinBetCommand implements Command {
+    
+    
+    
     /**
      * Method provides process for winning bets payment.<p>Takes input parameters from {@link
      * HttpServletRequest#getParameter(String)} and validates them. If all the parameters are valid
@@ -31,13 +35,14 @@ public class PayWinBetCommand implements Command {
      * @return {@link PageNavigator}
      */
     @Override
+    @Deprecated
     public PageNavigator execute(HttpServletRequest request) {
-        HttpSession    session        = request.getSession();
+        HttpSession session = request.getSession();
         MessageService messageService = ServiceFactory.getMessageService(session);
         
         String eventIdStr = request.getParameter(PARAM_EVENT_ID);
         validateRequestParams(messageService, eventIdStr);
-        validateCommand(messageService, eventIdStr);
+        validateEventId(messageService, eventIdStr);
         if (messageService.isErrMessEmpty()) {
             int eventId = Integer.parseInt(eventIdStr);
             try (BetService betService = ServiceFactory.getBetService()) {
@@ -61,7 +66,7 @@ public class PayWinBetCommand implements Command {
      * @param messageService {@link MessageService} to hold message about validation result
      * @param eventIdStr     {@link String} parameter for validation
      */
-    private static void validateCommand(MessageService messageService, String eventIdStr) {
+    private static void validateEventId(MessageService messageService, String eventIdStr) {
         if (messageService.isErrMessEmpty()) {
             ValidationService validationService = ServiceFactory.getValidationService();
             if (!validationService.isValidId(eventIdStr)) {

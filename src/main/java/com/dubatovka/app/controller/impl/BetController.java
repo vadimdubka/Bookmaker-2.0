@@ -12,6 +12,9 @@ import com.dubatovka.app.service.MessageService;
 import com.dubatovka.app.service.PlayerService;
 import com.dubatovka.app.service.ValidationService;
 import com.dubatovka.app.service.impl.ServiceFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -27,36 +30,22 @@ import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_BET_FOR_EMPLOY
 import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_BET_GOTO_REGISTRATION;
 import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_BET_TIME;
 import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_INVALID_BET_AMOUNT;
+import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_INVALID_EVENT_ID;
 import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_OUTCOME_COEFF_CHANGE;
+import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_PAY_WIN_BET;
 import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_PLAYER_STATUS_BAN;
 import static com.dubatovka.app.config.ConfigConstant.MESSAGE_INF_BET_IS_DONE;
+import static com.dubatovka.app.config.ConfigConstant.MESSAGE_INF_PAY_WIN_BET;
 import static com.dubatovka.app.config.ConfigConstant.PARAM_BET_AMOUNT;
 import static com.dubatovka.app.config.ConfigConstant.PARAM_EVENT_ID;
 import static com.dubatovka.app.config.ConfigConstant.PARAM_OUTCOME_COEFFICIENT;
 import static com.dubatovka.app.config.ConfigConstant.PARAM_OUTCOME_TYPE;
 import static com.dubatovka.app.config.ConfigConstant.PLAYER;
 
-/**
- * The class provides command implementation for making bet.
- *
- * @author Dubatovka Vadim
- */
-@Deprecated
-public class MakeBetCommand implements Command {
-    /**
-     * Method provides process for making bet.<p>Takes input parameters from {@link
-     * HttpServletRequest#getParameter(String)} and validates them. If all the parameters are valid
-     * converts them to relevant data types and passes converted parameters further to the Logic
-     * layer. If process passed successfully navigates to {@link
-     * PageNavigator#FORWARD_GOTO_MAIN}, else navigates to{@link
-     * PageNavigator#FORWARD_PREV_QUERY}</p>
-     *
-     * @param request {@link HttpServletRequest} from client
-     * @return {@link PageNavigator}
-     */
-    @Override
-    @Deprecated
-    public PageNavigator execute(HttpServletRequest request) {
+@Controller
+public class BetController implements Command {
+    @GetMapping("/make_bet")
+    public String makeBet(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         MessageService messageService = ServiceFactory.getMessageService(session);
         
@@ -74,7 +63,8 @@ public class MakeBetCommand implements Command {
         validateUserRole(role, messageService);
         validateCommand(player, betAmountStr, event, outcomeType,
                         outcomeCoeffOnPage, messageService);
-        PageNavigator navigator = PageNavigator.FORWARD_PREV_QUERY;
+//        PageNavigator navigator = PageNavigator.FORWARD_PREV_QUERY;
+        String navigator = "main";
         if (messageService.isErrMessEmpty()) {
             try (PlayerService playerService = ServiceFactory.getPlayerService();
                  BetService betService = ServiceFactory.getBetService()) {
@@ -86,7 +76,7 @@ public class MakeBetCommand implements Command {
                 if (messageService.isErrMessEmpty()) {
                     playerService.updatePlayerInfo(player);
                     session.setAttribute(ATTR_PLAYER, player);
-                    navigator = PageNavigator.FORWARD_GOTO_MAIN;
+                    navigator = "main";
                     messageService.appendInfMessByKey(MESSAGE_INF_BET_IS_DONE);
                 } else {
                     messageService.appendErrMessByKey(MESSAGE_ERR_BETTING_INTERRUPTED);
@@ -96,6 +86,32 @@ public class MakeBetCommand implements Command {
         setMessagesToRequest(messageService, request);
         return navigator;
     }
+    
+    @GetMapping("/pay_win_bet")
+    public String payWinBet(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        MessageService messageService = ServiceFactory.getMessageService(session);
+        
+        String eventIdStr = request.getParameter(PARAM_EVENT_ID);
+        validateRequestParams(messageService, eventIdStr);
+        validateEventId(messageService, eventIdStr);
+        if (messageService.isErrMessEmpty()) {
+            int eventId = Integer.parseInt(eventIdStr);
+            try (BetService betService = ServiceFactory.getBetService()) {
+                betService.payWinBet(eventId, messageService);
+            }
+            if (messageService.isErrMessEmpty()) {
+                messageService.appendInfMessByKey(MESSAGE_INF_PAY_WIN_BET);
+            } else {
+                messageService.appendErrMessByKey(MESSAGE_ERR_PAY_WIN_BET);
+            }
+        }
+        
+        setMessagesToRequest(messageService, request);
+//        return PageNavigator.FORWARD_PREV_QUERY;
+        return "main";
+    }
+    
     
     /**
      * Method validates {@link User.UserRole}.
@@ -154,5 +170,26 @@ public class MakeBetCommand implements Command {
                 messageService.appendErrMessByKey(MESSAGE_ERR_INVALID_BET_AMOUNT);
             }
         }
+    }
+    
+    /**
+     * Method validates parameters using {@link ValidationService} to confirm that all necessary
+     * parameters for command execution have proper state according to requirements for application.
+     *
+     * @param messageService {@link MessageService} to hold message about validation result
+     * @param eventIdStr     {@link String} parameter for validation
+     */
+    private static void validateEventId(MessageService messageService, String eventIdStr) {
+        if (messageService.isErrMessEmpty()) {
+            ValidationService validationService = ServiceFactory.getValidationService();
+            if (!validationService.isValidId(eventIdStr)) {
+                messageService.appendErrMessByKey(MESSAGE_ERR_INVALID_EVENT_ID);
+            }
+        }
+    }
+    
+    @Override
+    public PageNavigator execute(HttpServletRequest request) {
+        return null;
     }
 }
