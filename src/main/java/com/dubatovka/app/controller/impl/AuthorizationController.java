@@ -64,7 +64,7 @@ public class AuthorizationController implements Command {
         validateCommand(email, password, passwordAgain,
                         fName, mName, lName, birthDate, messageService, request);
 //        PageNavigator navigator = PageNavigator.FORWARD_PAGE_REGISTER;
-        String navigator = "register";
+        String navigator = "forward:/register";
         if (messageService.isErrMessEmpty()) {
             try (PlayerService playerService = ServiceFactory.getPlayerService()) {
                 int regPlayerId = playerService.registerPlayer(email, password, fName,
@@ -99,11 +99,11 @@ public class AuthorizationController implements Command {
             }
         }
         setMessagesToRequest(messageService, request);
-        return "main";
+        return "forward: /main_page";
     }
     
     @GetMapping("/logout")
-    public String showXXXPage(Model model, HttpServletRequest request) {
+    public String logout(Model model, HttpServletRequest request) {
         request.getSession().invalidate();
         return "redirect:/main_page";
     }

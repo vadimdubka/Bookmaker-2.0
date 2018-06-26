@@ -59,7 +59,7 @@ import static com.dubatovka.app.config.ConfigConstant.WIN_BET_INFO_KEY_SUM;
  * @author Dubatovka Vadim
  */
 @Controller
- public class GotoMainCommand implements Command {
+public class GotoMainCommand implements Command {
     @GetMapping("/index")
     public String gotoIndex(Model model, HttpServletRequest request) {
         QueryService.saveQueryToSession(request);
@@ -70,11 +70,11 @@ import static com.dubatovka.app.config.ConfigConstant.WIN_BET_INFO_KEY_SUM;
     public String showMainPage(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         MessageService messageService = ServiceFactory.getMessageService(session);
-    
+        
         String categoryIdStr = request.getParameter(PARAM_CATEGORY_ID);
         String eventQueryType = (String) session.getAttribute(ATTR_EVENT_QUERY_TYPE);
         String eventCommandType = (String) session.getAttribute(ATTR_EVENT_GOTO_TYPE);
-    
+        
         if ((eventQueryType == null) || (eventCommandType == null)) {
             eventQueryType = setDefaultSessionAttr(session);
         }
@@ -88,7 +88,7 @@ import static com.dubatovka.app.config.ConfigConstant.WIN_BET_INFO_KEY_SUM;
                 }
             }
         }
-    
+        
         QueryService.saveQueryToSession(request);
         setMessagesToRequest(messageService, request);
         return "main";
@@ -214,74 +214,74 @@ import static com.dubatovka.app.config.ConfigConstant.WIN_BET_INFO_KEY_SUM;
     }
     
     @GetMapping("/event_correct_outcome")
-    public String showMainPageWithEventCorrectOutcome(Model model, HttpServletRequest request){
+    public String showMainPageWithEventCorrectOutcome(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.setAttribute(ATTR_EVENT_QUERY_TYPE, EVENT_QUERY_TYPE_ACTUAL);
         session.setAttribute(ATTR_EVENT_GOTO_TYPE, EVENT_GOTO_MANAGE_OUTCOME);
-        return "main";
+        return "forward:/main_page";
     }
     
     @GetMapping("/event_correct_result")
-    public String showMainPageWithEventCorrectResult(Model model, HttpServletRequest request){
+    public String showMainPageWithEventCorrectResult(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.setAttribute(ATTR_EVENT_QUERY_TYPE, EVENT_QUERY_TYPE_CLOSED);
         session.setAttribute(ATTR_EVENT_GOTO_TYPE, EVENT_GOTO_MANAGE_RESULT);
-        return "main";
+        return "forward:/main_page";
     }
     
     @GetMapping("/event_manage")
-    public String showMainPageWithEventManage(Model model, HttpServletRequest request){
+    public String showMainPageWithEventManage(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.setAttribute(ATTR_EVENT_QUERY_TYPE, EVENT_QUERY_TYPE_NOT_STARTED);
         session.setAttribute(ATTR_EVENT_GOTO_TYPE, EVENT_GOTO_MANAGE_EVENT);
-        return "main";
+        return "forward:/main_page";
     }
     
     @GetMapping("/event_manage_failed")
-    public String showMainPageWithEventManageFailed(Model model, HttpServletRequest request){
+    public String showMainPageWithEventManageFailed(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.setAttribute(ATTR_EVENT_QUERY_TYPE, EVENT_QUERY_TYPE_FAILED);
         session.setAttribute(ATTR_EVENT_GOTO_TYPE, EVENT_GOTO_MANAGE_FAILED);
-        return "main";
+        return "forward:/main_page";
     }
     
     @GetMapping("/event_set_outcome")
-    public String showMainPageWithEventSetOutcome(Model model, HttpServletRequest request){
+    public String showMainPageWithEventSetOutcome(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.setAttribute(ATTR_EVENT_QUERY_TYPE, EVENT_QUERY_TYPE_NEW);
         session.setAttribute(ATTR_EVENT_GOTO_TYPE, EVENT_GOTO_MANAGE_OUTCOME);
-        return "main";
+        return "forward:/main_page";
     }
     
     @GetMapping("/event_set_result")
-    public String showMainPageWithEventSetResult(Model model, HttpServletRequest request){
+    public String showMainPageWithEventSetResult(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.setAttribute(ATTR_EVENT_QUERY_TYPE, EVENT_QUERY_TYPE_STARTED);
         session.setAttribute(ATTR_EVENT_GOTO_TYPE, EVENT_GOTO_MANAGE_RESULT);
-        return "main";
+        return "forward:/main_page";
     }
     
     @GetMapping("/event_show_actual")
-    public String showMainPageWithEventShowActual(Model model, HttpServletRequest request){
+    public String showMainPageWithEventShowActual(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.setAttribute(ATTR_EVENT_QUERY_TYPE, EVENT_QUERY_TYPE_ACTUAL);
         session.setAttribute(ATTR_EVENT_GOTO_TYPE, EVENT_GOTO_SHOW_ACTUAL);
-        return "main";
+        return "forward:/main_page";
     }
     
     @GetMapping("/event_show_result")
-    public String showMainPageWithEventShowResult(Model model, HttpServletRequest request){
+    public String showMainPageWithEventShowResult(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.setAttribute(ATTR_EVENT_QUERY_TYPE, EVENT_QUERY_TYPE_CLOSED);
         session.setAttribute(ATTR_EVENT_GOTO_TYPE, EVENT_GOTO_SHOW_RESULT);
-        return "main";
+        return "forward:/main_page";
     }
     
     @GetMapping("/event_to_pay")
-    public String showMainPageWithEventToPay(Model model, HttpServletRequest request){
+    public String showMainPageWithEventToPay(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.setAttribute(ATTR_EVENT_QUERY_TYPE, EVENT_QUERY_TYPE_TO_PAY);
         session.setAttribute(ATTR_EVENT_GOTO_TYPE, EVENT_GOTO_SHOW_TO_PAY);
-        return "main";
+        return "forward:/main_page";
     }
 }

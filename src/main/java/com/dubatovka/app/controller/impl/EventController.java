@@ -65,7 +65,7 @@ public class EventController implements Command {
         }
         setMessagesToRequest(messageService, request);
 //        return PageNavigator.FORWARD_PREV_QUERY;
-        return "main";
+        return "forward:/main_page";
     }
     
     @GetMapping("/event_delete")
@@ -92,7 +92,7 @@ public class EventController implements Command {
         setMessagesToRequest(messageService, request);
         //TODO сделать работу с предыдущим запросом
 //        return PageNavigator.FORWARD_PREV_QUERY;
-        return "main";
+        return "forward:/main_page";
     }
     
     @GetMapping("/event_info_update")
@@ -124,7 +124,7 @@ public class EventController implements Command {
         }
         setMessagesToRequest(messageService, request);
 //        return PageNavigator.FORWARD_PREV_QUERY;
-        return "main";
+        return "forward:/main_page";
     }
     
     @GetMapping("/event_result_update")
@@ -154,7 +154,7 @@ public class EventController implements Command {
         }
         setMessagesToRequest(messageService, request);
 //        return PageNavigator.FORWARD_PREV_QUERY;
-        return "main";
+        return "forward:/main_page";
     }
     
     /**

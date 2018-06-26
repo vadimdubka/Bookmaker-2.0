@@ -69,7 +69,7 @@ public class OutcomeCreateCommand implements Command {
         }
         
         setMessagesToRequest(messageService, request);
-        return "main";
+        return "forward:/main_page";
     }
     
     /**
