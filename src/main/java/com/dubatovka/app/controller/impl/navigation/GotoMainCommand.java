@@ -12,6 +12,9 @@ import com.dubatovka.app.service.MessageService;
 import com.dubatovka.app.service.QueryService;
 import com.dubatovka.app.service.ValidationService;
 import com.dubatovka.app.service.impl.ServiceFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -55,19 +58,46 @@ import static com.dubatovka.app.config.ConfigConstant.WIN_BET_INFO_KEY_SUM;
  *
  * @author Dubatovka Vadim
  */
-public class GotoMainCommand implements Command {
-    /**
-     * Method provides navigation process to main page.<p>Takes input parameters and attributes from
-     * {@link HttpServletRequest} and {@link HttpSession} and based on them adds appropriate
-     * attributes with data about events, events categories and bets to {@link
-     * HttpServletRequest}.
-     *
-     * @param request {@link HttpServletRequest} from client
-     * @return {@link PageNavigator#FORWARD_PAGE_MAIN}
-     */
+@Controller
+ public class GotoMainCommand implements Command {
+    @GetMapping("/index")
+    public String gotoIndex(Model model, HttpServletRequest request) {
+        QueryService.saveQueryToSession(request);
+        return "index";
+    }
+    
+    @GetMapping("/main")
+    public String showMainPage(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        MessageService messageService = ServiceFactory.getMessageService(session);
+    
+        String categoryIdStr = request.getParameter(PARAM_CATEGORY_ID);
+        String eventQueryType = (String) session.getAttribute(ATTR_EVENT_QUERY_TYPE);
+        String eventCommandType = (String) session.getAttribute(ATTR_EVENT_GOTO_TYPE);
+    
+        if ((eventQueryType == null) || (eventCommandType == null)) {
+            eventQueryType = setDefaultSessionAttr(session);
+        }
+        setCategoryInfo(request, eventQueryType);
+        if (categoryIdStr != null) {
+            validateCommand(messageService, categoryIdStr);
+            if (messageService.isErrMessEmpty()) {
+                setEventInfo(request, categoryIdStr, eventQueryType);
+                if (EVENT_GOTO_SHOW_TO_PAY.equals(eventCommandType)) {
+                    setWinBetInfo(request, categoryIdStr);
+                }
+            }
+        }
+    
+        QueryService.saveQueryToSession(request);
+        setMessagesToRequest(messageService, request);
+        return "main";
+    }
+    
     @Override
+    @Deprecated
     public PageNavigator execute(HttpServletRequest request) {
-        HttpSession    session        = request.getSession();
+        HttpSession session = request.getSession();
         MessageService messageService = ServiceFactory.getMessageService(session);
         
         String categoryIdStr = request.getParameter(PARAM_CATEGORY_ID);
@@ -115,7 +145,7 @@ public class GotoMainCommand implements Command {
     private static void setCategoryInfo(ServletRequest request, String eventQueryType) {
         try (EventService eventService = ServiceFactory.getEventService();
              CategoryService categoryService = ServiceFactory.getCategoryService()) {
-            Set<Category>         sportSet      = categoryService.getSportCategories();
+            Set<Category> sportSet = categoryService.getSportCategories();
             Map<Integer, Integer> eventCountMap = eventService.countEvents(eventQueryType);
             request.setAttribute(ATTR_SPORT_SET, sportSet);
             request.setAttribute(ATTR_EVENT_COUNT_MAP, eventCountMap);
@@ -132,7 +162,7 @@ public class GotoMainCommand implements Command {
      */
     private static void setEventInfo(ServletRequest request, String categoryIdStr,
                                      String eventQueryType) {
-        List<Event>                      events;
+        List<Event> events;
         Map<String, Map<String, String>> coeffColumnMaps;
         try (EventService eventService = ServiceFactory.getEventService()) {
             events = eventService.getEvents(categoryIdStr, eventQueryType);
