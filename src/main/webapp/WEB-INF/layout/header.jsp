@@ -23,7 +23,8 @@
 
         <header>
         <h1>
-        <a href="<s:url value="/controller?command_type=goto_index"/>" ><fmt:message
+            <%--TODO заменить ссылки с s на с , т.к. с с они переходят на соответствующие контроллеры--%>
+        <a href="<c:url value="/main_page"/>" ><fmt:message
             key="header.sitename"/></a>
         </h1>
         </header>
@@ -35,19 +36,19 @@
 
         <nav>
         <ul class="nav-horizontal">
-        <li><a href="<c:url value="/controller?command_type=goto_event_show_actual"/>" >
+        <li><a href="<c:url value="/event_show_actual"/>" >
         <fmt:message key="header.topmenu.main"/></a></li>
-        <li><a href="<c:url value="/controller?command_type=goto_event_show_result"/>" >
+        <li><a href="<c:url value="/event_show_result"/>" >
         <fmt:message key="header.topmenu.results"/></a></li>
-        <li><a href="<c:url value="/controller?command_type=goto_rules"/>" >
+        <li><a href="<c:url value="/main_page"/>" >
         <fmt:message key="header.topmenu.rules"/></a></li>
-        <li><a href="<c:url value="/controller?command_type=goto_support"/>" >
+        <li><a href="<c:url value="/main_page"/>" >
         <fmt:message key="header.topmenu.support"/></a></li>
-        <li><a href="<c:url value="/controller?command_type=goto_actions"/>" >
+        <li><a href="<c:url value="/main_page"/>" >
         <fmt:message key="header.topmenu.actions"/></a></li>
-        <li><a href="<c:url value="/controller?command_type=goto_news"/>" >
+        <li><a href="<c:url value="/main_page"/>" >
         <fmt:message key="header.topmenu.news"/></a></li>
-        <li><a href="<c:url value="/controller?command_type=goto_aboutus"/>" >
+        <li><a href="<c:url value="/main_page"/>" >
         <fmt:message key="header.topmenu.aboutus"/></a></li>
         </ul>
         </nav>
