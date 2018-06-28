@@ -51,7 +51,7 @@ final class CommandFactory {
     
     private static final String ERR_COMMAND_TYPE_PARAM =
         "Request doesn't have command_type parameter or defined command_type parameter is invalid: %s.";
-    private static final String ERR_COMMAND_IMPL       =
+    private static final String ERR_COMMAND_IMPL =
         "Command implementation is not defined for command type: %s.";
     
     //TODO избавиться от PreviousQueryService previousQueryService в этом классе
@@ -61,19 +61,19 @@ final class CommandFactory {
     /**
      * {@link EnumMap} collection of common commands for oll user roles.
      */
-    private static final Map<CommandType, Command> commonCommands  = new EnumMap<>(CommandType.class);
+    private static final Map<CommandType, Command> commonCommands = new EnumMap<>(CommandType.class);
     /**
      * {@link EnumMap} collection of commands available to {@link User.UserRole#GUEST}.
      */
-    private static final Map<CommandType, Command> guestCommands   = new EnumMap<>(CommandType.class);
+    private static final Map<CommandType, Command> guestCommands = new EnumMap<>(CommandType.class);
     /**
      * {@link EnumMap} collection of commands available to {@link User.UserRole#PLAYER}.
      */
-    private static final Map<CommandType, Command> playerCommands  = new EnumMap<>(CommandType.class);
+    private static final Map<CommandType, Command> playerCommands = new EnumMap<>(CommandType.class);
     /**
      * {@link EnumMap} collection of commands available to {@link User.UserRole#ADMIN}.
      */
-    private static final Map<CommandType, Command> adminCommands   = new EnumMap<>(CommandType.class);
+    private static final Map<CommandType, Command> adminCommands = new EnumMap<>(CommandType.class);
     /**
      * {@link EnumMap} collection of commands available to {@link User.UserRole#ANALYST}.
      */
@@ -81,13 +81,13 @@ final class CommandFactory {
     
     static {
         commonCommands.put(CommandType.GOTO_INDEX, new GotoIndexCommand());
-        commonCommands.put(CommandType.GOTO_MAIN, new GotoMainCommand());
-        commonCommands.put(CommandType.GOTO_REGISTER, new GotoRegisterCommand());
-        commonCommands.put(CommandType.CHANGE_LOCALE, new ChangeLocaleCommand());
+        commonCommands.put(CommandType.GOTO_MAIN, new GotoMainCommand(previousQueryService));
+        commonCommands.put(CommandType.GOTO_REGISTER, new GotoRegisterCommand(previousQueryService));
+        commonCommands.put(CommandType.CHANGE_LOCALE, new ChangeLocaleCommand(previousQueryService));
         commonCommands.put(CommandType.REGISTER, new RegisterCommand());
         commonCommands.put(CommandType.LOGIN, new LoginCommand());
         commonCommands.put(CommandType.LOGOUT, new LogoutCommand());
-        commonCommands.put(CommandType.GOTO_MAKE_BET, new GotoMakeBetCommand());
+        commonCommands.put(CommandType.GOTO_MAKE_BET, new GotoMakeBetCommand(previousQueryService));
         commonCommands.put(CommandType.MAKE_BET, new MakeBetCommand());
         commonCommands.put(CommandType.GOTO_EVENT_SHOW_ACTUAL, new GotoEventShowActualCommand());
         commonCommands.put(CommandType.GOTO_EVENT_SHOW_RESULT, new GotoEventShowResultCommand());
@@ -95,10 +95,10 @@ final class CommandFactory {
         guestCommands.putAll(commonCommands);
         
         playerCommands.putAll(commonCommands);
-        playerCommands.put(CommandType.GOTO_PLAYER_STATE, new GotoPlayerStateCommand());
+        playerCommands.put(CommandType.GOTO_PLAYER_STATE, new GotoPlayerStateCommand(previousQueryService));
         
         adminCommands.putAll(commonCommands);
-        adminCommands.put(CommandType.GOTO_MANAGE_PLAYERS, new GotoManagePlayersCommand());
+        adminCommands.put(CommandType.GOTO_MANAGE_PLAYERS, new GotoManagePlayersCommand(previousQueryService));
         adminCommands.put(CommandType.GOTO_EVENT_MANAGE, new GotoEventManageCommand());
         adminCommands.put(CommandType.GOTO_EVENT_SET_RESULT, new GotoEventSetResultCommand());
         adminCommands.put(CommandType.GOTO_EVENT_CORRECT_RESULT, new GotoEventCorrectResultCommand());
@@ -113,7 +113,7 @@ final class CommandFactory {
         analystCommands.putAll(commonCommands);
         analystCommands.put(CommandType.GOTO_EVENT_SET_OUTCOME, new GotoEventSetOutcomeCommand());
         analystCommands.put(CommandType.GOTO_EVENT_CORRECT_OUTCOME, new GotoEventCorrectOutcomeCommand());
-        analystCommands.put(CommandType.OUTCOME_CREATE, new OutcomeCreateCommand());
+        analystCommands.put(CommandType.OUTCOME_CREATE, new OutcomeCreateCommand(previousQueryService));
     }
     
     /**
@@ -131,10 +131,10 @@ final class CommandFactory {
      * @return {@link Command}
      */
     static Command defineCommand(HttpServletRequest request) {
-        String        commandTypeName        = request.getParameter(ConfigConstant.PARAM_COMMAND_TYPE);
-        User.UserRole role                   = (User.UserRole) request.getSession().getAttribute(ATTR_ROLE);
-        boolean       isCommandTypeNameValid = isCommandTypeNameValid(commandTypeName);
-        Command       command;
+        String commandTypeName = request.getParameter(ConfigConstant.PARAM_COMMAND_TYPE);
+        User.UserRole role = (User.UserRole) request.getSession().getAttribute(ATTR_ROLE);
+        boolean isCommandTypeNameValid = isCommandTypeNameValid(commandTypeName);
+        Command command;
         
         if (isCommandTypeNameValid) {
             commandTypeName = commandTypeName.trim().toUpperCase();
