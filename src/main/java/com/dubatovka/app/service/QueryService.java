@@ -17,6 +17,7 @@ import static com.dubatovka.app.config.ConfigConstant.VALUE_SEPARATOR;
 /**
  * The class provides Service layer actions for managing queries from clients.
  */
+@Deprecated
 public final class QueryService {
     private static final String STUB = "********";
     
@@ -29,9 +30,10 @@ public final class QueryService {
     /**
      * Saves query to {@link HttpSession} as {@link ConfigConstant#ATTR_PREV_QUERY} attribute.
      */
+    @Deprecated
     public static void saveQueryToSession(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        String      query   = buildQueryString(request);
+        String query = buildQueryString(request);
         session.setAttribute(ATTR_PREV_QUERY, query);
     }
     
@@ -39,11 +41,11 @@ public final class QueryService {
      * Builds query by parsing request parameters.
      */
     private static String buildQueryString(HttpServletRequest request) {
-        String              uri    = request.getRequestURI();
-        StringBuffer        query  = new StringBuffer();
+        String uri = request.getRequestURI();
+        StringBuffer query = new StringBuffer();
         Enumeration<String> params = request.getParameterNames();
         while (params.hasMoreElements()) {
-            String key   = params.nextElement();
+            String key = params.nextElement();
             String value = request.getParameter(key);
             if (key.equalsIgnoreCase(PARAM_PASSWORD) ||
                     key.equalsIgnoreCase(PARAM_PASSWORD_AGAIN) ||
