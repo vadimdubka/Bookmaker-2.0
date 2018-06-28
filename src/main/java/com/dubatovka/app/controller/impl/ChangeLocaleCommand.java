@@ -3,6 +3,8 @@ package com.dubatovka.app.controller.impl;
 import com.dubatovka.app.config.ConfigConstant;
 import com.dubatovka.app.controller.Command;
 import com.dubatovka.app.controller.PageNavigator;
+import com.dubatovka.app.service.PreviousQueryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +24,12 @@ import static com.dubatovka.app.config.ConfigConstant.PARAM_LOCALE;
 @Controller
 //TODO переименовать команды в контроллер
 public class ChangeLocaleCommand implements Command {
+    private final PreviousQueryService previousQueryService;
+    
+    @Autowired
+    public ChangeLocaleCommand(PreviousQueryService previousQueryService) {
+        this.previousQueryService = previousQueryService;
+    }
     
     @GetMapping("/change_locale")
     public String showMainPage(Model model, HttpServletRequest request) {

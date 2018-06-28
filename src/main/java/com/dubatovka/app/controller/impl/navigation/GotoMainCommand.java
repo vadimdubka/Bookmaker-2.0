@@ -9,9 +9,11 @@ import com.dubatovka.app.service.BetService;
 import com.dubatovka.app.service.CategoryService;
 import com.dubatovka.app.service.EventService;
 import com.dubatovka.app.service.MessageService;
+import com.dubatovka.app.service.PreviousQueryService;
 import com.dubatovka.app.service.QueryService;
 import com.dubatovka.app.service.ValidationService;
 import com.dubatovka.app.service.impl.ServiceFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,12 +62,21 @@ import static com.dubatovka.app.config.ConfigConstant.WIN_BET_INFO_KEY_SUM;
  */
 @Controller
 public class GotoMainCommand implements Command {
+    
+    private final PreviousQueryService previousQueryService;
+    
+    @Autowired
+    public GotoMainCommand(PreviousQueryService previousQueryService) {
+        this.previousQueryService = previousQueryService;
+    }
+    
     @GetMapping("/index")
     public String gotoIndex(Model model, HttpServletRequest request) {
         QueryService.saveQueryToSession(request);
         return "index";
     }
     
+    //TODO соединить main_page and show_actual #showMainPageWithEventShowActual
     @GetMapping("/main_page")
     public String showMainPage(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
@@ -88,8 +99,9 @@ public class GotoMainCommand implements Command {
                 }
             }
         }
-        
-        QueryService.saveQueryToSession(request);
+    
+        //TODO сделать с помощью intersepters автоматическое сохранение запросов в сессию для определенных страниц.
+        previousQueryService.saveQueryToSession(request);
         setMessagesToRequest(messageService, request);
         return "main";
     }

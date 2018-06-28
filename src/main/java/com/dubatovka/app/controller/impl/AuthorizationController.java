@@ -8,9 +8,11 @@ import com.dubatovka.app.entity.Player;
 import com.dubatovka.app.entity.User;
 import com.dubatovka.app.service.MessageService;
 import com.dubatovka.app.service.PlayerService;
+import com.dubatovka.app.service.PreviousQueryService;
 import com.dubatovka.app.service.UserService;
 import com.dubatovka.app.service.ValidationService;
 import com.dubatovka.app.service.impl.ServiceFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,7 +48,15 @@ import static com.dubatovka.app.config.ConfigConstant.PARAM_PASSWORD_AGAIN;
 
 @Controller
 public class AuthorizationController implements Command {
-    @GetMapping("/register")
+    
+    private final PreviousQueryService previousQueryService;
+    
+    @Autowired
+    public AuthorizationController(PreviousQueryService previousQueryService) {
+        this.previousQueryService = previousQueryService;
+    }
+    
+    @PostMapping("/register")
     public String register(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         MessageService messageService = ServiceFactory.getMessageService(session);

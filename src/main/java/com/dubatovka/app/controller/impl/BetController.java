@@ -10,11 +10,13 @@ import com.dubatovka.app.entity.User;
 import com.dubatovka.app.service.BetService;
 import com.dubatovka.app.service.MessageService;
 import com.dubatovka.app.service.PlayerService;
+import com.dubatovka.app.service.PreviousQueryService;
 import com.dubatovka.app.service.ValidationService;
 import com.dubatovka.app.service.impl.ServiceFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -44,7 +46,15 @@ import static com.dubatovka.app.config.ConfigConstant.PLAYER;
 
 @Controller
 public class BetController implements Command {
-    @GetMapping("/make_bet")
+    
+    private final PreviousQueryService previousQueryService;
+    
+    @Autowired
+    public BetController(PreviousQueryService previousQueryService) {
+        this.previousQueryService = previousQueryService;
+    }
+    
+    @PostMapping("/make_bet")
     public String makeBet(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         MessageService messageService = ServiceFactory.getMessageService(session);
@@ -57,12 +67,10 @@ public class BetController implements Command {
         String outcomeCoeffOnPage = request.getParameter(PARAM_OUTCOME_COEFFICIENT);
         Event event = new Event();
         
-        validateRequestParams(messageService, betAmountStr, eventIdStr,
-                              outcomeType, outcomeCoeffOnPage);
+        validateRequestParams(messageService, betAmountStr, eventIdStr, outcomeType, outcomeCoeffOnPage);
         checkAndSetEventNotNull(eventIdStr, event, messageService);
         validateUserRole(role, messageService);
-        validateCommand(player, betAmountStr, event, outcomeType,
-                        outcomeCoeffOnPage, messageService);
+        validateCommand(player, betAmountStr, event, outcomeType, outcomeCoeffOnPage, messageService);
 //        PageNavigator navigator = PageNavigator.FORWARD_PREV_QUERY;
         String navigator = "forward:/main_page";
         if (messageService.isErrMessEmpty()) {
@@ -87,7 +95,7 @@ public class BetController implements Command {
         return navigator;
     }
     
-    @GetMapping("/pay_win_bet")
+    @PostMapping("/pay_win_bet")
     public String payWinBet(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         MessageService messageService = ServiceFactory.getMessageService(session);

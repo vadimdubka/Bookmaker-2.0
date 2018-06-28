@@ -7,8 +7,10 @@ import com.dubatovka.app.entity.Event;
 import com.dubatovka.app.entity.Outcome;
 import com.dubatovka.app.service.CategoryService;
 import com.dubatovka.app.service.MessageService;
+import com.dubatovka.app.service.PreviousQueryService;
 import com.dubatovka.app.service.QueryService;
 import com.dubatovka.app.service.impl.ServiceFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +32,14 @@ import static com.dubatovka.app.config.ConfigConstant.PARAM_OUTCOME_TYPE;
  */
 @Controller
 public class GotoMakeBetCommand implements Command {
+    
+    private final PreviousQueryService previousQueryService;
+    
+    @Autowired
+    public GotoMakeBetCommand(PreviousQueryService previousQueryService) {
+        this.previousQueryService = previousQueryService;
+    }
+    
     @GetMapping("/make_bet_page")
     public String showMakeBetPage(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
@@ -55,8 +65,8 @@ public class GotoMakeBetCommand implements Command {
                 navigator = "make_bet";
             }
         }
-        
-        QueryService.saveQueryToSession(request);
+    
+        previousQueryService.saveQueryToSession(request);
         setMessagesToRequest(messageService, request);
         return navigator;
     }

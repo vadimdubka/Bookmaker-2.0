@@ -6,11 +6,13 @@ import com.dubatovka.app.entity.Event;
 import com.dubatovka.app.entity.Outcome;
 import com.dubatovka.app.service.MessageService;
 import com.dubatovka.app.service.OutcomeService;
+import com.dubatovka.app.service.PreviousQueryService;
 import com.dubatovka.app.service.ValidationService;
 import com.dubatovka.app.service.impl.ServiceFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -34,8 +36,14 @@ import static com.dubatovka.app.config.ConfigConstant.PARAM_OUTCOME_X;
 @Controller
 //TODO переименовать команду в контроллер
 public class OutcomeCreateCommand implements Command {
+    private final PreviousQueryService previousQueryService;
     
-    @GetMapping("/outcome_create")
+    @Autowired
+    public OutcomeCreateCommand(PreviousQueryService previousQueryService) {
+        this.previousQueryService = previousQueryService;
+    }
+    
+    @PostMapping("/outcome_create")
     public String outcomeCreate(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         MessageService messageService = ServiceFactory.getMessageService(session);
@@ -69,6 +77,7 @@ public class OutcomeCreateCommand implements Command {
         }
         
         setMessagesToRequest(messageService, request);
+//        return PageNavigator.FORWARD_PREV_QUERY;
         return "forward:/main_page";
     }
     

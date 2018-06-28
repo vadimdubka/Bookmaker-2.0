@@ -131,6 +131,7 @@ public class FrontControllerServlet extends HttpServlet {
     /**
      * Takes saved to {@link HttpSession} previous query.
      */
+    @Deprecated
     private static String takePreviousQuery(HttpServletRequest req) {
         String prevQuery = (String) req.getSession().getAttribute(ATTR_PREV_QUERY);
         if (prevQuery == null) {

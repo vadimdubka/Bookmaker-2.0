@@ -4,8 +4,10 @@ import com.dubatovka.app.controller.Command;
 import com.dubatovka.app.controller.PageNavigator;
 import com.dubatovka.app.entity.Player;
 import com.dubatovka.app.service.PlayerService;
+import com.dubatovka.app.service.PreviousQueryService;
 import com.dubatovka.app.service.QueryService;
 import com.dubatovka.app.service.impl.ServiceFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +24,13 @@ import static com.dubatovka.app.config.ConfigConstant.ATTR_PLAYERS;
  */
 @Controller
 public class GotoManagePlayersCommand implements Command {
+    private final PreviousQueryService previousQueryService;
+    
+    @Autowired
+    public GotoManagePlayersCommand(PreviousQueryService previousQueryService) {
+        this.previousQueryService = previousQueryService;
+    }
+    
     @GetMapping("/manage_players_page")
     public String showManagePlayerPage(Model model, HttpServletRequest request) {
         List<Player> players;
@@ -29,7 +38,7 @@ public class GotoManagePlayersCommand implements Command {
             players = playerService.getAllPlayers();
         }
         request.setAttribute(ATTR_PLAYERS, players);
-        QueryService.saveQueryToSession(request);
+        previousQueryService.saveQueryToSession(request);
         return "manage_players";
     }
     

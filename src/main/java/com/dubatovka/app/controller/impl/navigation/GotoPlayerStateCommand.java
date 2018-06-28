@@ -13,9 +13,11 @@ import com.dubatovka.app.service.EventService;
 import com.dubatovka.app.service.MessageService;
 import com.dubatovka.app.service.PaginationService;
 import com.dubatovka.app.service.PlayerService;
+import com.dubatovka.app.service.PreviousQueryService;
 import com.dubatovka.app.service.QueryService;
 import com.dubatovka.app.service.ValidationService;
 import com.dubatovka.app.service.impl.ServiceFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,6 +46,13 @@ import static com.dubatovka.app.config.ConfigConstant.PLAYER;
  */
 @Controller
 public class GotoPlayerStateCommand implements Command {
+    private final PreviousQueryService previousQueryService;
+    
+    @Autowired
+    public GotoPlayerStateCommand(PreviousQueryService previousQueryService) {
+        this.previousQueryService = previousQueryService;
+    }
+    
     @GetMapping("/player_state_page")
     public String showPlayerStatePage(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
@@ -62,7 +71,7 @@ public class GotoPlayerStateCommand implements Command {
             setPlayerInfo(session, player);
             navigator = "player_state";
         }
-        QueryService.saveQueryToSession(request);
+        previousQueryService.saveQueryToSession(request);
         setMessagesToRequest(messageService, request);
         
         return navigator;

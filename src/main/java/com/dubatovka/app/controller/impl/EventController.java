@@ -5,11 +5,13 @@ import com.dubatovka.app.controller.PageNavigator;
 import com.dubatovka.app.entity.Event;
 import com.dubatovka.app.service.EventService;
 import com.dubatovka.app.service.MessageService;
+import com.dubatovka.app.service.PreviousQueryService;
 import com.dubatovka.app.service.ValidationService;
 import com.dubatovka.app.service.impl.ServiceFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -34,7 +36,14 @@ import static com.dubatovka.app.config.ConfigConstant.PARAM_RESULT_2;
 @Controller
 public class EventController implements Command {
     
-    @GetMapping("/event_create")
+    private final PreviousQueryService previousQueryService;
+    
+    @Autowired
+    public EventController(PreviousQueryService previousQueryService) {
+        this.previousQueryService = previousQueryService;
+    }
+    
+    @PostMapping("/event_create")
     public String eventCreate(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         MessageService messageService = ServiceFactory.getMessageService(session);
@@ -68,7 +77,7 @@ public class EventController implements Command {
         return "forward:/main_page";
     }
     
-    @GetMapping("/event_delete")
+    @PostMapping("/event_delete")
     public String eventDelete(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         MessageService messageService = ServiceFactory.getMessageService(session);
@@ -95,7 +104,7 @@ public class EventController implements Command {
         return "forward:/main_page";
     }
     
-    @GetMapping("/event_info_update")
+    @PostMapping("/event_info_update")
     public String eventInfoUpdate(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         MessageService messageService = ServiceFactory.getMessageService(session);
@@ -127,7 +136,7 @@ public class EventController implements Command {
         return "forward:/main_page";
     }
     
-    @GetMapping("/event_result_update")
+    @PostMapping("/event_result_update")
     public String eventResultUpdate(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         MessageService messageService = ServiceFactory.getMessageService(session);

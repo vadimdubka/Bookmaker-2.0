@@ -28,9 +28,11 @@ import com.dubatovka.app.controller.impl.navigation.events.GotoEventShowActualCo
 import com.dubatovka.app.controller.impl.navigation.events.GotoEventShowResultCommand;
 import com.dubatovka.app.controller.impl.navigation.events.GotoEventToPayCommand;
 import com.dubatovka.app.entity.User;
+import com.dubatovka.app.service.PreviousQueryService;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -51,6 +53,10 @@ final class CommandFactory {
         "Request doesn't have command_type parameter or defined command_type parameter is invalid: %s.";
     private static final String ERR_COMMAND_IMPL       =
         "Command implementation is not defined for command type: %s.";
+    
+    //TODO избавиться от PreviousQueryService previousQueryService в этом классе
+    @Autowired
+    private static PreviousQueryService previousQueryService;
     
     /**
      * {@link EnumMap} collection of common commands for oll user roles.
