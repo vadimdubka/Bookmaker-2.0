@@ -46,14 +46,13 @@
 -- Аналитик:
 -- - определяет коэффициент доходности на исходы событий и вносит эту информацию в систему.
 -- -----------------------------------------------------
-
 DROP TABLE IF EXISTS bet;
 DROP TYPE IF EXISTS bet_status;
 DROP TABLE IF EXISTS outcome;
 DROP TABLE IF EXISTS outcome_type;
 DROP TABLE IF EXISTS event;
 DROP TABLE IF EXISTS category;
-DROP TABLE IF EXISTS transaction;
+DROP TABLE IF EXISTS "transaction";
 DROP TABLE IF EXISTS player;
 DROP TABLE IF EXISTS "user";
 DROP TYPE IF EXISTS role;
@@ -89,8 +88,8 @@ CREATE TABLE IF NOT EXISTS event (
   date         timestamp    NOT NULL,
   participant1 VARCHAR(150) NOT NULL,
   participant2 VARCHAR(150),
-  result1      VARCHAR      NULL,
-  result2      VARCHAR      NULL
+  result1      VARCHAR,
+  result2      VARCHAR
 );
 
 COMMENT ON TABLE event
@@ -166,7 +165,7 @@ IS 'Размер максимальной суммы выведенных сре
 
 -- -----------------------------------------------------
 -- Table `bookmaker`.`user`
--- -----------------------------------------------------
+-- -----------------------------------------------------`
 CREATE TYPE role AS ENUM ('player', 'admin', 'analyst');
 CREATE TABLE IF NOT EXISTS "user" (
   id                serial PRIMARY KEY,
@@ -233,10 +232,10 @@ IS 'Идентификационный номер паспорта игрока.
 COMMENT ON COLUMN player.photo
 IS 'Фото паспорта игрока.Необходимо для верификации пользователя.\nИгрок загружает фото паспорта, с помощью которого администратор  может верифицировать игрока и поменять его статус.';
 
+CREATE TYPE bet_status AS ENUM ('new', 'losing', 'win', 'paid');
 -- -----------------------------------------------------
 -- Table `bookmaker`.`bet`
 -- -----------------------------------------------------
-CREATE TYPE bet_status AS ENUM ('new', 'losing', 'win', 'paid');
 CREATE TABLE IF NOT EXISTS bet (
   player_id   integer       NOT NULL REFERENCES player (id) ON DELETE CASCADE ON UPDATE CASCADE,
   event_id    integer       NOT NULL,
@@ -269,7 +268,7 @@ IS 'Статус ставки.\n `new` - игрок сделал новую ст
 -- -----------------------------------------------------
 -- Table `bookmaker`.`transaction`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS transaction (
+CREATE TABLE IF NOT EXISTS "transaction" (
   id        serial PRIMARY KEY,
   player_id integer       NOT NULL REFERENCES player (id) ON DELETE CASCADE ON UPDATE CASCADE,
   date      timestamp     NOT NULL DEFAULT CURRENT_TIMESTAMP,
