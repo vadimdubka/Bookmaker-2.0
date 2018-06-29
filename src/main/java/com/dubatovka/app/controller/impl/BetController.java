@@ -71,7 +71,7 @@ public class BetController implements Command {
         checkAndSetEventNotNull(eventIdStr, event, messageService);
         validateUserRole(role, messageService);
         validateCommand(player, betAmountStr, event, outcomeType, outcomeCoeffOnPage, messageService);
-        String navigator = "forward:" + previousQueryService.takePreviousQuery(request);
+        String navigator = "redirect:" + previousQueryService.takePreviousQuery(request);
         if (messageService.isErrMessEmpty()) {
             try (PlayerService playerService = ServiceFactory.getPlayerService();
                  BetService betService = ServiceFactory.getBetService()) {
@@ -83,7 +83,7 @@ public class BetController implements Command {
                 if (messageService.isErrMessEmpty()) {
                     playerService.updatePlayerInfo(player);
                     session.setAttribute(ATTR_PLAYER, player);
-                    navigator = "forward:/main_page";
+                    navigator = "redirect:/main_page";
                     messageService.appendInfMessByKey(MESSAGE_INF_BET_IS_DONE);
                 } else {
                     messageService.appendErrMessByKey(MESSAGE_ERR_BETTING_INTERRUPTED);
@@ -115,7 +115,7 @@ public class BetController implements Command {
         }
         
         setMessagesToRequest(messageService, request);
-        return "forward:" + previousQueryService.takePreviousQuery(request);
+        return "redirect:" + previousQueryService.takePreviousQuery(request);
     }
     
     

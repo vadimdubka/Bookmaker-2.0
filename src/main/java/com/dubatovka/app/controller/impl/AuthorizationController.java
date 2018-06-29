@@ -73,7 +73,7 @@ public class AuthorizationController implements Command {
                               fName, mName, lName, birthDate);
         validateCommand(email, password, passwordAgain,
                         fName, mName, lName, birthDate, messageService, request);
-        String navigator = "forward:/register";
+        String navigator = "forward:/register_page";
         if (messageService.isErrMessEmpty()) {
             try (PlayerService playerService = ServiceFactory.getPlayerService()) {
                 int regPlayerId = playerService.registerPlayer(email, password, fName,
