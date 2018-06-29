@@ -109,7 +109,7 @@ public class AuthorizationController implements Command {
             }
         }
         setMessagesToRequest(messageService, request);
-        return "forward: /main_page";
+        return "redirect:/main_page";
     }
     
     @GetMapping("/logout")

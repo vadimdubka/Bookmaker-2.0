@@ -73,8 +73,7 @@ public class EventController implements Command {
             }
         }
         setMessagesToRequest(messageService, request);
-//        return PageNavigator.FORWARD_PREV_QUERY;
-        return "forward:/main_page";
+        return "forward:" + previousQueryService.takePreviousQuery(request);
     }
     
     @PostMapping("/event_delete")
@@ -99,9 +98,7 @@ public class EventController implements Command {
         }
         
         setMessagesToRequest(messageService, request);
-        //TODO сделать работу с предыдущим запросом
-//        return PageNavigator.FORWARD_PREV_QUERY;
-        return "forward:/main_page";
+        return "forward:" + previousQueryService.takePreviousQuery(request);
     }
     
     @PostMapping("/event_info_update")
@@ -132,8 +129,7 @@ public class EventController implements Command {
             }
         }
         setMessagesToRequest(messageService, request);
-//        return PageNavigator.FORWARD_PREV_QUERY;
-        return "forward:/main_page";
+        return "forward:" + previousQueryService.takePreviousQuery(request);
     }
     
     @PostMapping("/event_result_update")
@@ -162,8 +158,7 @@ public class EventController implements Command {
             }
         }
         setMessagesToRequest(messageService, request);
-//        return PageNavigator.FORWARD_PREV_QUERY;
-        return "forward:/main_page";
+        return "forward:" + previousQueryService.takePreviousQuery(request);
     }
     
     /**

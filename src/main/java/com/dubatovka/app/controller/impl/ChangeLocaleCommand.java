@@ -39,7 +39,7 @@ public class ChangeLocaleCommand implements Command {
             locale = LOCALE_DEFAULT;
         }
         session.setAttribute(ATTR_LOCALE, locale);
-        return "forward:/main_page"; //TODO сделать так, чтобы форвардило на предыдущую запрошенную страницу, а не всегда на main
+        return "forward:" + previousQueryService.takePreviousQuery(request);
     }
     
     /**

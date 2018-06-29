@@ -62,8 +62,7 @@ public class GotoPlayerStateCommand implements Command {
         String pageNumberStr = request.getParameter(PARAM_PAGE_NUMBER);
         
         validateCommand(player, messageService);
-        String navigator = "forward:/main_page";//TODO сделать на FORWARD_PREV_QUERY
-//        PageNavigator navigator = PageNavigator.FORWARD_PREV_QUERY;
+        String navigator = "forward:" + previousQueryService.takePreviousQuery(request);
         if (messageService.isErrMessEmpty()) {
             PaginationService paginationService = getPaginationService(request, player,
                                                                        pageNumberStr);

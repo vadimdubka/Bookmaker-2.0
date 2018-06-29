@@ -77,8 +77,7 @@ public class OutcomeCreateCommand implements Command {
         }
         
         setMessagesToRequest(messageService, request);
-//        return PageNavigator.FORWARD_PREV_QUERY;
-        return "forward:/main_page";
+        return "forward:" + previousQueryService.takePreviousQuery(request);
     }
     
     /**

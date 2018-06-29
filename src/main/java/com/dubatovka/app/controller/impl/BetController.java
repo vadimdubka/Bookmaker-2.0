@@ -71,8 +71,7 @@ public class BetController implements Command {
         checkAndSetEventNotNull(eventIdStr, event, messageService);
         validateUserRole(role, messageService);
         validateCommand(player, betAmountStr, event, outcomeType, outcomeCoeffOnPage, messageService);
-//        PageNavigator navigator = PageNavigator.FORWARD_PREV_QUERY;
-        String navigator = "forward:/main_page";
+        String navigator = "forward:" + previousQueryService.takePreviousQuery(request);
         if (messageService.isErrMessEmpty()) {
             try (PlayerService playerService = ServiceFactory.getPlayerService();
                  BetService betService = ServiceFactory.getBetService()) {
@@ -116,8 +115,7 @@ public class BetController implements Command {
         }
         
         setMessagesToRequest(messageService, request);
-//        return PageNavigator.FORWARD_PREV_QUERY;
-        return "forward:/main_page";
+        return "forward:" + previousQueryService.takePreviousQuery(request);
     }
     
     

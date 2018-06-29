@@ -52,7 +52,6 @@ public class GotoMakeBetCommand implements Command {
         validateRequestParams(messageService, eventIdStr, outcomeType);
         checkAndSetEventNotNull(eventIdStr, event, messageService);
         String navigator = "forward:/main_page";
-//        PageNavigator navigator = PageNavigator.FORWARD_GOTO_MAIN;
         if (messageService.isErrMessEmpty()) {
             try (CategoryService categoryService = ServiceFactory.getCategoryService()) {
                 Outcome outcome = event.getOutcomeByType(outcomeType);
