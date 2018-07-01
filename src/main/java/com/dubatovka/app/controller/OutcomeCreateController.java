@@ -6,7 +6,6 @@ import com.dubatovka.app.service.MessageService;
 import com.dubatovka.app.service.OutcomeService;
 import com.dubatovka.app.service.PreviousQueryService;
 import com.dubatovka.app.service.ValidationService;
-import com.dubatovka.app.service.impl.ServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,7 +42,7 @@ public class OutcomeCreateController extends AbstrController {
     @PostMapping("/outcome_create")
     public String outcomeCreate(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        MessageService messageService = ServiceFactory.getMessageService(session);
+        MessageService messageService = serviceFactory.getMessageService(session);
         
         String eventIdStr = request.getParameter(PARAM_EVENT_ID);
         String outcome1Str = request.getParameter(PARAM_OUTCOME_1);
@@ -63,7 +62,7 @@ public class OutcomeCreateController extends AbstrController {
             outcomeSet.add(outcomeType1);
             outcomeSet.add(outcomeTypeX);
             outcomeSet.add(outcomeType2);
-            try (OutcomeService outcomeService = ServiceFactory.getOutcomeService()) {
+            try (OutcomeService outcomeService = serviceFactory.getOutcomeService()) {
                 outcomeService.insertOutcomeSet(outcomeSet, messageService);
             }
             if (messageService.isErrMessEmpty()) {
@@ -89,7 +88,7 @@ public class OutcomeCreateController extends AbstrController {
     private static void validateCommand(MessageService messageService,
                                         String outcome1Str, String outcomeXStr, String outcome2Str) {
         if (messageService.isErrMessEmpty()) {
-            ValidationService validationService = ServiceFactory.getValidationService();
+            ValidationService validationService = serviceFactory.getValidationService();
             if (!validationService.isValidOutcomeCoeff(outcome1Str)) {
                 messageService.appendErrMessByKey(MESSAGE_ERR_INVALID_EVENT_OUTCOME);
             }

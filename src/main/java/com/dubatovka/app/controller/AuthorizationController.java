@@ -8,7 +8,6 @@ import com.dubatovka.app.service.MessageService;
 import com.dubatovka.app.service.PlayerService;
 import com.dubatovka.app.service.UserService;
 import com.dubatovka.app.service.ValidationService;
-import com.dubatovka.app.service.impl.ServiceFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +25,7 @@ public class AuthorizationController extends AbstrController {
     @PostMapping("/register")
     public String register(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        MessageService messageService = ServiceFactory.getMessageService(session);
+        MessageService messageService = serviceFactory.getMessageService(session);
         
         String email = request.getParameter(PARAM_EMAIL);
         String password = request.getParameter(PARAM_PASSWORD);
@@ -42,7 +41,7 @@ public class AuthorizationController extends AbstrController {
                         fName, mName, lName, birthDate, messageService, request);
         String navigator = "forward:/register_page";
         if (messageService.isErrMessEmpty()) {
-            try (PlayerService playerService = ServiceFactory.getPlayerService()) {
+            try (PlayerService playerService = serviceFactory.getPlayerService()) {
                 int regPlayerId = playerService.registerPlayer(email, password, fName,
                                                                mName, lName, birthDate);
                 if (regPlayerId > 0) {
@@ -57,7 +56,7 @@ public class AuthorizationController extends AbstrController {
     @PostMapping("/login")
     public String login(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        MessageService messageService = ServiceFactory.getMessageService(session);
+        MessageService messageService = serviceFactory.getMessageService(session);
         
         String email = request.getParameter(PARAM_EMAIL);
         String password = request.getParameter(PARAM_PASSWORD);
@@ -65,7 +64,7 @@ public class AuthorizationController extends AbstrController {
         validateRequestParams(messageService, email, password);
         validateCommand(email, password, messageService);
         if (messageService.isErrMessEmpty()) {
-            try (UserService userService = ServiceFactory.getUserService()) {
+            try (UserService userService = serviceFactory.getUserService()) {
                 User user = userService.authorizeUser(email, password);
                 if (user != null) {
                     setUserToSession(user, session);
@@ -102,7 +101,7 @@ public class AuthorizationController extends AbstrController {
     private static void validateCommand(String email, String password, String passwordAgain,
                                         String fName, String mName, String lName, String birthDate,
                                         MessageService messageService, ServletRequest request) {
-        ValidationService validationService = ServiceFactory.getValidationService();
+        ValidationService validationService = serviceFactory.getValidationService();
         if (validationService.isValidEmail(email)) {
             request.setAttribute(ATTR_EMAIL_INPUT, email);
         } else {
@@ -145,7 +144,7 @@ public class AuthorizationController extends AbstrController {
     private static void validateCommand(String email, String password,
                                         MessageService messageService) {
         if (messageService.isErrMessEmpty()) {
-            ValidationService validationService = ServiceFactory.getValidationService();
+            ValidationService validationService = serviceFactory.getValidationService();
             if (!validationService.isValidEmail(email)) {
                 messageService.appendErrMessByKey(MESSAGE_ERR_INVALID_EMAIL);
             }
@@ -167,7 +166,7 @@ public class AuthorizationController extends AbstrController {
         Class userClass = user.getClass();
         if (userClass == Player.class) {
             Player player = (Player) user;
-            try (PlayerService playerService = ServiceFactory.getPlayerService()) {
+            try (PlayerService playerService = serviceFactory.getPlayerService()) {
                 playerService.updatePlayerInfo(player);
             }
             session.setAttribute(ATTR_PLAYER, player);

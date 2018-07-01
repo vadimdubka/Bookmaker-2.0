@@ -10,7 +10,6 @@ import com.dubatovka.app.service.MessageService;
 import com.dubatovka.app.service.PlayerService;
 import com.dubatovka.app.service.PreviousQueryService;
 import com.dubatovka.app.service.ValidationService;
-import com.dubatovka.app.service.impl.ServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,7 +35,7 @@ public class BetController extends AbstrController {
     @PostMapping("/make_bet")
     public String makeBet(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        MessageService messageService = ServiceFactory.getMessageService(session);
+        MessageService messageService = serviceFactory.getMessageService(session);
         
         Player player = (Player) session.getAttribute(PLAYER);
         User.UserRole role = (User.UserRole) session.getAttribute(ATTR_ROLE);
@@ -52,8 +51,8 @@ public class BetController extends AbstrController {
         validateCommand(player, betAmountStr, event, outcomeType, outcomeCoeffOnPage, messageService);
         String navigator = "redirect:" + previousQueryService.takePreviousQuery(request);
         if (messageService.isErrMessEmpty()) {
-            try (PlayerService playerService = ServiceFactory.getPlayerService();
-                 BetService betService = ServiceFactory.getBetService()) {
+            try (PlayerService playerService = serviceFactory.getPlayerService();
+                 BetService betService = serviceFactory.getBetService()) {
                 BigDecimal coefficient = event.getOutcomeByType(outcomeType).getCoefficient();
                 BigDecimal betAmount = new BigDecimal(betAmountStr);
                 Bet bet = new Bet(player.getId(), event.getId(), outcomeType,
@@ -76,14 +75,14 @@ public class BetController extends AbstrController {
     @PostMapping("/pay_win_bet")
     public String payWinBet(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        MessageService messageService = ServiceFactory.getMessageService(session);
+        MessageService messageService = serviceFactory.getMessageService(session);
         
         String eventIdStr = request.getParameter(PARAM_EVENT_ID);
         validateRequestParams(messageService, eventIdStr);
         validateEventId(messageService, eventIdStr);
         if (messageService.isErrMessEmpty()) {
             int eventId = Integer.parseInt(eventIdStr);
-            try (BetService betService = ServiceFactory.getBetService()) {
+            try (BetService betService = serviceFactory.getBetService()) {
                 betService.payWinBet(eventId, messageService);
             }
             if (messageService.isErrMessEmpty()) {
@@ -130,7 +129,7 @@ public class BetController extends AbstrController {
                                         MessageService messageService) {
         if (messageService.isErrMessEmpty()) {
             LocalDateTime betDateTime = LocalDateTime.now();
-            ValidationService validationService = ServiceFactory.getValidationService();
+            ValidationService validationService = serviceFactory.getValidationService();
             if (!validationService.isValidBetTime(betDateTime, event.getDate())) {
                 messageService.appendErrMessByKey(MESSAGE_ERR_BET_TIME);
             }
@@ -166,7 +165,7 @@ public class BetController extends AbstrController {
      */
     private static void validateEventId(MessageService messageService, String eventIdStr) {
         if (messageService.isErrMessEmpty()) {
-            ValidationService validationService = ServiceFactory.getValidationService();
+            ValidationService validationService = serviceFactory.getValidationService();
             if (!validationService.isValidId(eventIdStr)) {
                 messageService.appendErrMessByKey(MESSAGE_ERR_INVALID_EVENT_ID);
             }

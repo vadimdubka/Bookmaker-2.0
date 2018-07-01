@@ -14,7 +14,6 @@ import com.dubatovka.app.service.PaginationService;
 import com.dubatovka.app.service.PlayerService;
 import com.dubatovka.app.service.PreviousQueryService;
 import com.dubatovka.app.service.ValidationService;
-import com.dubatovka.app.service.impl.ServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -55,7 +54,7 @@ public class NavigationController extends AbstrController {
     @GetMapping("/main_page")
     public String showMainPage(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        MessageService messageService = ServiceFactory.getMessageService(session);
+        MessageService messageService = serviceFactory.getMessageService(session);
         
         String categoryIdStr = request.getParameter(PARAM_CATEGORY_ID);
         String eventQueryType = (String) session.getAttribute(ATTR_EVENT_QUERY_TYPE);
@@ -101,8 +100,8 @@ public class NavigationController extends AbstrController {
      * @param eventQueryType {@link String}
      */
     private static void setCategoryInfo(ServletRequest request, String eventQueryType) {
-        try (EventService eventService = ServiceFactory.getEventService();
-             CategoryService categoryService = ServiceFactory.getCategoryService()) {
+        try (EventService eventService = serviceFactory.getEventService();
+             CategoryService categoryService = serviceFactory.getCategoryService()) {
             Set<Category> sportSet = categoryService.getSportCategories();
             Map<Integer, Integer> eventCountMap = eventService.countEvents(eventQueryType);
             request.setAttribute(ATTR_SPORT_SET, sportSet);
@@ -122,7 +121,7 @@ public class NavigationController extends AbstrController {
                                      String eventQueryType) {
         List<Event> events;
         Map<String, Map<String, String>> coeffColumnMaps;
-        try (EventService eventService = ServiceFactory.getEventService()) {
+        try (EventService eventService = serviceFactory.getEventService()) {
             events = eventService.getEvents(categoryIdStr, eventQueryType);
             coeffColumnMaps = eventService.getOutcomeColumnMaps(events);
         }
@@ -146,7 +145,7 @@ public class NavigationController extends AbstrController {
     private static void setWinBetInfo(ServletRequest request, String categoryIdStr) {
         int categoryId = Integer.parseInt(categoryIdStr);
         Map<String, Map<String, String>> winBetInfoMap;
-        try (BetService betService = ServiceFactory.getBetService()) {
+        try (BetService betService = serviceFactory.getBetService()) {
             winBetInfoMap = betService.getWinBetInfo(categoryId);
         }
         Map<String, String> winBetCount = winBetInfoMap.get(WIN_BET_INFO_KEY_COUNT);
@@ -164,7 +163,7 @@ public class NavigationController extends AbstrController {
      */
     private static void validateCommand(MessageService messageService, String categoryIdStr) {
         if (messageService.isErrMessEmpty()) {
-            ValidationService validationService = ServiceFactory.getValidationService();
+            ValidationService validationService = serviceFactory.getValidationService();
             if (!validationService.isValidId(categoryIdStr)) {
                 messageService.appendErrMessByKey(MESSAGE_ERR_INVALID_EVENT_ID);
             }
@@ -246,7 +245,7 @@ public class NavigationController extends AbstrController {
     @GetMapping("/make_bet_page")
     public String showMakeBetPage(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        MessageService messageService = ServiceFactory.getMessageService(session);
+        MessageService messageService = serviceFactory.getMessageService(session);
         
         String eventIdStr = request.getParameter(PARAM_EVENT_ID);
         String outcomeType = request.getParameter(PARAM_OUTCOME_TYPE);
@@ -256,7 +255,7 @@ public class NavigationController extends AbstrController {
         checkAndSetEventNotNull(eventIdStr, event, messageService);
         String navigator = "forward:/main_page";
         if (messageService.isErrMessEmpty()) {
-            try (CategoryService categoryService = ServiceFactory.getCategoryService()) {
+            try (CategoryService categoryService = serviceFactory.getCategoryService()) {
                 Outcome outcome = event.getOutcomeByType(outcomeType);
                 Category category = categoryService.getCategoryById(event.getCategoryId());
                 Category parentCategory = categoryService.getCategoryById(category.getParentId());
@@ -276,7 +275,7 @@ public class NavigationController extends AbstrController {
     @GetMapping("/manage_players_page")
     public String showManagePlayerPage(Model model, HttpServletRequest request) {
         List<Player> players;
-        try (PlayerService playerService = ServiceFactory.getPlayerService()) {
+        try (PlayerService playerService = serviceFactory.getPlayerService()) {
             players = playerService.getAllPlayers();
         }
         request.setAttribute(ATTR_PLAYERS, players);
@@ -287,7 +286,7 @@ public class NavigationController extends AbstrController {
     @GetMapping("/player_state_page")
     public String showPlayerStatePage(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        MessageService messageService = ServiceFactory.getMessageService(session);
+        MessageService messageService = serviceFactory.getMessageService(session);
         
         Player player = (Player) session.getAttribute(PLAYER);
         String pageNumberStr = request.getParameter(PARAM_PAGE_NUMBER);
@@ -322,9 +321,9 @@ public class NavigationController extends AbstrController {
      */
     private static void setBetInfo(ServletRequest request, User player,
                                    PaginationService paginationService) {
-        try (BetService betService = ServiceFactory.getBetService();
-             CategoryService categoryService = ServiceFactory.getCategoryService();
-             EventService eventService = ServiceFactory.getEventService()) {
+        try (BetService betService = serviceFactory.getBetService();
+             CategoryService categoryService = serviceFactory.getCategoryService();
+             EventService eventService = serviceFactory.getEventService()) {
             int limit = paginationService.getLimitOnPage();
             int offset = paginationService.getOffset();
             List<Bet> betList = betService.getBetListForPlayer(player.getId(), limit, offset);
@@ -356,14 +355,14 @@ public class NavigationController extends AbstrController {
      */
     private static PaginationService getPaginationService(ServletRequest request,
                                                           User player, String pageNumberStr) {
-        ValidationService validationService = ServiceFactory.getValidationService();
+        ValidationService validationService = serviceFactory.getValidationService();
         int pageNumber = (validationService.isValidId(pageNumberStr)) ?
                              Integer.parseInt(pageNumberStr) : 1;
         int totalEntityAmount;
-        try (BetService betService = ServiceFactory.getBetService()) {
+        try (BetService betService = serviceFactory.getBetService()) {
             totalEntityAmount = betService.countBetsForPlayer(player.getId());
         }
-        PaginationService paginationService = ServiceFactory.getPaginationService();
+        PaginationService paginationService = serviceFactory.getPaginationService();
         paginationService.buildService(totalEntityAmount, PAGE_LIMIT, pageNumber);
         request.setAttribute(ATTR_PAGINATION, paginationService);
         return paginationService;
@@ -377,7 +376,7 @@ public class NavigationController extends AbstrController {
      * @param player  {@link Player}
      */
     private static void setPlayerInfo(HttpSession session, Player player) {
-        try (PlayerService playerService = ServiceFactory.getPlayerService()) {
+        try (PlayerService playerService = serviceFactory.getPlayerService()) {
             playerService.updatePlayerInfo(player);
         }
         session.setAttribute(ATTR_PLAYER, player);

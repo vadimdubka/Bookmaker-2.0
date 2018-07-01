@@ -5,6 +5,7 @@ import com.dubatovka.app.service.EventService;
 import com.dubatovka.app.service.MessageService;
 import com.dubatovka.app.service.ValidationService;
 import com.dubatovka.app.service.impl.ServiceFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,6 +18,9 @@ import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_INVALID_REQUES
 
 public abstract class AbstrController {
     
+    @Autowired
+    protected static ServiceFactory serviceFactory;
+    
     /**
      * Method validates request parameters from {@link HttpServletRequest#getParameter(String)}
      * using {@link ValidationService} to confirm that all necessary parameters for command
@@ -26,7 +30,7 @@ public abstract class AbstrController {
      * @param params         {@link String} array of request parameters.
      */
     public void validateRequestParams(MessageService messageService, String... params) {
-        ValidationService validationService = ServiceFactory.getValidationService();
+        ValidationService validationService = serviceFactory.getValidationService();
         if (!validationService.isValidRequestParam(params)) {
             messageService.appendErrMessByKey(MESSAGE_ERR_INVALID_REQUEST_PARAMETER);
         }
@@ -43,7 +47,7 @@ public abstract class AbstrController {
     public void checkAndSetEventNotNull(String eventIdStr, Event event,
                                         MessageService messageService) {
         if (messageService.isErrMessEmpty()) {
-            try (EventService eventService = ServiceFactory.getEventService()) {
+            try (EventService eventService = serviceFactory.getEventService()) {
                 Event eventDB = eventService.getEvent(eventIdStr);
                 if (eventDB != null) {
                     event.updateFrom(eventDB);
@@ -68,7 +72,7 @@ public abstract class AbstrController {
                                   String eventIdStr, String dateTimeStr,
                                   String participant1, String participant2) {
         if (messageService.isErrMessEmpty()) {
-            ValidationService validationService = ServiceFactory.getValidationService();
+            ValidationService validationService = serviceFactory.getValidationService();
             if (!validationService.isValidId(eventIdStr)) {
                 messageService.appendErrMessByKey(MESSAGE_ERR_INVALID_EVENT_ID);
             }

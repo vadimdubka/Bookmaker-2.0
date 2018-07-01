@@ -5,7 +5,6 @@ import com.dubatovka.app.service.EventService;
 import com.dubatovka.app.service.MessageService;
 import com.dubatovka.app.service.PreviousQueryService;
 import com.dubatovka.app.service.ValidationService;
-import com.dubatovka.app.service.impl.ServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,7 +43,7 @@ public class EventController extends AbstrController {
     @PostMapping("/event_create")
     public String eventCreate(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        MessageService messageService = ServiceFactory.getMessageService(session);
+        MessageService messageService = serviceFactory.getMessageService(session);
         
         String categoryIdStr = request.getParameter(PARAM_CATEGORY_ID);
         String dateTimeStr = request.getParameter(PARAM_DATE);
@@ -61,7 +60,7 @@ public class EventController extends AbstrController {
             event.setDate(dateTime);
             event.setParticipant1(participant1.trim());
             event.setParticipant2(participant2.trim());
-            try (EventService eventService = ServiceFactory.getEventService()) {
+            try (EventService eventService = serviceFactory.getEventService()) {
                 eventService.insertEvent(event, messageService);
             }
             if (messageService.isErrMessEmpty()) {
@@ -77,7 +76,7 @@ public class EventController extends AbstrController {
     @PostMapping("/event_delete")
     public String eventDelete(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        MessageService messageService = ServiceFactory.getMessageService(session);
+        MessageService messageService = serviceFactory.getMessageService(session);
         
         String eventIdStr = request.getParameter(PARAM_EVENT_ID);
         
@@ -85,7 +84,7 @@ public class EventController extends AbstrController {
         validateCommand(messageService, eventIdStr);
         if (messageService.isErrMessEmpty()) {
             int eventId = Integer.parseInt(eventIdStr);
-            try (EventService eventService = ServiceFactory.getEventService()) {
+            try (EventService eventService = serviceFactory.getEventService()) {
                 eventService.deleteEvent(eventId, messageService);
             }
             if (messageService.isErrMessEmpty()) {
@@ -102,7 +101,7 @@ public class EventController extends AbstrController {
     @PostMapping("/event_info_update")
     public String eventInfoUpdate(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        MessageService messageService = ServiceFactory.getMessageService(session);
+        MessageService messageService = serviceFactory.getMessageService(session);
         
         String eventIdStr = request.getParameter(PARAM_EVENT_ID);
         String dateTimeStr = request.getParameter(PARAM_DATE);
@@ -117,7 +116,7 @@ public class EventController extends AbstrController {
             event.setDate(LocalDateTime.parse(dateTimeStr));
             event.setParticipant1(participant1.trim());
             event.setParticipant2(participant2.trim());
-            try (EventService eventService = ServiceFactory.getEventService()) {
+            try (EventService eventService = serviceFactory.getEventService()) {
                 eventService.updateEventInfo(event, messageService);
             }
             if (messageService.isErrMessEmpty()) {
@@ -133,7 +132,7 @@ public class EventController extends AbstrController {
     @PostMapping("/event_result_update")
     public String eventResultUpdate(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        MessageService messageService = ServiceFactory.getMessageService(session);
+        MessageService messageService = serviceFactory.getMessageService(session);
         
         String eventIdStr = request.getParameter(PARAM_EVENT_ID);
         String result1Str = request.getParameter(PARAM_RESULT_1);
@@ -146,7 +145,7 @@ public class EventController extends AbstrController {
         if (messageService.isErrMessEmpty()) {
             event.setResult1(result1Str.trim());
             event.setResult2(result2Str.trim());
-            try (EventService eventService = ServiceFactory.getEventService()) {
+            try (EventService eventService = serviceFactory.getEventService()) {
                 eventService.updateEventResult(event, messageService);
             }
             if (messageService.isErrMessEmpty()) {
@@ -168,7 +167,7 @@ public class EventController extends AbstrController {
      */
     private static void validateCommand(MessageService messageService, String eventIdStr) {
         if (messageService.isErrMessEmpty()) {
-            ValidationService validationService = ServiceFactory.getValidationService();
+            ValidationService validationService = serviceFactory.getValidationService();
             if (!validationService.isValidId(eventIdStr)) {
                 messageService.appendErrMessByKey(MESSAGE_ERR_INVALID_EVENT_ID);
             }
@@ -186,7 +185,7 @@ public class EventController extends AbstrController {
     private static void validateCommand(MessageService messageService,
                                         String result1Str, String result2Str) {
         if (messageService.isErrMessEmpty()) {
-            ValidationService validationService = ServiceFactory.getValidationService();
+            ValidationService validationService = serviceFactory.getValidationService();
             if (!validationService.isValidEventResult(result1Str) ||
                     !validationService.isValidEventResult(result2Str)) {
                 messageService.appendErrMessByKey(MESSAGE_ERR_INVALID_EVENT_RESULT);

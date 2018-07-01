@@ -19,7 +19,7 @@ import static com.dubatovka.app.config.ConfigConstant.PARAM_LOCALE;
  * @author Dubatovka Vadim
  */
 @Controller
-public class ChangeLocaleController {
+public class ChangeLocaleController extends AbstrController{
     private final PreviousQueryService previousQueryService;
     
     @Autowired
