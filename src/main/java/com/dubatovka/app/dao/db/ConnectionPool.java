@@ -8,8 +8,6 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -23,15 +21,6 @@ public final class ConnectionPool {
     private static final Logger logger = LogManager.getLogger(ConnectionPool.class);
     
     /**
-     * Database property-file keys.
-     */
-    private static final String DB_DRIVER   = "driver";
-    private static final String DB_USER     = "user";
-    private static final String DB_PASSWORD = "password";
-    private static final String DB_URL      = "url";
-    private static final String POOL_SIZE   = "poolsize";
-    
-    /**
      * Seconds for checking if connection is valid
      */
     private static final int VALIDATION_TIMEOUT = 1;
@@ -43,7 +32,7 @@ public final class ConnectionPool {
     /**
      * Class lock for {@link #getInstance()} method.
      */
-    private static final Lock          lock    = new ReentrantLock();
+    private static final Lock lock = new ReentrantLock();
     
     /**
      * Class singleton instance.
@@ -58,11 +47,22 @@ public final class ConnectionPool {
     /**
      * Database property-file values.
      */
+    /*@Value("${db.driver}")
     private String driver;
+    @Value("${spring.datasource.url}")
     private String url;
+    @Value("${db.user}")
     private String user;
+    @Value("${db.password}")
     private String password;
-    private String poolSizeStr;
+    @Value("${db.poolsize}")
+    private String poolSizeStr;*/
+    // TODO убрать хардкод
+    private String driver = "org.postgresql.Driver";
+    private String url = "jdbc:postgresql://127.0.0.1:5432/bookmaker";
+    private String user = "postgres";
+    private String password = "postpass";
+    private String poolSizeStr = "6";
     
     /**
      * Collection of {@link WrappedConnection} objects.
@@ -117,20 +117,7 @@ public final class ConnectionPool {
      * @throws ConnectionPoolException if {@link InterruptedException} occurred while putting {@link
      *                                 WrappedConnection} to {@link #connections}
      */
-    public int initPool(String properties) throws ConnectionPoolException {
-        ResourceBundle resourceBundle;
-        try {
-            resourceBundle = ResourceBundle.getBundle(properties);
-        } catch (MissingResourceException e) {
-            logger.log(Level.ERROR, "Invalid resource path to database *.properties file");
-            throw new RuntimeException(e.getMessage());
-        }
-        driver = resourceBundle.getString(DB_DRIVER);
-        user = resourceBundle.getString(DB_USER);
-        password = resourceBundle.getString(DB_PASSWORD);
-        url = resourceBundle.getString(DB_URL);
-        poolSizeStr = resourceBundle.getString(POOL_SIZE);
-        
+    public int initPool() throws ConnectionPoolException {
         poolSize = Integer.parseInt(poolSizeStr);
         connections = new ArrayBlockingQueue<>(poolSize);
         for (int i = 0; i < poolSize; i++) {

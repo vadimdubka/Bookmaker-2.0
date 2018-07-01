@@ -18,24 +18,18 @@ public class BookmakerContextListener implements ServletContextListener {
     private static final Logger logger = LogManager.getLogger(BookmakerContextListener.class);
     
     /**
-     * Database property-file path relative to Maven directory 'resources' servletContext initParam
-     * key.
-     */
-    private static final String         DB_PROPERTIES = "db.props";
-    /**
      * Connection pool instance for managing.
      */
-    private              ConnectionPool pool;
+    private ConnectionPool pool;
     
     /**
      * Initializes {@link ConnectionPool}.
      */
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        String databaseProps = sce.getServletContext().getInitParameter(DB_PROPERTIES);
         try {
             pool = ConnectionPool.getInstance();
-            int createdConnectionsNumber = pool.initPool(databaseProps);
+            int createdConnectionsNumber = pool.initPool();
             logger.log(Level.INFO, "ConnectionPool was initialized with "
                                        + createdConnectionsNumber + " connections.");
         } catch (ConnectionPoolException e) {
