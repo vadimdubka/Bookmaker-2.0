@@ -1,74 +1,10 @@
 package com.dubatovka.app.service;
 
-import com.dubatovka.app.config.ConfigConstant;
-import org.springframework.stereotype.Service;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.Enumeration;
 
-import static com.dubatovka.app.config.ConfigConstant.ATTR_PREV_QUERY;
-import static com.dubatovka.app.config.ConfigConstant.PAGE_INDEX;
-import static com.dubatovka.app.config.ConfigConstant.PARAMETER_SEPARATOR;
-import static com.dubatovka.app.config.ConfigConstant.PARAM_PASSWORD;
-import static com.dubatovka.app.config.ConfigConstant.PARAM_PASSWORD_AGAIN;
-import static com.dubatovka.app.config.ConfigConstant.PARAM_PASSWORD_OLD;
-import static com.dubatovka.app.config.ConfigConstant.QUERY_START_SEPARATOR;
-import static com.dubatovka.app.config.ConfigConstant.VALUE_SEPARATOR;
-
-@Service
-public class PreviousQueryService {
-    private static final String STUB = "********";
+public interface PreviousQueryService {
     
-    /**
-     * Saves query to {@link HttpSession} as {@link ConfigConstant#ATTR_PREV_QUERY} attribute.
-     */
-    public void saveQueryToSession(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        String query = buildQueryString(request);
-        session.setAttribute(ATTR_PREV_QUERY, query);
-    }
+    void saveQueryToSession(HttpServletRequest request);
     
-    /**
-     * Takes saved to {@link HttpSession} previous query.
-     */
-    public String takePreviousQuery(HttpServletRequest req) {
-        String prevQuery = (String) req.getSession().getAttribute(ATTR_PREV_QUERY);
-        if (prevQuery == null) {
-            prevQuery = PAGE_INDEX;
-        }
-        return prevQuery;
-    }
-    
-    /**
-     * Builds query by parsing request parameters.
-     */
-    private String buildQueryString(HttpServletRequest request) {
-        // /bookmaker/main_page
-        // String requestURI = request.getRequestURI();
-        // /bookmaker
-        // String contextPath = request.getContextPath();
-        // /main_page
-        String servletPath = request.getServletPath();
-        StringBuffer query = new StringBuffer();
-        Enumeration<String> params = request.getParameterNames();
-        while (params.hasMoreElements()) {
-            String key = params.nextElement();
-            String value = request.getParameter(key);
-            if (key.equalsIgnoreCase(PARAM_PASSWORD) ||
-                    key.equalsIgnoreCase(PARAM_PASSWORD_AGAIN) ||
-                    key.equalsIgnoreCase(PARAM_PASSWORD_OLD)) {
-                value = STUB;
-            }
-            query = query.append(PARAMETER_SEPARATOR).append(key)
-                        .append(VALUE_SEPARATOR).append(value);
-        }
-        
-        String result = servletPath;
-        if (query.length() > 0) {
-            query.deleteCharAt(0);
-            result = result + QUERY_START_SEPARATOR + query;
-        }
-        return result;
-    }
+    String takePreviousQuery(HttpServletRequest req);
 }
