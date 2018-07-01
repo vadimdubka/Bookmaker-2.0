@@ -14,6 +14,8 @@ import com.dubatovka.app.service.OutcomeService;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.EnumMap;
@@ -32,6 +34,9 @@ import static com.dubatovka.app.config.ConfigConstant.OUTCOME_TYPE_KEY_NAME;
  */
 class EventServiceImpl extends EventService {
     private static final Logger logger = LogManager.getLogger(EventServiceImpl.class);
+    
+    @Autowired
+    private static ServiceFactory serviceFactory;
     
     private final EventDAO eventDAO = daoProvider.getEventDAO();
     private final BetDAO   betDAO   = daoProvider.getBetDAO();
@@ -80,7 +85,7 @@ class EventServiceImpl extends EventService {
         } catch (DAOException e) {
             logger.log(Level.ERROR, e.getMessage());
         }
-        OutcomeService outcomeService = ServiceFactory.getOutcomeService(daoProvider);
+        OutcomeService outcomeService = serviceFactory.getOutcomeService(daoProvider);
         outcomeService.setOutcomesForEvent(event);
         return event;
     }
@@ -278,7 +283,7 @@ class EventServiceImpl extends EventService {
     }
     
     private void setOutcomesForEvents(Iterable<Event> eventSet) {
-        eventSet.forEach(ServiceFactory.getOutcomeService(daoProvider)::setOutcomesForEvent);
+        eventSet.forEach(serviceFactory.getOutcomeService(daoProvider)::setOutcomesForEvent);
     }
     
     private void fillOutcomeColumnMaps(int eventId, Iterable<Outcome> outcomeSet) {
