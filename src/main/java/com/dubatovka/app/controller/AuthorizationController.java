@@ -1,18 +1,14 @@
-package com.dubatovka.app.controller.impl;
+package com.dubatovka.app.controller;
 
-import com.dubatovka.app.controller.Command;
-import com.dubatovka.app.controller.PageNavigator;
 import com.dubatovka.app.entity.Admin;
 import com.dubatovka.app.entity.Analyst;
 import com.dubatovka.app.entity.Player;
 import com.dubatovka.app.entity.User;
 import com.dubatovka.app.service.MessageService;
 import com.dubatovka.app.service.PlayerService;
-import com.dubatovka.app.service.PreviousQueryService;
 import com.dubatovka.app.service.UserService;
 import com.dubatovka.app.service.ValidationService;
 import com.dubatovka.app.service.impl.ServiceFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,39 +18,10 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import static com.dubatovka.app.config.ConfigConstant.ATTR_ADMIN;
-import static com.dubatovka.app.config.ConfigConstant.ATTR_ANALYST;
-import static com.dubatovka.app.config.ConfigConstant.ATTR_BIRTHDATE_INPUT;
-import static com.dubatovka.app.config.ConfigConstant.ATTR_EMAIL_INPUT;
-import static com.dubatovka.app.config.ConfigConstant.ATTR_FNAME_INPUT;
-import static com.dubatovka.app.config.ConfigConstant.ATTR_LNAME_INPUT;
-import static com.dubatovka.app.config.ConfigConstant.ATTR_MNAME_INPUT;
-import static com.dubatovka.app.config.ConfigConstant.ATTR_PLAYER;
-import static com.dubatovka.app.config.ConfigConstant.ATTR_ROLE;
-import static com.dubatovka.app.config.ConfigConstant.ATTR_USER;
-import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_INVALID_BIRTHDATE;
-import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_INVALID_EMAIL;
-import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_INVALID_NAME;
-import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_INVALID_PASSWORD;
-import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_LOGIN_MISMATCH;
-import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_PASSWORD_MISMATCH;
-import static com.dubatovka.app.config.ConfigConstant.PARAM_BIRTHDATE;
-import static com.dubatovka.app.config.ConfigConstant.PARAM_EMAIL;
-import static com.dubatovka.app.config.ConfigConstant.PARAM_FNAME;
-import static com.dubatovka.app.config.ConfigConstant.PARAM_LNAME;
-import static com.dubatovka.app.config.ConfigConstant.PARAM_MNAME;
-import static com.dubatovka.app.config.ConfigConstant.PARAM_PASSWORD;
-import static com.dubatovka.app.config.ConfigConstant.PARAM_PASSWORD_AGAIN;
+import static com.dubatovka.app.config.ConfigConstant.*;
 
 @Controller
-public class AuthorizationController implements Command {
-    
-    private final PreviousQueryService previousQueryService;
-    
-    @Autowired
-    public AuthorizationController(PreviousQueryService previousQueryService) {
-        this.previousQueryService = previousQueryService;
-    }
+public class AuthorizationController extends AbstrController {
     
     @PostMapping("/register")
     public String register(Model model, HttpServletRequest request) {
@@ -211,11 +178,5 @@ public class AuthorizationController implements Command {
             Analyst analyst = (Analyst) user;
             session.setAttribute(ATTR_ANALYST, analyst);
         }
-    }
-    
-    @Override
-    //TODO delete method
-    public PageNavigator execute(HttpServletRequest request) {
-        return null;
     }
 }

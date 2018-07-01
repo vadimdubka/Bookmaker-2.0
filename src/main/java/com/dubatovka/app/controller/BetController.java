@@ -1,7 +1,5 @@
-package com.dubatovka.app.controller.impl;
+package com.dubatovka.app.controller;
 
-import com.dubatovka.app.controller.Command;
-import com.dubatovka.app.controller.PageNavigator;
 import com.dubatovka.app.entity.Bet;
 import com.dubatovka.app.entity.Event;
 import com.dubatovka.app.entity.Player;
@@ -23,29 +21,10 @@ import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import static com.dubatovka.app.config.ConfigConstant.ATTR_PLAYER;
-import static com.dubatovka.app.config.ConfigConstant.ATTR_ROLE;
-import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_BETTING_INTERRUPTED;
-import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_BET_AMOUNT_LESS_BALANCE;
-import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_BET_AMOUNT_LESS_BET_LIMIT;
-import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_BET_FOR_EMPLOYEE;
-import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_BET_GOTO_REGISTRATION;
-import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_BET_TIME;
-import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_INVALID_BET_AMOUNT;
-import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_INVALID_EVENT_ID;
-import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_OUTCOME_COEFF_CHANGE;
-import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_PAY_WIN_BET;
-import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_PLAYER_STATUS_BAN;
-import static com.dubatovka.app.config.ConfigConstant.MESSAGE_INF_BET_IS_DONE;
-import static com.dubatovka.app.config.ConfigConstant.MESSAGE_INF_PAY_WIN_BET;
-import static com.dubatovka.app.config.ConfigConstant.PARAM_BET_AMOUNT;
-import static com.dubatovka.app.config.ConfigConstant.PARAM_EVENT_ID;
-import static com.dubatovka.app.config.ConfigConstant.PARAM_OUTCOME_COEFFICIENT;
-import static com.dubatovka.app.config.ConfigConstant.PARAM_OUTCOME_TYPE;
-import static com.dubatovka.app.config.ConfigConstant.PLAYER;
+import static com.dubatovka.app.config.ConfigConstant.*;
 
 @Controller
-public class BetController implements Command {
+public class BetController extends AbstrController {
     
     private final PreviousQueryService previousQueryService;
     
@@ -192,10 +171,5 @@ public class BetController implements Command {
                 messageService.appendErrMessByKey(MESSAGE_ERR_INVALID_EVENT_ID);
             }
         }
-    }
-    
-    @Override
-    public PageNavigator execute(HttpServletRequest request) {
-        return null;
     }
 }

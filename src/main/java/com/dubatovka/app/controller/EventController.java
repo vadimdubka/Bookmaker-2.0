@@ -1,7 +1,5 @@
-package com.dubatovka.app.controller.impl;
+package com.dubatovka.app.controller;
 
-import com.dubatovka.app.controller.Command;
-import com.dubatovka.app.controller.PageNavigator;
 import com.dubatovka.app.entity.Event;
 import com.dubatovka.app.service.EventService;
 import com.dubatovka.app.service.MessageService;
@@ -34,7 +32,7 @@ import static com.dubatovka.app.config.ConfigConstant.PARAM_RESULT_1;
 import static com.dubatovka.app.config.ConfigConstant.PARAM_RESULT_2;
 
 @Controller
-public class EventController implements Command {
+public class EventController extends AbstrController {
     
     private final PreviousQueryService previousQueryService;
     
@@ -196,8 +194,4 @@ public class EventController implements Command {
         }
     }
     
-    @Override
-    public PageNavigator execute(HttpServletRequest request) {
-        return null;
-    }
 }

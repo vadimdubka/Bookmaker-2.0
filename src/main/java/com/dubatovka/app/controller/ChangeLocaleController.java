@@ -1,8 +1,5 @@
-package com.dubatovka.app.controller.impl;
+package com.dubatovka.app.controller;
 
-import com.dubatovka.app.config.ConfigConstant;
-import com.dubatovka.app.controller.Command;
-import com.dubatovka.app.controller.PageNavigator;
 import com.dubatovka.app.service.PreviousQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,12 +19,11 @@ import static com.dubatovka.app.config.ConfigConstant.PARAM_LOCALE;
  * @author Dubatovka Vadim
  */
 @Controller
-//TODO переименовать команды в контроллер
-public class ChangeLocaleCommand implements Command {
+public class ChangeLocaleController {
     private final PreviousQueryService previousQueryService;
     
     @Autowired
-    public ChangeLocaleCommand(PreviousQueryService previousQueryService) {
+    public ChangeLocaleController(PreviousQueryService previousQueryService) {
         this.previousQueryService = previousQueryService;
     }
     
@@ -40,24 +36,5 @@ public class ChangeLocaleCommand implements Command {
         }
         session.setAttribute(ATTR_LOCALE, locale);
         return "forward:" + previousQueryService.takePreviousQuery(request);
-    }
-    
-    /**
-     * Takes {@link ConfigConstant#PARAM_LOCALE} parameter from {@link HttpServletRequest , sets it
-     * as attribute to {@link HttpSession } and navigates to {@link PageNavigator#FORWARD_PREV_QUERY}.
-     *
-     * @param request {@link HttpServletRequest } from client
-     * @return {@link PageNavigator#FORWARD_PREV_QUERY}
-     */
-    @Deprecated
-    @Override
-    public PageNavigator execute(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        String locale = request.getParameter(PARAM_LOCALE);
-        if (locale == null) {
-            locale = LOCALE_DEFAULT;
-        }
-        session.setAttribute(ATTR_LOCALE, locale);
-        return PageNavigator.FORWARD_PREV_QUERY;
     }
 }
