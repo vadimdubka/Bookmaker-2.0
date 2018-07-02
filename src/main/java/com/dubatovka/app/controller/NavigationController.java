@@ -14,6 +14,7 @@ import com.dubatovka.app.service.PaginationService;
 import com.dubatovka.app.service.PlayerService;
 import com.dubatovka.app.service.PreviousQueryService;
 import com.dubatovka.app.service.ValidationService;
+import com.dubatovka.app.service.impl.ServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,7 +41,8 @@ public class NavigationController extends AbstrController {
     private final PreviousQueryService previousQueryService;
     
     @Autowired
-    public NavigationController(PreviousQueryService previousQueryService) {
+    public NavigationController(ServiceFactory serviceFactory, PreviousQueryService previousQueryService) {
+        this.serviceFactory = serviceFactory;
         this.previousQueryService = previousQueryService;
     }
     
@@ -86,7 +88,7 @@ public class NavigationController extends AbstrController {
      * @param session {@link HttpSession}
      * @return {@link String} default value for event query type
      */
-    private static String setDefaultSessionAttr(HttpSession session) {
+    private String setDefaultSessionAttr(HttpSession session) {
         session.setAttribute(ATTR_EVENT_QUERY_TYPE, EVENT_QUERY_TYPE_ACTUAL);
         session.setAttribute(ATTR_EVENT_GOTO_TYPE, EVENT_GOTO_SHOW_ACTUAL);
         return EVENT_QUERY_TYPE_ACTUAL;
@@ -99,7 +101,7 @@ public class NavigationController extends AbstrController {
      * @param request        {@link ServletRequest}
      * @param eventQueryType {@link String}
      */
-    private static void setCategoryInfo(ServletRequest request, String eventQueryType) {
+    private void setCategoryInfo(ServletRequest request, String eventQueryType) {
         try (EventService eventService = serviceFactory.getEventService();
              CategoryService categoryService = serviceFactory.getCategoryService()) {
             Set<Category> sportSet = categoryService.getSportCategories();
@@ -117,8 +119,8 @@ public class NavigationController extends AbstrController {
      * @param categoryIdStr  {@link String} representation of {@link Category} id
      * @param eventQueryType {@link String}
      */
-    private static void setEventInfo(ServletRequest request, String categoryIdStr,
-                                     String eventQueryType) {
+    private void setEventInfo(ServletRequest request, String categoryIdStr,
+                              String eventQueryType) {
         List<Event> events;
         Map<String, Map<String, String>> coeffColumnMaps;
         try (EventService eventService = serviceFactory.getEventService()) {
@@ -142,7 +144,7 @@ public class NavigationController extends AbstrController {
      * @param request       {@link ServletRequest}
      * @param categoryIdStr {@link String} representation of {@link Category} id.
      */
-    private static void setWinBetInfo(ServletRequest request, String categoryIdStr) {
+    private void setWinBetInfo(ServletRequest request, String categoryIdStr) {
         int categoryId = Integer.parseInt(categoryIdStr);
         Map<String, Map<String, String>> winBetInfoMap;
         try (BetService betService = serviceFactory.getBetService()) {
@@ -161,7 +163,7 @@ public class NavigationController extends AbstrController {
      * @param messageService {@link MessageService} to hold message about result of validation
      * @param categoryIdStr  {@link String} parameter for validation
      */
-    private static void validateCommand(MessageService messageService, String categoryIdStr) {
+    private void validateCommand(MessageService messageService, String categoryIdStr) {
         if (messageService.isErrMessEmpty()) {
             ValidationService validationService = serviceFactory.getValidationService();
             if (!validationService.isValidId(categoryIdStr)) {
@@ -319,8 +321,8 @@ public class NavigationController extends AbstrController {
      * @param player            {@link User}
      * @param paginationService {@link PaginationService}
      */
-    private static void setBetInfo(ServletRequest request, User player,
-                                   PaginationService paginationService) {
+    private void setBetInfo(ServletRequest request, User player,
+                            PaginationService paginationService) {
         try (BetService betService = serviceFactory.getBetService();
              CategoryService categoryService = serviceFactory.getCategoryService();
              EventService eventService = serviceFactory.getEventService()) {
@@ -353,8 +355,8 @@ public class NavigationController extends AbstrController {
      * @param pageNumberStr {@link String}
      * @return {@link PaginationService}
      */
-    private static PaginationService getPaginationService(ServletRequest request,
-                                                          User player, String pageNumberStr) {
+    private PaginationService getPaginationService(ServletRequest request,
+                                                   User player, String pageNumberStr) {
         ValidationService validationService = serviceFactory.getValidationService();
         int pageNumber = (validationService.isValidId(pageNumberStr)) ?
                              Integer.parseInt(pageNumberStr) : 1;
@@ -375,7 +377,7 @@ public class NavigationController extends AbstrController {
      * @param session {@link HttpSession}
      * @param player  {@link Player}
      */
-    private static void setPlayerInfo(HttpSession session, Player player) {
+    private void setPlayerInfo(HttpSession session, Player player) {
         try (PlayerService playerService = serviceFactory.getPlayerService()) {
             playerService.updatePlayerInfo(player);
         }
@@ -389,7 +391,7 @@ public class NavigationController extends AbstrController {
      * @param player         {@link Player} parameter for validation
      * @param messageService {@link MessageService} to hold message about result of validation
      */
-    private static void validateCommand(Player player, MessageService messageService) {
+    private void validateCommand(Player player, MessageService messageService) {
         if (messageService.isErrMessEmpty()) {
             if (player == null) {
                 messageService.appendErrMessByKey(MESSAGE_ERR_PLAYER_NOT_DEFINED);

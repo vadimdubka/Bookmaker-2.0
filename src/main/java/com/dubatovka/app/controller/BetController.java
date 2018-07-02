@@ -10,6 +10,7 @@ import com.dubatovka.app.service.MessageService;
 import com.dubatovka.app.service.PlayerService;
 import com.dubatovka.app.service.PreviousQueryService;
 import com.dubatovka.app.service.ValidationService;
+import com.dubatovka.app.service.impl.ServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,7 +29,8 @@ public class BetController extends AbstrController {
     private final PreviousQueryService previousQueryService;
     
     @Autowired
-    public BetController(PreviousQueryService previousQueryService) {
+    public BetController(ServiceFactory serviceFactory, PreviousQueryService previousQueryService) {
+        this.serviceFactory = serviceFactory;
         this.previousQueryService = previousQueryService;
     }
     
@@ -124,9 +126,9 @@ public class BetController extends AbstrController {
      * @param outcomeCoeffOnPage {@link String} parameter for validation
      * @param messageService     {@link MessageService} to hold message about validation result
      */
-    private static void validateCommand(Player player, String betAmountStr, Event event,
-                                        String outcomeType, String outcomeCoeffOnPage,
-                                        MessageService messageService) {
+    private void validateCommand(Player player, String betAmountStr, Event event,
+                                 String outcomeType, String outcomeCoeffOnPage,
+                                 MessageService messageService) {
         if (messageService.isErrMessEmpty()) {
             LocalDateTime betDateTime = LocalDateTime.now();
             ValidationService validationService = serviceFactory.getValidationService();
@@ -163,7 +165,7 @@ public class BetController extends AbstrController {
      * @param messageService {@link MessageService} to hold message about validation result
      * @param eventIdStr     {@link String} parameter for validation
      */
-    private static void validateEventId(MessageService messageService, String eventIdStr) {
+    private void validateEventId(MessageService messageService, String eventIdStr) {
         if (messageService.isErrMessEmpty()) {
             ValidationService validationService = serviceFactory.getValidationService();
             if (!validationService.isValidId(eventIdStr)) {

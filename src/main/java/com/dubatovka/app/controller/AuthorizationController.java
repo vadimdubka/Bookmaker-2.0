@@ -8,6 +8,7 @@ import com.dubatovka.app.service.MessageService;
 import com.dubatovka.app.service.PlayerService;
 import com.dubatovka.app.service.UserService;
 import com.dubatovka.app.service.ValidationService;
+import com.dubatovka.app.service.impl.ServiceFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,9 @@ import static com.dubatovka.app.config.ConfigConstant.*;
 
 @Controller
 public class AuthorizationController extends AbstrController {
+    public AuthorizationController(ServiceFactory serviceFactory) {
+        this.serviceFactory = serviceFactory;
+    }
     
     @PostMapping("/register")
     public String register(Model model, HttpServletRequest request) {
@@ -98,9 +102,9 @@ public class AuthorizationController extends AbstrController {
      * @param messageService {@link MessageService} to hold message about result of validation
      * @param request        {@link ServletRequest} to add attributes with valid data
      */
-    private static void validateCommand(String email, String password, String passwordAgain,
-                                        String fName, String mName, String lName, String birthDate,
-                                        MessageService messageService, ServletRequest request) {
+    private void validateCommand(String email, String password, String passwordAgain,
+                                 String fName, String mName, String lName, String birthDate,
+                                 MessageService messageService, ServletRequest request) {
         ValidationService validationService = serviceFactory.getValidationService();
         if (validationService.isValidEmail(email)) {
             request.setAttribute(ATTR_EMAIL_INPUT, email);
@@ -141,8 +145,8 @@ public class AuthorizationController extends AbstrController {
      * @param password       {@link String} parameter for validation
      * @param messageService {@link MessageService} to hold message about validation result
      */
-    private static void validateCommand(String email, String password,
-                                        MessageService messageService) {
+    private void validateCommand(String email, String password,
+                                 MessageService messageService) {
         if (messageService.isErrMessEmpty()) {
             ValidationService validationService = serviceFactory.getValidationService();
             if (!validationService.isValidEmail(email)) {
@@ -160,7 +164,7 @@ public class AuthorizationController extends AbstrController {
      * @param user    {@link User}
      * @param session {@link HttpSession}
      */
-    private static void setUserToSession(User user, HttpSession session) {
+    private void setUserToSession(User user, HttpSession session) {
         session.setAttribute(ATTR_USER, user);
         session.setAttribute(ATTR_ROLE, user.getRole());
         Class userClass = user.getClass();

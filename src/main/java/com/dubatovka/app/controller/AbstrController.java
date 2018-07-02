@@ -5,7 +5,6 @@ import com.dubatovka.app.service.EventService;
 import com.dubatovka.app.service.MessageService;
 import com.dubatovka.app.service.ValidationService;
 import com.dubatovka.app.service.impl.ServiceFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,8 +17,7 @@ import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_INVALID_REQUES
 
 public abstract class AbstrController {
     
-    @Autowired
-    protected static ServiceFactory serviceFactory;
+    protected ServiceFactory serviceFactory;
     
     /**
      * Method validates request parameters from {@link HttpServletRequest#getParameter(String)}

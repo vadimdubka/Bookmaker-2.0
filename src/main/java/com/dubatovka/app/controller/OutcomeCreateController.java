@@ -6,6 +6,7 @@ import com.dubatovka.app.service.MessageService;
 import com.dubatovka.app.service.OutcomeService;
 import com.dubatovka.app.service.PreviousQueryService;
 import com.dubatovka.app.service.ValidationService;
+import com.dubatovka.app.service.impl.ServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,7 +36,8 @@ public class OutcomeCreateController extends AbstrController {
     private final PreviousQueryService previousQueryService;
     
     @Autowired
-    public OutcomeCreateController(PreviousQueryService previousQueryService) {
+    public OutcomeCreateController(ServiceFactory serviceFactory, PreviousQueryService previousQueryService) {
+        this.serviceFactory = serviceFactory;
         this.previousQueryService = previousQueryService;
     }
     
@@ -85,8 +87,8 @@ public class OutcomeCreateController extends AbstrController {
      * @param outcomeXStr    {@link String} parameter for validation
      * @param outcome2Str    {@link String} parameter for validation
      */
-    private static void validateCommand(MessageService messageService,
-                                        String outcome1Str, String outcomeXStr, String outcome2Str) {
+    private void validateCommand(MessageService messageService,
+                                 String outcome1Str, String outcomeXStr, String outcome2Str) {
         if (messageService.isErrMessEmpty()) {
             ValidationService validationService = serviceFactory.getValidationService();
             if (!validationService.isValidOutcomeCoeff(outcome1Str)) {
