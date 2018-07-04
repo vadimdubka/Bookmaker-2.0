@@ -4,6 +4,7 @@ import com.dubatovka.app.service.impl.ServiceFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Locale;
 
@@ -13,6 +14,10 @@ import static com.dubatovka.app.config.ConfigConstant.LANG_EN;
 import static com.dubatovka.app.config.ConfigConstant.LANG_RU;
 
 public class MessageServiceTest {
+    
+    @Autowired
+    protected static ServiceFactory serviceFactory;
+    
     private static final String         PATH_TO_BUNDLE = "testcontent/messages";
     private static final Locale         LOCALE_EN_US = new Locale(LANG_EN, COUNTRY_US);
     private static final Locale         LOCALE_RU_RU = new Locale(LANG_RU, COUNTRY_RU);
@@ -24,8 +29,8 @@ public class MessageServiceTest {
     
     @Before
     public void setUp() {
-        messageServiceEn = ServiceFactory.getMessageService(LOCALE_EN_US, PATH_TO_BUNDLE);
-        messageServiceRu = ServiceFactory.getMessageService(LOCALE_RU_RU, PATH_TO_BUNDLE);
+        messageServiceEn = serviceFactory.getMessageService(LOCALE_EN_US, PATH_TO_BUNDLE);
+        messageServiceRu = serviceFactory.getMessageService(LOCALE_RU_RU, PATH_TO_BUNDLE);
     }
     
     @Test

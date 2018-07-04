@@ -6,6 +6,7 @@ import com.dubatovka.app.service.impl.ServiceFactory;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,11 +16,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ValidationServiceTest {
+    @Autowired
+    protected static ServiceFactory serviceFactory;
     private static ValidationService validationService;
     
     @BeforeClass
     public static void setUp() {
-        validationService = ServiceFactory.getValidationService();
+        validationService = serviceFactory.getValidationService();
     }
     
     @Test
@@ -115,7 +118,7 @@ public class ValidationServiceTest {
     
     @Test
     public void isValidEventParticipantNameTest() {
-        Assert.assertTrue(validationService.isValidEventParticipantName("Command"));
+        Assert.assertTrue(validationService.isValidEventParticipantName("AbstrController"));
         Assert.assertTrue(validationService.isValidEventParticipantName("Команда"));
         Assert.assertTrue(validationService.isValidEventParticipantName("Команда мечты."));
         Assert.assertTrue(validationService.isValidEventParticipantName("Команда-мечты. "));
@@ -135,7 +138,7 @@ public class ValidationServiceTest {
     
     @Test
     public void isValidOutcomeCoeffOnPageTest() {
-        Event   event = new Event();
+        Event event = new Event();
         Outcome type1 = new Outcome();
         Outcome typeX = new Outcome();
         Outcome type2 = new Outcome();

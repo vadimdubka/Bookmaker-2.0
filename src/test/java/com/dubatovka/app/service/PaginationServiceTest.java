@@ -4,13 +4,17 @@ import com.dubatovka.app.service.impl.ServiceFactory;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class PaginationServiceTest {
+    @Autowired
+    protected static ServiceFactory serviceFactory;
+    
     private static PaginationService paginationService;
     
     @BeforeClass
     public static void setUp() {
-        paginationService = ServiceFactory.getPaginationService();
+        paginationService = serviceFactory.getPaginationService();
         paginationService.buildService(15, 5, 2);
     }
     
@@ -47,7 +51,7 @@ public class PaginationServiceTest {
     
     @Test(expected = IllegalStateException.class)
     public void getOffsetExceptionTest() {
-        PaginationService paginationService = ServiceFactory.getPaginationService();
+        PaginationService paginationService = serviceFactory.getPaginationService();
         paginationService.getOffset();
     }
 }
