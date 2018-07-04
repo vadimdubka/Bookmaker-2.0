@@ -1,34 +1,30 @@
 package com.dubatovka.app.filter;
 
 
-import com.dubatovka.app.config.ConfigConstant;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
-import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.dubatovka.app.config.ConfigConstant.FILTER_PARAM_INDEX_PATH;
 
+// TODO заменить PageRedirectSecurityFilter с помощью SpringSecurity
+
 /**
  * The class provides security filter for servlet container which prevents application users custom
  * site navigation.
  */
-@WebFilter(
+/*@WebFilter(
     filterName = "PageRedirectFilter",
     urlPatterns = {"/pages/*"},
     initParams = {@WebInitParam(name = FILTER_PARAM_INDEX_PATH, value = ConfigConstant.PAGE_INDEX)}
-)
+)*/
 public class PageRedirectSecurityFilter implements Filter {
-    
-    
     /**
      * Path to index page.
      */
@@ -84,7 +80,7 @@ public class PageRedirectSecurityFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
         throws IOException, ServletException {
-        HttpServletRequest  httpRequest  = (HttpServletRequest) request;
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         httpResponse.sendRedirect(httpRequest.getContextPath() + indexPath);
         chain.doFilter(request, response);
