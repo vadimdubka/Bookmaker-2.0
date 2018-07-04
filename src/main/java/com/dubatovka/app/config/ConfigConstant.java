@@ -4,6 +4,7 @@ package com.dubatovka.app.config;
  * Contains configuration constants, that are used throughout the project.
  */
 @SuppressWarnings("HardCodedStringLiteral")
+//TODO перенести конфиги в application.properties
 public final class ConfigConstant {
     /**
      * User's roles
@@ -176,48 +177,6 @@ public final class ConfigConstant {
     public static final String MESSAGE_INF_EVENT_UPDATE_INFO = "inf.event.update.info";
     public static final String MESSAGE_INF_OUTCOME_UPDATE = "inf.outcome.update";
     public static final String MESSAGE_INF_PAY_WIN_BET = "inf.pay.win.bet";
-    
-    /**
-     * Navigation response types
-     */
-    public static final String FORWARD = "forward";
-    public static final String REDIRECT = "redirect";
-    
-    /**
-     * Navigation previous query constant
-     */
-    public static final String PREV_QUERY = ATTR_PREV_QUERY;
-    
-    /**
-     * Common JSP pages paths
-     */
-    public static final String PAGE_INDEX = "/WEB-INF/pages/index.jsp";
-    public static final String PAGE_MAIN = "/WEB-INF/pages/main.jsp";
-    public static final String PAGE_REGISTER = "/WEB-INF/pages/register.jsp";
-    public static final String PAGE_MAKE_BET = "/WEB-INF/pages/make_bet.jsp";
-    public static final String PAGE_PLAYER_STATE = "/WEB-INF/pages/player_state.jsp";
-    /**
-     * Common navigation queries
-     */
-    public static final String GOTO_INDEX = "/controller?command_type=goto_index";
-    public static final String GOTO_MAIN = "/controller?command_type=goto_main";
-    public static final String GOTO_REGISTER = "/controller?command_type=goto_register";
-    public static final String GOTO_MAKE_BET = "/controller?command_type=goto_make_bet";
-    public static final String GOTO_PLAYER_STATE = "/controller?command_type=goto_player_state";
-    
-    /**
-     * Admin JSP pages paths
-     */
-    public static final String PAGE_MANAGE_PLAYERS = "/WEB-INF/pages/manage_players.jsp";
-    /**
-     * Admin navigation queries
-     */
-    public static final String GOTO_MANAGE_PLAYERS = "/controller?command=goto_manage_players";
-    
-    /**
-     * Front controller servlet name.
-     */
-    public static final String FRONT_CONTROLLER = "FrontController";
     
     /**
      * Event query types

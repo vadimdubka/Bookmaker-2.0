@@ -12,6 +12,7 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+    
     /* ********* Configure View Resolver***********
      * The ViewResolver maps view names to actual views.
      * Equivalents of View resolver:
@@ -40,7 +41,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         viewResolver.setOrder(1);
         
         /*Thymeleaf throws an error when trying to find pages outside of their view resolver instead of passing it onto the next view resolver. By setting the excludeViewNames, skips trying to resolve the view name within Thymeleaf.*/
-        String[] excludedViews = new String[]{"index", "main", "xxx",};
+        String[] excludedViews = new String[]{"index", "main", "xxx", "error", "error_404", "error_500"};
         viewResolver.setExcludedViewNames(excludedViews);
         
         return viewResolver;
