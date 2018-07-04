@@ -28,8 +28,7 @@
                     <td>Количество: ${requestScope.win_bet_count[pageScope.event_id]}
                         Сумма: ${requestScope.win_bet_sum[pageScope.event_id]}</td>
                     <td>
-                        <form class="edit-event-form" action="controller" method="post" id="form-edit">
-                            <input type="hidden" name="command_type" value="pay_win_bet"/>
+                        <form class="edit-event-form" action="pay_win_bet" method="post" id="form-edit">
                             <input type="hidden" name="event_id" value="${event.id}"/>
                             <input type="submit" value="<fmt:message key="button.pay"/>">
                         </form>

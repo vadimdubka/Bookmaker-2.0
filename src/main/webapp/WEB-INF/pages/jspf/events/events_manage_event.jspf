@@ -19,8 +19,7 @@
             </tr>
             <tr class="row-new-event">
                 <td>new</td>
-                <form class="edit-event-form" action="controller" method="post">
-                    <input type="hidden" name="command_type" value="event_create"/>
+                <form class="edit-event-form" action="event_create" method="post">
                     <input type="hidden" name="category_id" value="${requestScope.category_id}"/>
                     <td>
                         <input type="datetime-local" name="date" value="2018-01-01T00:00" min="2018-01-02T00:00" max="2028-01-01T00:00" required/>
@@ -37,8 +36,7 @@
             <c:forEach var="event" items="${requestScope.event_set}">
                 <tr>
                     <td>${event.id}</td>
-                    <form class="edit-event-form" action="controller" method="post" id="form-edit${event.id}">
-                        <input type="hidden" name="command_type" value="event_info_update"/>
+                    <form class="edit-event-form" action="event_info_update" method="post" id="form-edit${event.id}">
                         <input type="hidden" name="event_id" value="${event.id}"/>
                         <td>
                             <input type="datetime-local" name="date" value="${event.date}" min="2018-01-01" required/>
@@ -50,8 +48,7 @@
                             <input class="participant" type="text" name="participant_2" value="${event.participant2}" pattern="^([a-zA-Z_0-9а-яА-Я]+).{0,100}" required/>
                         </td>
                     </form>
-                    <form class="edit-event-form" action="controller" method="post" id="form-delete${event.id}">
-                        <input type="hidden" name="command_type" value="event_delete"/>
+                    <form class="edit-event-form" action="event_delete" method="post" id="form-delete${event.id}">
                         <input type="hidden" name="event_id" value="${event.id}"/>
                         <input type="hidden" name="category_id" value="${requestScope.category_id}"/>
                     </form>

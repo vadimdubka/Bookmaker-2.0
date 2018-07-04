@@ -6,22 +6,19 @@
          http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
-    <display-name>Bookmaker Web Application</display-name>
+    <!--<display-name>Bookmaker Web Application</display-name>-->
 
-    <welcome-file-list>
+    <!--TODO welcome list-->
+   <!-- <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
-    </welcome-file-list>
+    </welcome-file-list>-->
 
-    <session-config>
+    <!--TODO session timeout-->
+    <!--<session-config>
         <session-timeout>30</session-timeout>
-    </session-config>
+    </session-config>-->
 
-    <context-param>
-        <param-name>db.props</param-name>
-        <param-value>database</param-value>
-    </context-param>
-
-    <error-page>
+    <!--<error-page>
         <error-code>500</error-code>
         <exception-type>java.lang.Exception</exception-type>
         <location>/pages/error/error_500.jsp</location>
@@ -32,18 +29,6 @@
     </error-page>
     <error-page>
         <location>/pages/error/error.jsp</location>
-    </error-page>
+    </error-page>-->
 
-    <jsp-config>
-        <jsp-property-group>
-            <description>header and footer player settings</description>
-            <url-pattern>/pages/*</url-pattern>
-            <include-prelude>/pages/jspf/header.jspf</include-prelude>
-            <include-coda>/pages/jspf/footer.jspf</include-coda>
-        </jsp-property-group>
-        <taglib>
-            <taglib-uri>http://bookmaker.com/functions</taglib-uri>
-            <taglib-location>/WEB-INF/tld/custom.tld</taglib-location>
-        </taglib>
-    </jsp-config>
 </web-app>

@@ -25,13 +25,25 @@
                     <td>${j:formatDateTime(event.date, "dd.MM.yyyy HH:mm")}</td>
                     <td>${event.participant1} - ${event.participant2}</td>
                     <td>
-                        <a href="<s:url value="/controller?command_type=goto_make_bet&event_id=${event.id}&outcome_type=${requestScope.type_1_map.name}"/>">${requestScope.type_1_map[pageScope.event_id]}</a>
+                        <c:url value="/make_bet_page" var="make_bet_1">
+                            <c:param name="event_id" value="${event.id}"/>
+                            <c:param name="outcome_type" value="${requestScope.type_1_map.name}"/>
+                        </c:url>
+                        <a href="${make_bet_1}">${requestScope.type_1_map[pageScope.event_id]}</a>
                     </td>
                     <td>
-                        <a href="<s:url value="/controller?command_type=goto_make_bet&event_id=${event.id}&outcome_type=${requestScope.type_x_map.name}"/>">${requestScope.type_x_map[pageScope.event_id]}</a>
+                        <c:url value="/make_bet_page" var="make_bet_x">
+                            <c:param name="event_id" value="${event.id}"/>
+                            <c:param name="outcome_type" value="${requestScope.type_x_map.name}"/>
+                        </c:url>
+                        <a href="${make_bet_x}">${requestScope.type_x_map[pageScope.event_id]}</a>
                     </td>
                     <td>
-                        <a href="<s:url value="/controller?command_type=goto_make_bet&event_id=${event.id}&outcome_type=${requestScope.type_2_map.name}"/>">${requestScope.type_2_map[pageScope.event_id]}</a>
+                        <c:url value="/make_bet_page" var="make_bet_2">
+                            <c:param name="event_id" value="${event.id}"/>
+                            <c:param name="outcome_type" value="${requestScope.type_2_map.name}"/>
+                        </c:url>
+                        <a href="${make_bet_2}">${requestScope.type_2_map[pageScope.event_id]}</a>
                     </td>
                 </tr>
             </c:forEach>

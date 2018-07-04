@@ -30,8 +30,7 @@
                 </tr>
             </table>
             <div class="div-align-center">
-                <form class="make-bet-form" action="controller" method="post">
-                    <input type="hidden" name="command_type" value="make_bet"/>
+                <form class="make-bet-form" action="make_bet" method="post">
                     <input type="hidden" name="event_id" value="${requestScope.event.id}"/>
                     <input type="hidden" name="outcome_type" value="${requestScope.outcome.type.type}"/>
                     <input type="hidden" name="outcome_coefficient" value="${requestScope.outcome.coefficient}"/>

@@ -12,8 +12,7 @@
         <div class="section-content">
             <noscript><p class="error-message">${requestScope.errorMessage}</p></noscript>
             <form onsubmit="return validateRegister()" id="register-form" class="register-form" name="registerForm"
-                  action="controller" method="post">
-                <input type="hidden" name="command_type" value="register"/>
+                  action="register" method="post">
                 <div class="input-block">
                     <label class="required" for="email-input"><fmt:message key="register.email"/></label>
                     <span id="err-email" class="err-msg"></span>
@@ -67,13 +66,13 @@
                 </div>
             </form>
             <div class="custom-link">
-                <a href="<s:url value="/controller?command_type=goto_index"/>">
+                <a href="<c:url value="/main_page"/>">
                     <fmt:message key="register.back"/>
                 </a>
             </div>
         </div>
     </section>
 </main>
-<script type="text/javascript" src="/resources/js/validate-form.js"></script>
+<script type="text/javascript" src="<s:url value="/js/validate-form.js"/>"></script>
 
 

@@ -19,7 +19,7 @@
                 <div>
                     <ul>
                         <li>
-                            <a href="<s:url value="/controller?command_type=goto_player_state"/>">
+                            <a href="<c:url value="/player_state_page"/>">
                                 <fmt:message key="header.section.player.state"/></a>
                         </li>
                     </ul>
@@ -29,21 +29,21 @@
                 <div>
                     <ul>
                         <li>
-                            <a href="<s:url value="/controller?command_type=goto_event_manage"/>">
+                            <a href="<c:url value="/event_manage"/>">
                                 <fmt:message key="menu.event.manage"/></a></li>
                         <li>
-                            <a href="<s:url value="/controller?command_type=goto_event_set_result"/>">
+                            <a href="<c:url value="/event_set_result"/>">
                                 <fmt:message key="menu.event.set.result"/></a></li>
                         <li>
-                            <a href="<s:url value="/controller?command_type=goto_event_correct_result"/>">
+                            <a href="<c:url value="/event_correct_result"/>">
                                 <fmt:message key="menu.event.correct.result"/></a></li>
                         <li>
-                            <a href="<s:url value="/controller?command_type=goto_event_manage_failed"/>">
+                            <a href="<c:url value="/event_manage_failed"/>">
                                 <fmt:message key="menu.event.manage.failed"/></a></li>
                         <li>
-                            <a href="<s:url value="/controller?command_type=goto_events_to_pay"/>">
+                            <a href="<c:url value="/event_to_pay"/>">
                                 <fmt:message key="menu.event.to.pay"/></a></li>
-                        <li><a href="<s:url value="/controller?command_type=goto_manage_players"/>">
+                        <li><a href="<c:url value="/manage_players_page"/>">
                             <fmt:message key="leftmenu.admin.players"/></a></li>
                     </ul>
                 </div>
@@ -52,16 +52,16 @@
                 <div>
                     <ul>
                         <li>
-                            <a href="<s:url value="/controller?command_type=goto_event_set_outcome"/>">
+                            <a href="<c:url value="/event_set_outcome"/>">
                                 <fmt:message key="menu.event.set.outcome"/></a></li>
                         <li>
-                            <a href="<s:url value="/controller?command_type=goto_event_correct_outcome"/>">
+                            <a href="<c:url value="/event_correct_outcome"/>">
                                 <fmt:message key="menu.event.correct.outcome"/></a></li>
                     </ul>
                 </div>
             </c:when>
         </c:choose>
-        <a href="<s:url value="/controller?command_type=logout"/>">
+        <a href="<c:url value="/logout"/>">
             <fmt:message key="user.logout"/></a>
     </div>
 </section>

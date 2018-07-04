@@ -29,8 +29,7 @@
                     <td>${requestScope.type_x_map[pageScope.event_id]}</td>
                     <td>${requestScope.type_2_map[pageScope.event_id]}</td>
                     <td>
-                        <form class="edit-event-form" action="controller" method="post" id="form-delete">
-                            <input type="hidden" name="command_type" value="event_delete"/>
+                        <form class="edit-event-form" action="event_delete" method="post" id="form-delete">
                             <input type="hidden" name="event_id" value="${event.id}"/>
                             <input type="hidden" name="category_id" value="${requestScope.category_id}"/>
                             <input type="submit" value="<fmt:message key="button.delete"/>">
