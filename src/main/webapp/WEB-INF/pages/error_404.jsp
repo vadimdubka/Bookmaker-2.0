@@ -8,6 +8,7 @@
 <%@ page isErrorPage="true" %>
 
 <main class="container">
+    <h3>Error page 404</h3><%--TODO delete--%>
     <section class="col-s-10 col-12">
         <ul class="error-paragraph">
             <li>Request from <c:out value="${pageContext.errorData.requestURI}" default="N/A"/> is failed</li>
@@ -18,7 +19,7 @@
             <li>Error message: <c:out value="${errorMessage}" default="Requested resource doesn't exist"/></li>
         </ul>
         <div class="custom-button">
-            <a href="<s:url value="/controller?command=back_from_error"/>">Back</a>
+            <a href="<c:url value="/main_page"/>">Back</a>
         </div>
     </section>
 </main>
