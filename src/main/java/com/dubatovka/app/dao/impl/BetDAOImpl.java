@@ -35,17 +35,17 @@ import static com.dubatovka.app.config.ConfigConstant.WIN_BET_INFO_KEY_SUM;
 class BetDAOImpl extends DBConnectionHolder implements BetDAO {
     private static final String SQL_INSERT_BET =
         "INSERT INTO bet (player_id, event_id, type, date, coefficient, amount, status) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            "VALUES (?, ?, ?, ?, ?, ?, ?::bet_status)";
     
     private static final String SQL_UPDATE_BET_STATUS_BY_TYPE =
-        "UPDATE bet SET status=? WHERE event_id=? AND type=? AND status <>'paid'";
+        "UPDATE bet SET status=?::bet_status WHERE event_id=? AND type=? AND status <>'paid'";
     
     private static final String SQL_UPDATE_BET_STATUS_BY_STATUS =
-        "UPDATE bet SET status=? WHERE event_id=? AND status= ?";
+        "UPDATE bet SET status=?::bet_status WHERE event_id=? AND status= ?::bet_status";
     
     private static final String SQL_SELECT_BET_BY_EVENT_ID_AND_STATUS =
         "SELECT player_id, event_id, type, date, coefficient, amount, status " +
-            "FROM bet WHERE event_id = ? and status = ?";
+            "FROM bet WHERE event_id = ? and status = ?::bet_status";
     
     private static final String SQL_SELECT_BET_BY_PLAYER_ID =
         "SELECT player_id, event_id, type, date, coefficient, amount, status " +
@@ -60,7 +60,7 @@ class BetDAOImpl extends DBConnectionHolder implements BetDAO {
     
     private static final String SQL_SELECT_BET_INFO_BY_STATUS_GROUP_BY_EVENT_ID =
         "SELECT event_id, COUNT(event_id) AS count, SUM(amount) AS sum " +
-            "FROM bet WHERE status=? and event_id IN (SELECT id FROM event " +
+            "FROM bet WHERE status=?::bet_status and event_id IN (SELECT id FROM event " +
             "WHERE category_id=?) GROUP BY event_id;";
     
     /**
@@ -307,14 +307,14 @@ class BetDAOImpl extends DBConnectionHolder implements BetDAO {
      *                      this method is called on a closed result set
      */
     private static Bet buildBet(ResultSet resultSet) throws SQLException {
-        int           playerId    = resultSet.getInt(PLAYER_ID);
-        int           eventId     = resultSet.getInt(EVENT_ID);
-        String        outcomeType = resultSet.getString(OUTCOME_TYPE);
-        LocalDateTime date        = resultSet.getTimestamp(DATE).toLocalDateTime();
-        BigDecimal    coefficient = resultSet.getBigDecimal(COEFFICIENT);
-        BigDecimal    amount      = resultSet.getBigDecimal(AMOUNT);
-        Bet.Status    status      = Bet.Status.valueOf(resultSet.getString(STATUS).toUpperCase());
-        Bet           bet         = new Bet(playerId, eventId, outcomeType, date, coefficient, amount, status);
+        int playerId = resultSet.getInt(PLAYER_ID);
+        int eventId = resultSet.getInt(EVENT_ID);
+        String outcomeType = resultSet.getString(OUTCOME_TYPE);
+        LocalDateTime date = resultSet.getTimestamp(DATE).toLocalDateTime();
+        BigDecimal coefficient = resultSet.getBigDecimal(COEFFICIENT);
+        BigDecimal amount = resultSet.getBigDecimal(AMOUNT);
+        Bet.Status status = Bet.Status.valueOf(resultSet.getString(STATUS).toUpperCase());
+        Bet bet = new Bet(playerId, eventId, outcomeType, date, coefficient, amount, status);
         return bet;
     }
 }

@@ -25,21 +25,21 @@ import java.sql.SQLException;
  * @author Dubatovka Vadim
  */
 public final class DAOProvider implements AutoCloseable {
-    private static final Logger            logger = LogManager.getLogger(DAOProvider.class);
+    private static final Logger logger = LogManager.getLogger(DAOProvider.class);
     /**
      * Field used to connect to database and do queries.
      *
      * @see WrappedConnection
      */
-    private              WrappedConnection connection;
+    private WrappedConnection connection;
     
-    private BetDAO         betDAO;
-    private CategoryDAO    categoryDAO;
-    private EventDAO       eventDAO;
-    private OutcomeDAO     outcomeDAO;
-    private PlayerDAO      playerDAO;
+    private BetDAO betDAO;
+    private CategoryDAO categoryDAO;
+    private EventDAO eventDAO;
+    private OutcomeDAO outcomeDAO;
+    private PlayerDAO playerDAO;
     private TransactionDAO transactionDAO;
-    private UserDAO        userDAO;
+    private UserDAO userDAO;
     
     /**
      * Constructs DAOProvider object by taking {@link WrappedConnection} object from {@link

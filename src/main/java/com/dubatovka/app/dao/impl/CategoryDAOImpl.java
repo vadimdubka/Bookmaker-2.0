@@ -55,7 +55,7 @@ class CategoryDAOImpl extends DBConnectionHolder implements CategoryDAO {
         try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_CATEGORY_BY_ID)) {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
-            Category  category  = null;
+            Category category = null;
             if (resultSet.next()) {
                 category = buildCategory(resultSet);
             }

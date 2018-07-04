@@ -27,7 +27,8 @@ class OutcomeDAOImpl extends DBConnectionHolder implements OutcomeDAO {
     
     private static final String SQL_INSERT_OUTCOME =
         "INSERT INTO outcome (event_id, type, coefficient) " +
-            "VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE coefficient = ?";
+            "VALUES (?, ?, ?) ON CONFLICT (event_id, type) DO UPDATE " +
+            "SET coefficient = ?";
     
     
     /**

@@ -23,7 +23,7 @@ class TransactionDAOImpl extends DBConnectionHolder implements TransactionDAO {
     /**
      * Selects definite player transactions and orders them by date in descending order.
      */
-    private static final String SQL_SELECT_BY_PLAYER_ID      =
+    private static final String SQL_SELECT_BY_PLAYER_ID =
         "SELECT id, player_id, date, amount FROM transaction " +
             "WHERE player_id=? ORDER BY date DESC";
     /**
@@ -37,13 +37,13 @@ class TransactionDAOImpl extends DBConnectionHolder implements TransactionDAO {
      * Selects transactions where date is like definite pattern and orders them by date in
      * descending order.
      */
-    private static final String SQL_SELECT_LIKE_MONTH        =
+    private static final String SQL_SELECT_LIKE_MONTH =
         "SELECT id, player_id, date, amount FROM transaction " +
             "WHERE date LIKE ? ORDER BY date DESC";
     /**
      * Inserts transaction to database.
      */
-    private static final String SQL_INSERT_TRANSACTION       =
+    private static final String SQL_INSERT_TRANSACTION =
         "INSERT INTO transaction (player_id, date, amount) VALUES (?, NOW(), ?)";
     
     /**
@@ -168,8 +168,8 @@ class TransactionDAOImpl extends DBConnectionHolder implements TransactionDAO {
             transaction.setDate(resultSet.getTimestamp(DATE).toLocalDateTime());
             BigDecimal amount = resultSet.getBigDecimal(AMOUNT);
             Transaction.TransactionType transactionType = (amount.signum() == -1)
-                                                          ? Transaction.TransactionType.WITHDRAW
-                                                          : Transaction.TransactionType.REPLENISH;
+                                                              ? Transaction.TransactionType.WITHDRAW
+                                                              : Transaction.TransactionType.REPLENISH;
             transaction.setType(transactionType);
             transaction.setAmount(amount.abs());
         }
@@ -187,7 +187,7 @@ class TransactionDAOImpl extends DBConnectionHolder implements TransactionDAO {
     private static List<Transaction> buildTransactionList(ResultSet resultSet)
         throws SQLException {
         List<Transaction> transactionList = new ArrayList<>();
-        Transaction       transaction;
+        Transaction transaction;
         do {
             transaction = buildTransaction(resultSet);
             if (transaction != null) {

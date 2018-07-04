@@ -19,11 +19,11 @@ import java.time.LocalDate;
  */
 class UserDAOImpl extends DBConnectionHolder implements UserDAO {
     private static final String SQL_INSERT_USER =
-        "INSERT INTO user (email, password, role, registration_date) " +
+        "INSERT INTO \"user\" (email, password, role, registration_date) " +
             "VALUES (?, ?, 'player', NOW())";
     
     private static final String SQL_AUTH =
-        "SELECT id, email, role, registration_date  FROM user " +
+        "SELECT id, email, role, registration_date  FROM \"user\" " +
             "WHERE email=? AND password=?";
     
     /**

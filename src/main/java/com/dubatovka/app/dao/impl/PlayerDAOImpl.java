@@ -31,9 +31,10 @@ class PlayerDAOImpl extends DBConnectionHolder implements PlayerDAO {
     
     private static final String SQL_SELECT_PLAYER_BY_ID =
         "SELECT fname, mname, lname, birthday, status, balance, " +
-            "bet_limit, withdrawal_limit, verification_status, passport," +
-            "IFNULL((SELECT ABS(SUM(amount)) FROM transaction WHERE player.id=player_id " +
-            "AND amount < 0 AND MONTH(date)=MONTH(NOW()) AND YEAR(date)=YEAR(NOW())), 0) AS month_withdrawal " +
+            "bet_limit, withdrawal_limit, verification_status, passport, " +
+            "coalesce((SELECT ABS(SUM(amount)) FROM \"transaction\" WHERE player.id=player_id " +
+            "AND amount < 0 AND date_part('month', date) = date_part('month', clock_timestamp()) " +
+            "AND date_part('year', date) = date_part('year', clock_timestamp())), 0) AS month_withdrawal " +
             "FROM player " +
             "LEFT JOIN player_status ON player.player_status=player_status.status " +
             "WHERE player.id=?;";
@@ -41,8 +42,10 @@ class PlayerDAOImpl extends DBConnectionHolder implements PlayerDAO {
     private static final String SQL_SELECT_ALL_PLAYERS =
         "SELECT fname, mname, lname, birthday, status, balance, " +
             "bet_limit, withdrawal_limit, verification_status, passport," +
-            "IFNULL((SELECT ABS(SUM(amount)) FROM transaction WHERE player.id=player_id " +
-            "AND amount < 0 AND MONTH(date)=MONTH(NOW()) AND YEAR(date)=YEAR(NOW())), 0) AS month_withdrawal " +
+            "coalesce((SELECT ABS(SUM(amount)) FROM transaction WHERE player.id=player_id " +
+            "AND amount < 0 " +
+            "AND date_part('month', date) = date_part('month', clock_timestamp())" +
+            "AND date_part('year', date) = date_part('year', clock_timestamp())), 0) AS month_withdrawal " +
             "FROM player " +
             "LEFT JOIN player_status ON player.player_status=player_status.status " +
             "ORDER BY lname";
@@ -164,7 +167,7 @@ class PlayerDAOImpl extends DBConnectionHolder implements PlayerDAO {
      */
     private static List<Player> createUserList(ResultSet resultSet) throws SQLException {
         List<Player> playerList = new ArrayList<>();
-        Player       player;
+        Player player;
         do {
             player = buildPlayer(resultSet);
             if (player != null) {

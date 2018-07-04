@@ -39,34 +39,34 @@ class EventDAOImpl extends DBConnectionHolder implements EventDAO {
         "SELECT id, category_id, date, participant1, participant2, result1, result2 " +
             "FROM event WHERE category_id =? " +
             "AND id NOT IN (SELECT event_id FROM outcome GROUP BY event_id) " +
-            "AND (date - NOW()) > 0 " +
+            "AND (date - CURRENT_TIMESTAMP) > (0 * '1 sec'::interval) " +
             "AND result1 IS NULL ORDER BY date";
     
     private static final String SQL_SELECT_ACTUAL_EVENTS_BY_CATEGORY_ID =
         "SELECT id, category_id, date, participant1, participant2, result1, result2 " +
             "FROM event WHERE category_id =? " +
             "AND id IN (SELECT event_id FROM outcome GROUP BY event_id) " +
-            "AND (date - NOW()) > 0 " +
+            "AND (date - CURRENT_TIMESTAMP) > (0 * '1 sec'::interval) " +
             "AND result1 IS NULL ORDER BY date";
     
     private static final String SQL_SELECT_NOT_STARTED_EVENTS_BY_CATEGORY_ID =
         "SELECT id, category_id, date, participant1, participant2, result1, result2 " +
             "FROM event WHERE category_id =? " +
-            "AND (date - NOW()) > 0 " +
+            "AND (date - CURRENT_TIMESTAMP) > (0 * '1 sec'::interval) " +
             "AND result1 IS NULL ORDER BY date";
     
     private static final String SQL_SELECT_STARTED_EVENTS_BY_CATEGORY_ID =
         "SELECT id, category_id, date, participant1, participant2, result1, result2 " +
             "FROM event WHERE category_id =? " +
             "AND id IN (SELECT event_id FROM outcome GROUP BY event_id) " +
-            "AND (date - NOW()) <= 0 " +
+            "AND (date - CURRENT_TIMESTAMP) <= (0 * '1 sec'::interval) " +
             "AND result1 IS NULL ORDER BY date";
     
     private static final String SQL_SELECT_FAILED_EVENTS_BY_CATEGORY_ID =
         "SELECT id, category_id, date, participant1, participant2, result1, result2 " +
             "FROM event " +
             "WHERE category_id =? " +
-            "AND (date - NOW()) <= 0 " +
+            "AND (date - CURRENT_TIMESTAMP) <= (0 * '1 sec'::interval) " +
             "AND (id NOT IN (SELECT event_id FROM outcome GROUP BY event_id) " +
             "OR id NOT IN (SELECT event_id FROM bet GROUP BY event_id)) " +
             "ORDER BY date";
@@ -85,33 +85,33 @@ class EventDAOImpl extends DBConnectionHolder implements EventDAO {
     private static final String SQL_COUNT_NEW_EVENTS_GROUP_BY_CATEGORY_ID =
         "SELECT category_id, COUNT(category_id) AS count FROM event " +
             "WHERE id NOT IN (SELECT event_id FROM outcome GROUP BY event_id) " +
-            "AND (date - NOW()) > 0 " +
+            "AND (date - CURRENT_TIMESTAMP) > (0 * '1 sec'::interval) " +
             "AND result1 IS NULL " +
             "GROUP BY category_id";
     
     private static final String SQL_COUNT_ACTUAL_EVENTS_GROUP_BY_CATEGORY_ID =
         "SELECT category_id, COUNT(category_id) AS count FROM event " +
             "WHERE id IN (SELECT event_id FROM outcome GROUP BY event_id) " +
-            "AND (date - NOW()) > 0 " +
+            "AND (date - CURRENT_TIMESTAMP) > (0 * '1 sec'::interval) " +
             "AND result1 IS NULL " +
             "GROUP BY category_id";
     
     private static final String SQL_COUNT_NOT_STARTED_EVENTS_GROUP_BY_CATEGORY_ID =
         "SELECT category_id, COUNT(category_id) AS count FROM event " +
-            "WHERE (date - NOW()) > 0 " +
+            "WHERE (date - CURRENT_TIMESTAMP) > (0 * '1 sec'::interval) " +
             "AND result1 IS NULL " +
             "GROUP BY category_id";
     
     private static final String SQL_COUNT_STARTED_EVENTS_GROUP_BY_CATEGORY_ID =
         "SELECT category_id, COUNT(category_id) AS count FROM event " +
             "WHERE id IN (SELECT event_id FROM outcome GROUP BY event_id) " +
-            "AND (date - NOW()) <= 0 " +
+            "AND (date - CURRENT_TIMESTAMP) <= (0 * '1 sec'::interval) " +
             "AND result1 IS NULL " +
             "GROUP BY category_id";
     
     private static final String SQL_COUNT_FAILED_EVENTS_GROUP_BY_CATEGORY_ID =
         "SELECT category_id, COUNT(category_id) AS count FROM event " +
-            "WHERE (date - NOW()) <= 0 AND " +
+            "WHERE (date - CURRENT_TIMESTAMP) <= (0 * '1 sec'::interval) AND " +
             "(id NOT IN (SELECT event_id FROM outcome GROUP BY event_id) " +
             "OR id NOT IN (SELECT event_id FROM bet GROUP BY event_id)) " +
             "GROUP BY category_id";
@@ -167,7 +167,7 @@ class EventDAOImpl extends DBConnectionHolder implements EventDAO {
         try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_EVENT_BY_EVENT_ID)) {
             statement.setInt(1, eventId);
             ResultSet resultSet = statement.executeQuery();
-            Event     event     = null;
+            Event event = null;
             if (resultSet.next()) {
                 event = buildEvent(resultSet);
             }
@@ -336,14 +336,15 @@ class EventDAOImpl extends DBConnectionHolder implements EventDAO {
      * Reads {@link List} of {@link Event} objects for given category id and SQL query from
      * database.
      *
-     * @param categoryId {@link String} category id
-     * @param sqlQuery   {@link String} SQL query
+     * @param categoryIdStr {@link String} category id
+     * @param sqlQuery      {@link String} SQL query
      * @return {@link List< Event >} of {@link Event}
      * @throws DAOException when {@link SQLException} occurred while working with database
      */
-    private List<Event> readEventsByQuery(String categoryId, String sqlQuery) throws DAOException {
+    private List<Event> readEventsByQuery(String categoryIdStr, String sqlQuery) throws DAOException {
         try (PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
-            statement.setString(1, categoryId);
+            int categoryId = Integer.parseInt(categoryIdStr);
+            statement.setInt(1, categoryId);
             ResultSet resultSet = statement.executeQuery();
             return buildEventList(resultSet);
         } catch (SQLException e) {
