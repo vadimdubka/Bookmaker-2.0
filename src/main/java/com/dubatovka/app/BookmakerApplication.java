@@ -15,7 +15,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
     "com.dubatovka.app.listener"
 })
 public class BookmakerApplication extends SpringBootServletInitializer {
-    
     public static void main(String[] args) {
         SpringApplication.run(BookmakerApplication.class, args);
     }
