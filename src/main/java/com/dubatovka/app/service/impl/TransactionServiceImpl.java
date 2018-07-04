@@ -2,6 +2,7 @@ package com.dubatovka.app.service.impl;
 
 import com.dubatovka.app.dao.PlayerDAO;
 import com.dubatovka.app.dao.TransactionDAO;
+import com.dubatovka.app.dao.db.ConnectionPool;
 import com.dubatovka.app.dao.exception.DAOException;
 import com.dubatovka.app.dao.impl.DAOProvider;
 import com.dubatovka.app.entity.Transaction;
@@ -28,23 +29,22 @@ import static com.dubatovka.app.config.ConfigConstant.PERCENT;
  *
  * @author Dubatovka Vadim
  */
-class TransactionServiceImpl extends TransactionService {
+class TransactionServiceImpl implements TransactionService {
     private static final Logger logger = LogManager.getLogger(TransactionServiceImpl.class);
-    
-    private final TransactionDAO transactionDAO = daoProvider.getTransactionDAO();
-    private final PlayerDAO      playerDAO      = daoProvider.getPlayerDAO();
+    /**
+     * DAOProvider instance for this class instance use.
+     */
+    private final DAOProvider daoProvider;
+    private final TransactionDAO transactionDAO;
+    private final PlayerDAO playerDAO;
     
     /**
      * Default constructor.
      */
     TransactionServiceImpl() {
-    }
-    
-    /**
-     * Constructs instance using definite {@link DAOProvider} object.
-     */
-    TransactionServiceImpl(DAOProvider daoProvider) {
-        super(daoProvider);
+        this.daoProvider = new DAOProvider();
+        this.transactionDAO = daoProvider.getTransactionDAO();
+        this.playerDAO = daoProvider.getPlayerDAO();
     }
     
     /**
@@ -58,7 +58,7 @@ class TransactionServiceImpl extends TransactionService {
     @Override
     public List<Transaction> getPlayerTransactions(int id, String month) {
         List<Transaction> transactionList = null;
-        String            monthPattern    = (month != null ? month.trim() : EMPTY_STRING) + PERCENT;
+        String monthPattern = (month != null ? month.trim() : EMPTY_STRING) + PERCENT;
         try {
             transactionList = transactionDAO.takePlayerTransactions(id, monthPattern);
         } catch (DAOException e) {
@@ -81,7 +81,7 @@ class TransactionServiceImpl extends TransactionService {
     public List<Transaction> getTransactionList(String filterByType, String month,
                                                 boolean isSortByAmount) {
         List<Transaction> transactionList = null;
-        String            monthPattern    = (month != null ? month.trim() : EMPTY_STRING) + PERCENT;
+        String monthPattern = (month != null ? month.trim() : EMPTY_STRING) + PERCENT;
         if ((filterByType == null) || filterByType.trim().isEmpty()) {
             filterByType = ALL;
         }
@@ -111,8 +111,8 @@ class TransactionServiceImpl extends TransactionService {
         BigDecimal maxPayment = BigDecimal.ZERO;
         if (transactions != null) {
             for (Transaction transaction : transactions) {
-                BigDecimal                  amount = transaction.getAmount();
-                Transaction.TransactionType type   = transaction.getType();
+                BigDecimal amount = transaction.getAmount();
+                Transaction.TransactionType type = transaction.getType();
                 if ((type == Transaction.TransactionType.REPLENISH)
                         && (maxPayment.compareTo(amount) < 0)) {
                     maxPayment = amount;
@@ -133,8 +133,8 @@ class TransactionServiceImpl extends TransactionService {
         BigDecimal totalPayment = BigDecimal.ZERO;
         if (transactions != null) {
             for (Transaction transaction : transactions) {
-                BigDecimal                  amount = transaction.getAmount();
-                Transaction.TransactionType type   = transaction.getType();
+                BigDecimal amount = transaction.getAmount();
+                Transaction.TransactionType type = transaction.getType();
                 if (type == Transaction.TransactionType.REPLENISH) {
                     totalPayment = totalPayment.add(amount);
                 }
@@ -154,8 +154,8 @@ class TransactionServiceImpl extends TransactionService {
         BigDecimal maxWithdrawal = BigDecimal.ZERO;
         if (transactions != null) {
             for (Transaction transaction : transactions) {
-                BigDecimal                  amount = transaction.getAmount();
-                Transaction.TransactionType type   = transaction.getType();
+                BigDecimal amount = transaction.getAmount();
+                Transaction.TransactionType type = transaction.getType();
                 if ((type == Transaction.TransactionType.WITHDRAW)
                         && (maxWithdrawal.compareTo(amount) < 0)) {
                     maxWithdrawal = amount;
@@ -176,8 +176,8 @@ class TransactionServiceImpl extends TransactionService {
         BigDecimal totalWithdrawal = BigDecimal.ZERO;
         if (transactions != null) {
             for (Transaction transaction : transactions) {
-                BigDecimal                  amount = transaction.getAmount();
-                Transaction.TransactionType type   = transaction.getType();
+                BigDecimal amount = transaction.getAmount();
+                Transaction.TransactionType type = transaction.getType();
                 if (type == Transaction.TransactionType.WITHDRAW) {
                     totalWithdrawal = totalWithdrawal.add(amount);
                 }
@@ -285,5 +285,13 @@ class TransactionServiceImpl extends TransactionService {
             }
             return o1.getAmount().compareTo(o2.getAmount());
         }
+    }
+    
+    /**
+     * Returns {@link DAOProvider#connection} to {@link ConnectionPool}.
+     */
+    @Override
+    public void close() {
+        daoProvider.close();
     }
 }

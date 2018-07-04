@@ -8,16 +8,16 @@ import com.dubatovka.app.service.PaginationService;
  * @author Dubatovka Vadim
  */
 class PaginationServiceImpl implements PaginationService {
-    private static final int DEFAULT_LIMIT_ON_PAGE       = 5;
+    private static final int DEFAULT_LIMIT_ON_PAGE = 5;
     private static final int DEFAULT_TOTAL_ENTITY_AMOUNT = 0;
-    private static final int DEFAULT_AMOUNT_OF_PAGES     = 0;
-    private static final int DEFAULT_CURRENT_PAGE        = 1;
+    private static final int DEFAULT_AMOUNT_OF_PAGES = 0;
+    private static final int DEFAULT_CURRENT_PAGE = 1;
     
-    private int     limitOnPage       = DEFAULT_LIMIT_ON_PAGE;
-    private int     totalEntityAmount = DEFAULT_TOTAL_ENTITY_AMOUNT;
-    private int     amountOfPages     = DEFAULT_AMOUNT_OF_PAGES;
-    private int     currentPage       = DEFAULT_CURRENT_PAGE;
-    private boolean isStateValid      = false;
+    private int limitOnPage = DEFAULT_LIMIT_ON_PAGE;
+    private int totalEntityAmount = DEFAULT_TOTAL_ENTITY_AMOUNT;
+    private int amountOfPages = DEFAULT_AMOUNT_OF_PAGES;
+    private int currentPage = DEFAULT_CURRENT_PAGE;
+    private boolean isStateValid = false;
     
     /**
      * Returns the limit of entities on a page of this PaginationService object.

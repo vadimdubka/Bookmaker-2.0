@@ -1,6 +1,7 @@
 package com.dubatovka.app.service.impl;
 
 import com.dubatovka.app.dao.UserDAO;
+import com.dubatovka.app.dao.db.ConnectionPool;
 import com.dubatovka.app.dao.exception.DAOException;
 import com.dubatovka.app.dao.impl.DAOProvider;
 import com.dubatovka.app.entity.Admin;
@@ -12,28 +13,29 @@ import com.dubatovka.app.service.UserService;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * The class provides implementation for Service layer actions with Users.
  *
  * @author Dubatovka Vadim
  */
-class UserServiceImpl extends UserService {
+class UserServiceImpl implements UserService {
     private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
-    
-    private final UserDAO userDAO = daoProvider.getUserDAO();
+    /**
+     * DAOProvider instance for this class instance use.
+     */
+    private final DAOProvider daoProvider;
+    private final UserDAO userDAO;
+    @Autowired
+    private EncryptionService encryptionService;
     
     /**
      * Default instance constructor.
      */
     UserServiceImpl() {
-    }
-    
-    /**
-     * Constructs instance using definite {@link DAOProvider} object.
-     */
-    UserServiceImpl(DAOProvider daoProvider) {
-        super(daoProvider);
+        this.daoProvider = new DAOProvider();
+        this.userDAO = daoProvider.getUserDAO();
     }
     
     /**
@@ -47,7 +49,7 @@ class UserServiceImpl extends UserService {
     @Override
     public User authorizeUser(String email, String password) {
         email = email.toLowerCase().trim();
-        password = EncryptionService.encryptMD5(password);
+        password = encryptionService.encryptMD5(password);
         User user = null;
         try {
             user = userDAO.readUser(email, password);
@@ -65,5 +67,13 @@ class UserServiceImpl extends UserService {
             }
         }
         return user;
+    }
+    
+    /**
+     * Returns {@link DAOProvider#connection} to {@link ConnectionPool}.
+     */
+    @Override
+    public void close() {
+        daoProvider.close();
     }
 }

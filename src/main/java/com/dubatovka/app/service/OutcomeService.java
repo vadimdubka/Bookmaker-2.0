@@ -1,6 +1,5 @@
 package com.dubatovka.app.service;
 
-import com.dubatovka.app.dao.impl.DAOProvider;
 import com.dubatovka.app.entity.Event;
 import com.dubatovka.app.entity.Outcome;
 
@@ -11,19 +10,7 @@ import java.util.Set;
  *
  * @author Dubatovka Vadim
  */
-public abstract class OutcomeService extends DAOProviderHolder {
-    /**
-     * Default constructor.
-     */
-    protected OutcomeService() {
-    }
-    
-    /**
-     * Constructs instance using definite {@link DAOProvider} object.
-     */
-    protected OutcomeService(DAOProvider daoProvider) {
-        super(daoProvider);
-    }
+public interface OutcomeService extends AutoCloseable {
     
     /**
      * Calls DAO layer to get {@link Set} of {@link Outcome} from database which correspond to given
@@ -31,7 +18,7 @@ public abstract class OutcomeService extends DAOProviderHolder {
      *
      * @param event {@link Event}
      */
-    public abstract void setOutcomesForEvent(Event event);
+    void setOutcomesForEvent(Event event);
     
     /**
      * Calls DAO layer to insert  {@link Set} of {@link Outcome} to database.
@@ -40,6 +27,9 @@ public abstract class OutcomeService extends DAOProviderHolder {
      * @param messageService {@link MessageService} that holds messages, formed during execution of
      *                       method
      */
-    public abstract void insertOutcomeSet(Set<Outcome> outcomeSet,
-                                          MessageService messageService);
+    void insertOutcomeSet(Set<Outcome> outcomeSet,
+                          MessageService messageService);
+    
+    @Override
+    void close();
 }

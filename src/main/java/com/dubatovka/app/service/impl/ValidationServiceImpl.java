@@ -17,23 +17,23 @@ import java.util.regex.Pattern;
  * @author Dubatovka Vadim
  */
 class ValidationServiceImpl implements ValidationService {
-    private static final int        MAX_EMAIL_LENGTH        = 320;
-    private static final int        MAX_EMAIL_NAME_LENGTH   = 64;
-    private static final int        MAX_EMAIL_DOMAIN_LENGTH = 255;
-    private static final int        EMAIL_PAIR_LENGTH       = 2;
-    private static final int        MIN_PLAYER_AGE          = 18;
-    private static final BigDecimal MIN_OUTCOME_COEFF       = BigDecimal.valueOf(1.01);
-    private static final BigDecimal MAX_OUTCOME_COEFF       = BigDecimal.valueOf(99.99);
-    private static final String     EMAIL_SPLITERATOR       = "@";
-    private static final String     NAME_REGEX              = "[A-Za-z]{1,70}";
-    private static final String     BET_AMOUNT_REGEX        = "^[0-9]{1,3}\\.?[0-9]{0,2}$";
-    private static final String     OUTCOME_COEFF_REGEX     = "^[0-9]{1,2}\\.?[0-9]{0,2}$";
-    private static final String     ID_REGEX                = "[0-9]+";
-    private static final String     RESULT_REGEX            = "[0-9]{1,3}";
-    private static final String     PARTICIPANT_REGEX       = "^([a-zA-Z_0-9а-яА-Я]+).{0,100}";
-    private static final String     EMAIL_REGEX             =
+    private static final int MAX_EMAIL_LENGTH = 320;
+    private static final int MAX_EMAIL_NAME_LENGTH = 64;
+    private static final int MAX_EMAIL_DOMAIN_LENGTH = 255;
+    private static final int EMAIL_PAIR_LENGTH = 2;
+    private static final int MIN_PLAYER_AGE = 18;
+    private static final BigDecimal MIN_OUTCOME_COEFF = BigDecimal.valueOf(1.01);
+    private static final BigDecimal MAX_OUTCOME_COEFF = BigDecimal.valueOf(99.99);
+    private static final String EMAIL_SPLITERATOR = "@";
+    private static final String NAME_REGEX = "[A-Za-z]{1,70}";
+    private static final String BET_AMOUNT_REGEX = "^[0-9]{1,3}\\.?[0-9]{0,2}$";
+    private static final String OUTCOME_COEFF_REGEX = "^[0-9]{1,2}\\.?[0-9]{0,2}$";
+    private static final String ID_REGEX = "[0-9]+";
+    private static final String RESULT_REGEX = "[0-9]{1,3}";
+    private static final String PARTICIPANT_REGEX = "^([a-zA-Z_0-9а-яА-Я]+).{0,100}";
+    private static final String EMAIL_REGEX =
         "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
-    private static final String     PASSWORD_REGEX          =
+    private static final String PASSWORD_REGEX =
         "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[\\w_-]{8,}$";
     
     /**
@@ -249,10 +249,10 @@ class ValidationServiceImpl implements ValidationService {
      */
     @Override
     public boolean isValidOutcomeCoeffOnPage(String outcomeCoeffOnPage, Event event, String outcomeType) {
-        Outcome    outcome       = event.getOutcomeByType(outcomeType);
-        BigDecimal coeffOnPage   = new BigDecimal(outcomeCoeffOnPage);
-        BigDecimal coeffFromDB   = outcome.getCoefficient();
-        int        compareResult = coeffFromDB.compareTo(coeffOnPage);
+        Outcome outcome = event.getOutcomeByType(outcomeType);
+        BigDecimal coeffOnPage = new BigDecimal(outcomeCoeffOnPage);
+        BigDecimal coeffFromDB = outcome.getCoefficient();
+        int compareResult = coeffFromDB.compareTo(coeffOnPage);
         return compareResult == 0;
     }
     

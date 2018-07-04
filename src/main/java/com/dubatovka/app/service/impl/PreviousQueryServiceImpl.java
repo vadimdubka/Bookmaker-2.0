@@ -9,7 +9,6 @@ import javax.servlet.http.HttpSession;
 import java.util.Enumeration;
 
 import static com.dubatovka.app.config.ConfigConstant.ATTR_PREV_QUERY;
-import static com.dubatovka.app.config.ConfigConstant.PAGE_INDEX;
 import static com.dubatovka.app.config.ConfigConstant.PARAMETER_SEPARATOR;
 import static com.dubatovka.app.config.ConfigConstant.PARAM_PASSWORD;
 import static com.dubatovka.app.config.ConfigConstant.PARAM_PASSWORD_AGAIN;
@@ -38,7 +37,7 @@ public class PreviousQueryServiceImpl implements PreviousQueryService {
     public String takePreviousQuery(HttpServletRequest req) {
         String prevQuery = (String) req.getSession().getAttribute(ATTR_PREV_QUERY);
         if (prevQuery == null) {
-            prevQuery = PAGE_INDEX;
+            prevQuery = "/main"; // TODO убрать хардкод
         }
         return prevQuery;
     }

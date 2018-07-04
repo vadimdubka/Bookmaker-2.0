@@ -1,6 +1,5 @@
 package com.dubatovka.app.service;
 
-import com.dubatovka.app.dao.impl.DAOProvider;
 import com.dubatovka.app.entity.Category;
 import com.dubatovka.app.entity.Event;
 import com.dubatovka.app.entity.Outcome;
@@ -13,20 +12,7 @@ import java.util.Map;
  *
  * @author Dubatovka Vadim
  */
-public abstract class EventService extends DAOProviderHolder {
-    
-    /**
-     * Default constructor.
-     */
-    protected EventService() {
-    }
-    
-    /**
-     * Constructs instance using definite {@link DAOProvider} object.
-     */
-    protected EventService(DAOProvider daoProvider) {
-        super(daoProvider);
-    }
+public interface EventService extends AutoCloseable{
     
     /**
      * Calls DAO layer to get {@link Event} from database which correspond to given {@link
@@ -35,7 +21,7 @@ public abstract class EventService extends DAOProviderHolder {
      * @param eventId {@link Event} id
      * @return {@link Category}
      */
-    public abstract Event getEvent(int eventId);
+    Event getEvent(int eventId);
     
     /**
      * Calls DAO layer to get {@link Event} from database which correspond to given {@link
@@ -44,7 +30,7 @@ public abstract class EventService extends DAOProviderHolder {
      * @param eventIdStr {@link Event} id of type {@link String}
      * @return {@link Event}
      */
-    public abstract Event getEvent(String eventIdStr);
+    Event getEvent(String eventIdStr);
     
     /**
      * Calls DAO layer to get {@link List} of {@link Event} objects for given category id and query
@@ -54,7 +40,7 @@ public abstract class EventService extends DAOProviderHolder {
      * @param eventQueryType {@link String} query type
      * @return {@link List} of {@link Event}
      */
-    public abstract List<Event> getEvents(String categoryId, String eventQueryType);
+    List<Event> getEvents(String categoryId, String eventQueryType);
     
     /**
      * Calls DAO layer to get {@link Map} with information about quantity of events for given query
@@ -64,7 +50,7 @@ public abstract class EventService extends DAOProviderHolder {
      * @return {@link Map} whose key is {@link Category} id and value is quantity of events for
      * corresponding {@link Category} id
      */
-    public abstract Map<Integer, Integer> countEvents(String eventQueryType);
+    Map<Integer, Integer> countEvents(String eventQueryType);
     
     /**
      * Calls DAO layer to get {@link Map} with information about coefficients for certain outcome
@@ -74,7 +60,7 @@ public abstract class EventService extends DAOProviderHolder {
      * @return {@link Map} whose key is {@link Outcome.Type#getType} and value is {@link Map} whose
      * key is {@link Event} id and values are coefficients for corresponding {@link Event} id.
      */
-    public abstract Map<String, Map<String, String>> getOutcomeColumnMaps(List<Event> events);
+    Map<String, Map<String, String>> getOutcomeColumnMaps(List<Event> events);
     
     /**
      * Calls DAO layer to delete {@link Event} by given event id.
@@ -83,7 +69,7 @@ public abstract class EventService extends DAOProviderHolder {
      * @param messageService {@link MessageService} that holds messages, formed during execution of
      *                       method
      */
-    public abstract void deleteEvent(int eventId, MessageService messageService);
+    void deleteEvent(int eventId, MessageService messageService);
     
     /**
      * Calls DAO layer to insert {@link Event} to database.
@@ -92,7 +78,7 @@ public abstract class EventService extends DAOProviderHolder {
      * @param messageService {@link MessageService} that holds messages, formed during execution of
      *                       method
      */
-    public abstract void insertEvent(Event event, MessageService messageService);
+    void insertEvent(Event event, MessageService messageService);
     
     /**
      * Calls DAO layer to update description information for given {@link Event} in database.
@@ -101,7 +87,7 @@ public abstract class EventService extends DAOProviderHolder {
      * @param messageService {@link MessageService} that holds messages, formed during execution of
      *                       method
      */
-    public abstract void updateEventInfo(Event event, MessageService messageService);
+    void updateEventInfo(Event event, MessageService messageService);
     
     /**
      * Calls DAO layer to update results for given {@link Event} and update bet status of bets in
@@ -111,5 +97,8 @@ public abstract class EventService extends DAOProviderHolder {
      * @param messageService {@link MessageService} that holds messages, formed during execution of
      *                       method
      */
-    public abstract void updateEventResult(Event event, MessageService messageService);
+    void updateEventResult(Event event, MessageService messageService);
+    
+    @Override
+    void close();
 }

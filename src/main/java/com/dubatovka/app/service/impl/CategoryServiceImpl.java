@@ -1,6 +1,7 @@
 package com.dubatovka.app.service.impl;
 
 import com.dubatovka.app.dao.CategoryDAO;
+import com.dubatovka.app.dao.db.ConnectionPool;
 import com.dubatovka.app.dao.exception.DAOException;
 import com.dubatovka.app.dao.impl.DAOProvider;
 import com.dubatovka.app.entity.Category;
@@ -23,9 +24,9 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author Dubatovka Vadim
  */
-class CategoryServiceImpl extends CategoryService {
+class CategoryServiceImpl implements CategoryService {
     private static final Logger logger = LogManager.getLogger(CategoryServiceImpl.class);
-    private static final Lock   lock   = new ReentrantLock();
+    private static final Lock lock = new ReentrantLock();
     
     /**
      * Field is used to define whether any category was modified. If it was then field turns into
@@ -36,21 +37,20 @@ class CategoryServiceImpl extends CategoryService {
     /**
      * Set of top level categories
      */
-    private static Set<Category>       sportCategories;
+    private static Set<Category> sportCategories;
     
-    private final CategoryDAO categoryDAO = daoProvider.getCategoryDAO();
+    /**
+     * DAOProvider instance for this class instance use.
+     */
+    private final DAOProvider daoProvider;
+    private final CategoryDAO categoryDAO;
     
     /**
      * Default constructor.
      */
     CategoryServiceImpl() {
-    }
-    
-    /**
-     * Constructs instance using definite {@link DAOProvider} object.
-     */
-    CategoryServiceImpl(DAOProvider daoProvider) {
-        super(daoProvider);
+        this.daoProvider = new DAOProvider();
+        this.categoryDAO = daoProvider.getCategoryDAO();
     }
     
     /**
@@ -113,7 +113,7 @@ class CategoryServiceImpl extends CategoryService {
     
     private static Map<Integer, Category> pickOutSportCategories(Iterable<Category> categorySet) {
         Map<Integer, Category> sportCategoriesMap = new HashMap<>();
-        Iterator<Category>     iterator           = categorySet.iterator();
+        Iterator<Category> iterator = categorySet.iterator();
         while (iterator.hasNext()) {
             Category category = iterator.next();
             if (category.getParentId() == 0) {
@@ -128,9 +128,17 @@ class CategoryServiceImpl extends CategoryService {
     private static void fillSportWithCategories(Map<Integer, Category> sportCategoriesMap,
                                                 Iterable<Category> categorySet) {
         categorySet.forEach(category -> {
-            int      parentId = category.getParentId();
-            Category sport    = sportCategoriesMap.get(parentId);
+            int parentId = category.getParentId();
+            Category sport = sportCategoriesMap.get(parentId);
             sport.getChildCategorySet().add(category);
         });
+    }
+    
+    /**
+     * Returns {@link DAOProvider#connection} to {@link ConnectionPool}.
+     */
+    @Override
+    public void close() {
+        daoProvider.close();
     }
 }

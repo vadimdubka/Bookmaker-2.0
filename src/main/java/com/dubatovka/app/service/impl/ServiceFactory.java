@@ -1,6 +1,5 @@
 package com.dubatovka.app.service.impl;
 
-import com.dubatovka.app.dao.impl.DAOProvider;
 import com.dubatovka.app.service.BetService;
 import com.dubatovka.app.service.CategoryService;
 import com.dubatovka.app.service.EventService;
@@ -11,7 +10,10 @@ import com.dubatovka.app.service.PlayerService;
 import com.dubatovka.app.service.TransactionService;
 import com.dubatovka.app.service.UserService;
 import com.dubatovka.app.service.ValidationService;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -24,123 +26,81 @@ import java.util.Locale;
  * @author Dubatovka Vadim
  */
 @Component
-public final class ServiceFactory {
+@Configuration
+@ComponentScan
+public class ServiceFactory {
     @Bean
-    @Scope("prototype")
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public BetService getBetService() {
         return new BetServiceImpl();
     }
     
     @Bean
-    @Scope("prototype")
-    public BetService getBetService(DAOProvider daoProvider) {
-        return new BetServiceImpl(daoProvider);
-    }
-    
-    @Bean
-    @Scope("prototype")
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public CategoryService getCategoryService() {
         return new CategoryServiceImpl();
     }
     
     @Bean
-    @Scope("prototype")
-    public CategoryService getCategoryService(DAOProvider daoProvider) {
-        return new CategoryServiceImpl(daoProvider);
-    }
-    
-    @Bean
-    @Scope("prototype")
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public EventService getEventService() {
-        return new EventServiceImpl();
+        EventServiceImpl eventService = new EventServiceImpl();
+        eventService.setServiceFactory(this);
+        return eventService;
     }
     
     @Bean
-    @Scope("prototype")
-    public EventService getEventService(DAOProvider daoProvider) {
-        return new EventServiceImpl(daoProvider);
-    }
-    
-    @Bean
-    @Scope("prototype")
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public MessageService getMessageService() {
         return new MessageServiceImpl();
     }
     
-    @Bean
-    @Scope("prototype")
     public MessageService getMessageService(String locale) {
         return new MessageServiceImpl(locale);
     }
     
-    @Bean
-    @Scope("prototype")
     public MessageService getMessageService(Locale locale, String pathToBundle) {
         return new MessageServiceImpl(locale, pathToBundle);
     }
     
     @Bean
-    @Scope("prototype")
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public MessageService getMessageService(HttpSession session) {
         return new MessageServiceImpl(session);
     }
     
     @Bean
-    @Scope("prototype")
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public OutcomeService getOutcomeService() {
         return new OutcomeServiceImpl();
     }
     
     @Bean
-    @Scope("prototype")
-    public OutcomeService getOutcomeService(DAOProvider daoProvider) {
-        return new OutcomeServiceImpl(daoProvider);
-    }
-    
-    @Bean
-    @Scope("prototype")
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public PaginationService getPaginationService() {
         return new PaginationServiceImpl();
     }
     
     @Bean
-    @Scope("prototype")
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public PlayerService getPlayerService() {
         return new PlayerServiceImpl();
     }
     
     @Bean
-    @Scope("prototype")
-    public PlayerService getPlayerService(DAOProvider daoProvider) {
-        return new PlayerServiceImpl(daoProvider);
-    }
-    
-    @Bean
-    @Scope("prototype")
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public TransactionService getTransactionService() {
         return new TransactionServiceImpl();
     }
     
     @Bean
-    @Scope("prototype")
-    public TransactionService getTransactionService(DAOProvider daoProvider) {
-        return new TransactionServiceImpl(daoProvider);
-    }
-    
-    @Bean
-    @Scope("prototype")
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public UserService getUserService() {
         return new UserServiceImpl();
     }
     
     @Bean
-    @Scope("prototype")
-    public UserService getUserService(DAOProvider daoProvider) {
-        return new UserServiceImpl(daoProvider);
-    }
-    
-    @Bean
-    @Scope("prototype")
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public ValidationService getValidationService() {
         return new ValidationServiceImpl();
     }

@@ -1,6 +1,7 @@
 package com.dubatovka.app.service.impl;
 
 import com.dubatovka.app.dao.OutcomeDAO;
+import com.dubatovka.app.dao.db.ConnectionPool;
 import com.dubatovka.app.dao.exception.DAOException;
 import com.dubatovka.app.dao.impl.DAOProvider;
 import com.dubatovka.app.entity.Event;
@@ -20,22 +21,20 @@ import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_SQL_OPERATION;
  *
  * @author Dubatovka Vadim
  */
-class OutcomeServiceImpl extends OutcomeService {
+class OutcomeServiceImpl implements OutcomeService {
     private static final Logger logger = LogManager.getLogger(OutcomeServiceImpl.class);
-    
-    private final OutcomeDAO outcomeDAO = daoProvider.getOutcomeDAO();
+    /**
+     * DAOProvider instance for this class instance use.
+     */
+    private final DAOProvider daoProvider;
+    private final OutcomeDAO outcomeDAO;
     
     /**
      * Default constructor.
      */
     OutcomeServiceImpl() {
-    }
-    
-    /**
-     * Constructs instance using definite {@link DAOProvider} object.
-     */
-    OutcomeServiceImpl(DAOProvider daoProvider) {
-        super(daoProvider);
+        this.daoProvider = new DAOProvider();
+        this.outcomeDAO = daoProvider.getOutcomeDAO();
     }
     
     /**
@@ -48,7 +47,7 @@ class OutcomeServiceImpl extends OutcomeService {
     public void setOutcomesForEvent(Event event) {
         if (event != null) {
             try {
-                int          id         = event.getId();
+                int id = event.getId();
                 Set<Outcome> outcomeSet = outcomeDAO.readOutcomesByEventId(id);
                 event.setOutcomeSet(outcomeSet);
             } catch (DAOException e) {
@@ -77,5 +76,13 @@ class OutcomeServiceImpl extends OutcomeService {
             logger.log(Level.ERROR, e.getMessage());
             messageService.appendErrMessByKey(MESSAGE_ERR_SQL_OPERATION);
         }
+    }
+    
+    /**
+     * Returns {@link DAOProvider#connection} to {@link ConnectionPool}.
+     */
+    @Override
+    public void close() {
+        daoProvider.close();
     }
 }

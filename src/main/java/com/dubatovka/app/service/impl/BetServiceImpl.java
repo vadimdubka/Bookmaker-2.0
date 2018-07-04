@@ -4,6 +4,7 @@ import com.dubatovka.app.config.ConfigConstant;
 import com.dubatovka.app.dao.BetDAO;
 import com.dubatovka.app.dao.PlayerDAO;
 import com.dubatovka.app.dao.TransactionDAO;
+import com.dubatovka.app.dao.db.ConnectionPool;
 import com.dubatovka.app.dao.exception.DAOException;
 import com.dubatovka.app.dao.impl.DAOProvider;
 import com.dubatovka.app.entity.Bet;
@@ -31,24 +32,24 @@ import static com.dubatovka.app.config.ConfigConstant.MESSAGE_ERR_SQL_TRANSACTIO
  *
  * @author Dubatovka Vadim
  */
-class BetServiceImpl extends BetService {
+class BetServiceImpl implements BetService {
     private static final Logger logger = LogManager.getLogger(BetServiceImpl.class);
-    
-    private final BetDAO         betDAO         = daoProvider.getBetDAO();
-    private final PlayerDAO      playerDAO      = daoProvider.getPlayerDAO();
-    private final TransactionDAO transactionDAO = daoProvider.getTransactionDAO();
+    /**
+     * DAOProvider instance for this class instance use.
+     */
+    private final DAOProvider daoProvider;
+    private final BetDAO betDAO;
+    private final PlayerDAO playerDAO;
+    private final TransactionDAO transactionDAO;
     
     /**
      * Default constructor.
      */
     BetServiceImpl() {
-    }
-    
-    /**
-     * Constructs instance using definite {@link DAOProvider} object.
-     */
-    BetServiceImpl(DAOProvider daoProvider) {
-        super(daoProvider);
+        this.daoProvider = new DAOProvider();
+        this.betDAO = daoProvider.getBetDAO();
+        this.playerDAO = daoProvider.getPlayerDAO();
+        this.transactionDAO = daoProvider.getTransactionDAO();
     }
     
     /**
@@ -199,6 +200,14 @@ class BetServiceImpl extends BetService {
             logger.log(Level.ERROR, e.getMessage());
         }
         return count;
+    }
+    
+    /**
+     * Returns {@link DAOProvider#connection} to {@link ConnectionPool}.
+     */
+    @Override
+    public void close() {
+        daoProvider.close();
     }
     
 }

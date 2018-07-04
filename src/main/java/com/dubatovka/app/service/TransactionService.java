@@ -1,6 +1,5 @@
 package com.dubatovka.app.service;
 
-import com.dubatovka.app.dao.impl.DAOProvider;
 import com.dubatovka.app.entity.Transaction;
 
 import java.math.BigDecimal;
@@ -11,19 +10,7 @@ import java.util.List;
  *
  * @author Dubatovka Vadim
  */
-public abstract class TransactionService extends DAOProviderHolder {
-    /**
-     * Default constructor.
-     */
-    protected TransactionService() {
-    }
-    
-    /**
-     * Constructs instance using definite {@link DAOProvider} object.
-     */
-    protected TransactionService(DAOProvider daoProvider) {
-        super(daoProvider);
-    }
+public interface TransactionService extends AutoCloseable{
     
     /**
      * Calls DAO layer to take {@link List} collection of definite player {@link Transaction}
@@ -33,7 +20,7 @@ public abstract class TransactionService extends DAOProviderHolder {
      * @param month string representation of month value in format 'yyyy-mm'
      * @return taken {@link List} collection
      */
-    public abstract List<Transaction> getPlayerTransactions(int id, String month);
+    List<Transaction> getPlayerTransactions(int id, String month);
     
     /**
      * Calls DAO layer to take {@link List} collection of {@link Transaction} objects due to given
@@ -45,8 +32,8 @@ public abstract class TransactionService extends DAOProviderHolder {
      * @param isSortByAmount is need to sort result collection by {@link Transaction#amount}
      * @return taken {@link List} collection
      */
-    public abstract List<Transaction> getTransactionList(String filterByType,
-                                                         String month, boolean isSortByAmount);
+    List<Transaction> getTransactionList(String filterByType,
+                                         String month, boolean isSortByAmount);
     
     /**
      * Defines max payment value from {@link List} collection of {@link Transaction} objects.
@@ -54,7 +41,7 @@ public abstract class TransactionService extends DAOProviderHolder {
      * @param transactions {@link List} collection of {@link Transaction} objects to be filtered
      * @return defined {@link BigDecimal} value
      */
-    public abstract BigDecimal defineMaxPayment(List<Transaction> transactions);
+    BigDecimal defineMaxPayment(List<Transaction> transactions);
     
     /**
      * Counts total payment value from {@link List} collection of {@link Transaction} objects.
@@ -62,7 +49,7 @@ public abstract class TransactionService extends DAOProviderHolder {
      * @param transactions {@link List} collection of {@link Transaction} objects to be filtered
      * @return counted {@link BigDecimal} value
      */
-    public abstract BigDecimal countTotalPayment(List<Transaction> transactions);
+    BigDecimal countTotalPayment(List<Transaction> transactions);
     
     /**
      * Defines max withdrawal value from {@link List} collection of {@link Transaction} objects.
@@ -70,7 +57,7 @@ public abstract class TransactionService extends DAOProviderHolder {
      * @param transactions {@link List} collection of {@link Transaction} objects to be filtered
      * @return defined {@link BigDecimal} value
      */
-    public abstract BigDecimal defineMaxWithdrawal(List<Transaction> transactions);
+    BigDecimal defineMaxWithdrawal(List<Transaction> transactions);
     
     /**
      * Counts total withdrawal value from {@link List} collection of {@link Transaction} objects.
@@ -78,7 +65,7 @@ public abstract class TransactionService extends DAOProviderHolder {
      * @param transactions {@link List} collection of {@link Transaction} objects to be filtered
      * @return counted {@link BigDecimal} value
      */
-    public abstract BigDecimal countTotalWithdrawal(List<Transaction> transactions);
+    BigDecimal countTotalWithdrawal(List<Transaction> transactions);
     
     /**
      * Calls DAO layer to make an account transaction of definite
@@ -89,6 +76,9 @@ public abstract class TransactionService extends DAOProviderHolder {
      * @param transactionType type of transaction
      * @return true if transaction proceeded successfully
      */
-    public abstract int makeTransaction(int playerId, BigDecimal amount,
-                                        Transaction.TransactionType transactionType);
+    int makeTransaction(int playerId, BigDecimal amount,
+                        Transaction.TransactionType transactionType);
+    
+    @Override
+    void close();
 }

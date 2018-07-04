@@ -2,6 +2,7 @@ package com.dubatovka.app.service.impl;
 
 import com.dubatovka.app.dao.BetDAO;
 import com.dubatovka.app.dao.EventDAO;
+import com.dubatovka.app.dao.db.ConnectionPool;
 import com.dubatovka.app.dao.exception.DAOException;
 import com.dubatovka.app.dao.impl.DAOProvider;
 import com.dubatovka.app.entity.Bet;
@@ -14,8 +15,6 @@ import com.dubatovka.app.service.OutcomeService;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.EnumMap;
@@ -32,19 +31,22 @@ import static com.dubatovka.app.config.ConfigConstant.OUTCOME_TYPE_KEY_NAME;
  *
  * @author Dubatovka Vadim
  */
-class EventServiceImpl extends EventService {
+class EventServiceImpl implements EventService {
     private static final Logger logger = LogManager.getLogger(EventServiceImpl.class);
     
-    @Autowired
-    private static ServiceFactory serviceFactory;
+    /**
+     * DAOProvider instance for this class instance use.
+     */
+    private final DAOProvider daoProvider;
+    private final EventDAO eventDAO;
+    private final BetDAO betDAO;
     
-    private final EventDAO eventDAO = daoProvider.getEventDAO();
-    private final BetDAO   betDAO   = daoProvider.getBetDAO();
+    private ServiceFactory serviceFactory;
     
     private final Map<String, Map<String, String>> coeffColumnMaps = new HashMap<>();
-    private final Map<String, String>              type1           = new HashMap<>();
-    private final Map<String, String>              typeX           = new HashMap<>();
-    private final Map<String, String>              type2           = new HashMap<>();
+    private final Map<String, String> type1 = new HashMap<>();
+    private final Map<String, String> typeX = new HashMap<>();
+    private final Map<String, String> type2 = new HashMap<>();
     
     {
         coeffColumnMaps.put(Outcome.Type.TYPE_1.getType(), type1);
@@ -60,14 +62,13 @@ class EventServiceImpl extends EventService {
      * Default constructor.
      */
     EventServiceImpl() {
-        
+        this.daoProvider = new DAOProvider();
+        eventDAO = daoProvider.getEventDAO();
+        betDAO = daoProvider.getBetDAO();
     }
     
-    /**
-     * Constructs instance using definite {@link DAOProvider} object.
-     */
-    EventServiceImpl(DAOProvider daoProvider) {
-        super(daoProvider);
+    public void setServiceFactory(ServiceFactory serviceFactory) {
+        this.serviceFactory = serviceFactory;
     }
     
     /**
@@ -85,7 +86,7 @@ class EventServiceImpl extends EventService {
         } catch (DAOException e) {
             logger.log(Level.ERROR, e.getMessage());
         }
-        OutcomeService outcomeService = serviceFactory.getOutcomeService(daoProvider);
+        OutcomeService outcomeService = serviceFactory.getOutcomeService();
         outcomeService.setOutcomesForEvent(event);
         return event;
     }
@@ -283,7 +284,7 @@ class EventServiceImpl extends EventService {
     }
     
     private void setOutcomesForEvents(Iterable<Event> eventSet) {
-        eventSet.forEach(serviceFactory.getOutcomeService(daoProvider)::setOutcomesForEvent);
+        eventSet.forEach(serviceFactory.getOutcomeService()::setOutcomesForEvent);
     }
     
     private void fillOutcomeColumnMaps(int eventId, Iterable<Outcome> outcomeSet) {
@@ -294,5 +295,13 @@ class EventServiceImpl extends EventService {
                 typeMap.put(String.valueOf(eventId), String.valueOf(outcome.getCoefficient()));
             }
         }
+    }
+    
+    /**
+     * Returns {@link DAOProvider#connection} to {@link ConnectionPool}.
+     */
+    @Override
+    public void close() {
+        daoProvider.close();
     }
 }

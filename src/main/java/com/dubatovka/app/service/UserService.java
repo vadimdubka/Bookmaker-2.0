@@ -1,6 +1,5 @@
 package com.dubatovka.app.service;
 
-import com.dubatovka.app.dao.impl.DAOProvider;
 import com.dubatovka.app.entity.User;
 
 /**
@@ -8,20 +7,7 @@ import com.dubatovka.app.entity.User;
  *
  * @author Dubatovka Vadim
  */
-public abstract class UserService extends DAOProviderHolder {
-    /**
-     * Default constructor.
-     */
-    protected UserService() {
-    }
-    
-    /**
-     * Constructs instance using definite {@link DAOProvider} object.
-     */
-    protected UserService(DAOProvider daoProvider) {
-        super(daoProvider);
-    }
-    
+public interface UserService extends AutoCloseable {
     /**
      * Provides authorisation operation service for user. Calls DAO layer to init {@link User}
      * object due to given parameters.
@@ -30,5 +16,8 @@ public abstract class UserService extends DAOProviderHolder {
      * @param password user password
      * @return initialized {@link User} object
      */
-    public abstract User authorizeUser(String email, String password);
+    User authorizeUser(String email, String password);
+    
+    @Override
+    void close();
 }

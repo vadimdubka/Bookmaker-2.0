@@ -2,6 +2,7 @@ package com.dubatovka.app.service.impl;
 
 import com.dubatovka.app.dao.PlayerDAO;
 import com.dubatovka.app.dao.UserDAO;
+import com.dubatovka.app.dao.db.ConnectionPool;
 import com.dubatovka.app.dao.exception.DAOException;
 import com.dubatovka.app.dao.impl.DAOProvider;
 import com.dubatovka.app.entity.Player;
@@ -10,6 +11,7 @@ import com.dubatovka.app.service.PlayerService;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -18,23 +20,24 @@ import java.util.List;
  *
  * @author Dubatovka Vadim
  */
-class PlayerServiceImpl extends PlayerService {
+class PlayerServiceImpl implements PlayerService {
     private static final Logger logger = LogManager.getLogger(PlayerServiceImpl.class);
-    
-    private final UserDAO   userDAO   = daoProvider.getUserDAO();
-    private final PlayerDAO playerDAO = daoProvider.getPlayerDAO();
+    /**
+     * DAOProvider instance for this class instance use.
+     */
+    private final DAOProvider daoProvider;
+    private final UserDAO userDAO;
+    private final PlayerDAO playerDAO;
+    @Autowired
+    private EncryptionService encryptionService;
     
     /**
      * Default constructor.
      */
     PlayerServiceImpl() {
-    }
-    
-    /**
-     * Constructs instance using definite {@link DAOProvider} object.
-     */
-    PlayerServiceImpl(DAOProvider daoProvider) {
-        super(daoProvider);
+        this.daoProvider = new DAOProvider();
+        this.userDAO = daoProvider.getUserDAO();
+        this.playerDAO = daoProvider.getPlayerDAO();
     }
     
     /**
@@ -69,7 +72,7 @@ class PlayerServiceImpl extends PlayerService {
     public int registerPlayer(String email, String password, String fName,
                               String mName, String lName, String birthDate) {
         email = email.trim().toLowerCase();
-        password = EncryptionService.encryptMD5(password);
+        password = encryptionService.encryptMD5(password);
         if (fName != null) {
             fName = fName.trim().toUpperCase();
         }
@@ -109,5 +112,13 @@ class PlayerServiceImpl extends PlayerService {
         } catch (DAOException e) {
             logger.log(Level.ERROR, e.getMessage());
         }
+    }
+    
+    /**
+     * Returns {@link DAOProvider#connection} to {@link ConnectionPool}.
+     */
+    @Override
+    public void close() {
+        daoProvider.close();
     }
 }
